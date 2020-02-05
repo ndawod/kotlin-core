@@ -34,13 +34,13 @@ import java.nio.charset.StandardCharsets
 /**
  * Handles loading k:v properties into a [Properties] class using *.properties files.
  */
-class Properties private constructor(private val props: java.util.Properties) {
+open class Properties protected constructor(private val props: java.util.Properties) {
   private var destroyed = false
 
   /**
    * Destroys this instance and clears its memory.
    */
-  fun destroy() {
+  open fun destroy() {
     checkNotDestroyed()
     destroyed = true
     props.clear()
@@ -49,7 +49,7 @@ class Properties private constructor(private val props: java.util.Properties) {
   /**
    * Merges more properties loaded from [files] into this instance.
    */
-  fun merge(paths: Iterable<String>? = null, files: Iterable<File>? = null) {
+  open fun merge(paths: Iterable<String>? = null, files: Iterable<File>? = null) {
     checkNotDestroyed()
 
     fun mergeFrom(fis: FileInputStream) {
@@ -75,7 +75,7 @@ class Properties private constructor(private val props: java.util.Properties) {
    * do so as well.
    */
   @Throws(PropertiesDestroyedException::class)
-  operator fun <T> get(key: String): T? {
+  open operator fun <T> get(key: String): T? {
     checkNotDestroyed()
 
     @Suppress("UNCHECKED_CAST")
@@ -87,7 +87,7 @@ class Properties private constructor(private val props: java.util.Properties) {
    * do so as well.
    */
   @Throws(PropertiesDestroyedException::class)
-  private operator fun <T> set(key: String, value: T) {
+  protected open operator fun <T> set(key: String, value: T) {
     checkNotDestroyed()
     props[key] = value
   }
@@ -100,7 +100,7 @@ class Properties private constructor(private val props: java.util.Properties) {
 
   companion object {
     /**
-     * Loads properties from the specified [file].
+     * Loads [Properties] from the specified [file].
      */
     @Throws(IOException::class)
     fun from(file: String): Properties {
@@ -110,7 +110,7 @@ class Properties private constructor(private val props: java.util.Properties) {
     }
 
     /**
-     * Loads properties from the specified [file].
+     * Loads [Properties] from the specified [file].
      */
     @Throws(IOException::class)
     fun from(file: File): Properties {
@@ -120,8 +120,8 @@ class Properties private constructor(private val props: java.util.Properties) {
     }
 
     /**
-     * Loads properties from the list of [files] by merging all together. Properties belonging to
-     * later files override those in earlier positions.
+     * Loads [Properties] from the list of [files] / [paths] by merging all together.
+     * Entries appearing in later files override those in earlier positions.
      */
     @Throws(IOException::class)
     fun from(paths: Iterable<String>?, files: Iterable<File>?): Properties {
@@ -133,9 +133,17 @@ class Properties private constructor(private val props: java.util.Properties) {
 }
 
 /**
+ * The base [Exception] for [Properties].
+ */
+open class PropertiesException(
+  message: String,
+  cause: Throwable? = null
+) : Exception(message, cause)
+
+/**
  * Denotes that a [Properties] instance has been destroyed and no longer can be used.
  */
 class PropertiesDestroyedException(
   message: String,
   cause: Throwable? = null
-) : RuntimeException(message, cause)
+) : PropertiesException(message, cause)
