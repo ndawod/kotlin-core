@@ -1,0 +1,8 @@
+Project: kotlin-core
+Description: Auxiliary methods and functions for the Kotlin programming language.
+Latest version: 1.0.0
+
+This documents the changes between versions:
+
+1.0.0 (Feb 3 2020)
+    Initial public release with few extensions and support classes.
