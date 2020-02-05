@@ -23,7 +23,7 @@
 
 apply from: 'gradle/config.gradle'
 
-apply plugin: "io.gitlab.arturbosch.detekt"
+apply plugin: 'io.gitlab.arturbosch.detekt'
 
 detekt {
     baseline = file('detekt-baseline.xml')
