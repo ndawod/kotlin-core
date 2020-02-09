@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.0.2 (Feb 9 2020)
+    Added a TranslationsMap typealias that maps a Locale to its Localization.
+
 1.0.1 (Feb 5 2020)
     Added a Localization class to ease localizing apps. The Localization class marries a Locale and
     a Properties instances and exposes easy functions to instantiate it from one or more

@@ -25,18 +25,17 @@
 
 package org.noordawod.kotlin.core.util
 
-import java.io.File
-import java.io.IOException
-import java.util.Locale
+import org.noordawod.kotlin.core.extension.sameLanguageAs
 
 /**
- * Binds a [Locale] and [Properties], the latter holds translations for the specified [locale].
+ * Binds a [java.util.Locale] and [Properties], the latter holds translations for the
+ * specified [locale].
  */
 open class Localization(
   /**
-   * The [Locale] associated with this [Localization] instance.
+   * The [java.util.Locale] associated with this [Localization] instance.
    */
-  val locale: Locale,
+  val locale: java.util.Locale,
 
   /**
    * The localized translations associated with [locale].
@@ -47,24 +46,45 @@ open class Localization(
     /**
      * Loads [Localization] from the specified [file].
      */
-    @Throws(IOException::class)
-    fun from(locale: Locale, file: String) = Localization(locale, Properties.from(file))
+    @Throws(java.io.IOException::class)
+    fun from(locale: java.util.Locale, file: String) =
+      Localization(locale, Properties.from(file))
 
     /**
      * Loads [Localization] from the specified [file].
      */
-    @Throws(IOException::class)
-    fun from(locale: Locale, file: File) = Localization(locale, Properties.from(file))
+    @Throws(java.io.IOException::class)
+    fun from(locale: java.util.Locale, file: java.io.File) =
+      Localization(locale, Properties.from(file))
 
     /**
      * Loads [Localization] from the list of [files] / [paths] by merging all together.
      * Entries appearing in later files override those in earlier positions.
      */
-    @Throws(IOException::class)
+    @Throws(java.io.IOException::class)
     fun from(
-      locale: Locale,
+      locale: java.util.Locale,
       paths: Iterable<String>?,
-      files: Iterable<File>?
+      files: Iterable<java.io.File>?
     ): Localization = Localization(locale, Properties.from(paths, files))
   }
+}
+
+/**
+ * A [Map] of instances of [Localization] indexed by a [java.util.Locale].
+ */
+typealias TranslationsMap = Map<java.util.Locale, Localization>
+
+/**
+ * Checks whether a [TranslationsMap] contains a [java.util.Locale] with the specified [language].
+ */
+fun TranslationsMap.hasLanguage(language: String): Boolean =
+  null != keys.firstOrNull { it.sameLanguageAs(language) }
+
+/**
+ * Returns a [Localization] for the specified [language] on success, null otherwise.
+ */
+fun TranslationsMap.localizationFor(language: String): Localization? {
+  val locale: java.util.Locale? = keys.firstOrNull { it.sameLanguageAs(language) }
+  return if (null != locale) get(locale) else null
 }
