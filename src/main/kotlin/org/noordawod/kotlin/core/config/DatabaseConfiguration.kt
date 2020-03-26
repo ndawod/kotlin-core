@@ -90,17 +90,19 @@ open class MySqlDatabaseConfiguration constructor(
       .setHost(host)
       .setPort(port)
       .setPaths(db)
-      .setQueryParameter("user", user)
-      .setQueryParameter("password", pass)
-      .setQueryParameter("characterEncoding", encoding)
-      .setQueryParameter("connectionCollation", collation)
-      .setQueryParameter("useUnicode", "true")
-      .setQueryParameter("useSSL", "false")
-      .setQueryParameter("useCompression", "false")
-      .setQueryParameter("autoReconnect", "true")
-      .setQueryParameter("connectTimeout", "$connectTimeout")
-      .setQueryParameter("socketTimeout", "$socketTimeout")
-      .setQueryParameter("serverTimezone", serverTimezone)
+      .setQueryParameters(mapOf<String, Any>(
+        "user" to user,
+        "password" to pass,
+        "characterEncoding" to encoding,
+        "connectionCollation" to collation,
+        "useUnicode" to true.toString(),
+        "useSSL" to false.toString(),
+        "useCompression" to false.toString(),
+        "autoReconnect" to true.toString(),
+        "connectTimeout" to "$connectTimeout",
+        "socketTimeout" to "$socketTimeout",
+        "serverTimezone" to serverTimezone
+      ))
       .build()
       .toString()
   }
