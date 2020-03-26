@@ -4,6 +4,12 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.0.4 (Mar 26 2020)
+    Pass a prepared map of parameters when building the database URI.
+
+1.0.3 (Mar 26 2020)
+    Add configuration for pool-based database servers.
+
 1.0.2 (Feb 9 2020)
     Added a TranslationsMap typealias that maps a Locale to its Localization.
 
