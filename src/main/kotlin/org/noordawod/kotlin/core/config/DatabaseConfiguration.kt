@@ -25,12 +25,15 @@
 
 package org.noordawod.kotlin.core.config
 
+import net.moznion.uribuildertiny.URIBuilderTiny
+
 /**
  * Generic database configuration suitable for most database drivers.
  */
 open class DatabaseConfiguration constructor(
   val driver: String,
   val host: String,
+  val port: Int,
   val user: String,
   val pass: String,
   val db: String
@@ -42,27 +45,65 @@ open class DatabaseConfiguration constructor(
 open class MySqlDatabaseConfiguration constructor(
   driver: String,
   host: String,
+  port: Int,
   user: String,
   pass: String,
-  db: String,
-  val encoding: String,
-  val charset: String,
-  val collation: String
-) : DatabaseConfiguration(driver, host, user, pass, db) {
+  db: String
+) : DatabaseConfiguration(driver, host, port, user, pass, db) {
   /**
-   * Returns the connection URI string.
+   * Encoding to use for this connection (normally passed in
+   * "SET NAMES [encoding]" MySQL command.
    */
-  val uri: String = "mysql://$host/$db" +
-    "?user=$user" +
-    "&password=$pass" +
-    "&useUnicode=true" +
-    "&characterEncoding=$encoding" +
-    "&useSSL=false" +
-    "&useCompression=false" +
-    "&connectTimeout=2000" +
-    "&socketTimeout=2000" +
-    "&autoReconnect=true" +
-    "&serverTimezone=UTC"
+  open val encoding: String = "utf8"
+
+  /**
+   * Encoding to use for this connection (normally passed in
+   * "SET NAMES [encoding] COLLATE [collation]" MySQL command.
+   */
+  open val collation: String = "utf8_general_ci"
+
+  /**
+   * How long in milliseconds until a client can connect to a server.
+   */
+  @Suppress("MagicNumber")
+  open val connectTimeout: Long = 2_000L
+
+  /**
+   * How long in milliseconds until a socket can connect to a destination.
+   */
+  @Suppress("MagicNumber")
+  open val socketTimeout: Long = 2_000L
+
+  /**
+   * Sets the timezone of the server.
+   */
+  open val serverTimezone: String = "UTC"
+
+  /**
+   * Returns the connection URI string for MySQL.
+   *
+   * @see <a href="https://tinyurl.com/yagm2clw">Connector/J Configuration Properties</a>
+   */
+  val uri: String by lazy {
+    URIBuilderTiny()
+      .setScheme("mysql")
+      .setHost(host)
+      .setPort(port)
+      .setPaths(db)
+      .setQueryParameter("user", user)
+      .setQueryParameter("password", pass)
+      .setQueryParameter("characterEncoding", encoding)
+      .setQueryParameter("connectionCollation", collation)
+      .setQueryParameter("useUnicode", "true")
+      .setQueryParameter("useSSL", "false")
+      .setQueryParameter("useCompression", "false")
+      .setQueryParameter("autoReconnect", "true")
+      .setQueryParameter("connectTimeout", "$connectTimeout")
+      .setQueryParameter("socketTimeout", "$socketTimeout")
+      .setQueryParameter("serverTimezone", serverTimezone)
+      .build()
+      .toString()
+  }
 }
 
 /**
@@ -72,10 +113,11 @@ open class MySqlDatabaseConfiguration constructor(
 open class Utf8Mb4DatabaseConfiguration constructor(
   driver: String,
   host: String,
+  port: Int,
   user: String,
   pass: String,
   db: String
-) : MySqlDatabaseConfiguration(
-  driver, host, user, pass, db,
-  "utf8", "utf8mb4", "utf8mb4_general_ci"
-)
+) : MySqlDatabaseConfiguration(driver, host, port, user, pass, db) {
+  override val encoding: String = "utf8mb4"
+  override val collation: String = "utf8mb4_general_ci"
+}
