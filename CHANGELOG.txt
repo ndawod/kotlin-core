@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.0.5 (Mar 26 2020)
+    Fix a small error in configuring the connection encoding ("utf8mb4" -> "utf8").
+
 1.0.4 (Mar 26 2020)
     Pass a prepared map of parameters when building the database URI.
 

@@ -52,8 +52,9 @@ open class MySqlPoolDatabaseConfiguration constructor(
 ) : MySqlDatabaseConfiguration(driver, host, port, user, pass, db)
 
 /**
- * A special [Utf8Mb4DatabaseConfiguration] that uses a pool of connections for better
- * concurrency and speed improvements.
+ * A special [MySqlDatabaseConfiguration] that uses the
+ * [DatabaseConfiguration.DEFAULT_ENCODING] encoding and
+ * [DatabaseConfiguration.EXTENDED_COLLATION] collation.
  */
 open class Utf8Mb4PoolDatabaseConfiguration constructor(
   driver: String,
@@ -64,8 +65,8 @@ open class Utf8Mb4PoolDatabaseConfiguration constructor(
   db: String,
   val pool: ConnectionPoolConfiguration
 ) : MySqlDatabaseConfiguration(driver, host, port, user, pass, db) {
-  override val encoding: String = "utf8mb4"
-  override val collation: String = "utf8mb4_general_ci"
+  override val encoding: String = DEFAULT_ENCODING
+  override val collation: String = EXTENDED_COLLATION
 }
 
 /**

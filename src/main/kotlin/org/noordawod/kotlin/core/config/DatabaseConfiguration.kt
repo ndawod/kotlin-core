@@ -37,7 +37,13 @@ open class DatabaseConfiguration constructor(
   val user: String,
   val pass: String,
   val db: String
-)
+) {
+  companion object {
+    const val DEFAULT_ENCODING: String = "utf8"
+    const val DEFAULT_COLLATION: String = "utf8_general_ci"
+    const val EXTENDED_COLLATION: String = "utf8mb4_general_ci"
+  }
+}
 
 /**
  * Database configuration suitable for MySQL server.
@@ -54,13 +60,13 @@ open class MySqlDatabaseConfiguration constructor(
    * Encoding to use for this connection (normally passed in
    * "SET NAMES [encoding]" MySQL command.
    */
-  open val encoding: String = "utf8"
+  open val encoding: String = DEFAULT_ENCODING
 
   /**
    * Encoding to use for this connection (normally passed in
    * "SET NAMES [encoding] COLLATE [collation]" MySQL command.
    */
-  open val collation: String = "utf8_general_ci"
+  open val collation: String = DEFAULT_COLLATION
 
   /**
    * How long in milliseconds until a client can connect to a server.
@@ -109,8 +115,9 @@ open class MySqlDatabaseConfiguration constructor(
 }
 
 /**
- * A special [MySqlDatabaseConfiguration] that uses the "utf8" encoding and "utf8mb4"
- * character set.
+ * A special [MySqlDatabaseConfiguration] that uses the
+ * [DatabaseConfiguration.DEFAULT_ENCODING] encoding and
+ * [DatabaseConfiguration.EXTENDED_COLLATION] collation.
  */
 open class Utf8Mb4DatabaseConfiguration constructor(
   driver: String,
@@ -120,6 +127,6 @@ open class Utf8Mb4DatabaseConfiguration constructor(
   pass: String,
   db: String
 ) : MySqlDatabaseConfiguration(driver, host, port, user, pass, db) {
-  override val encoding: String = "utf8mb4"
-  override val collation: String = "utf8mb4_general_ci"
+  override val encoding: String = DEFAULT_ENCODING
+  override val collation: String = EXTENDED_COLLATION
 }
