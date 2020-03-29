@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.2 (Mar 29 2020)
+    Added properties in Environment to easily check for Devel, Beta, and Production.
+
 1.1.1 (Mar 29 2020)
     Added implementations a Map with ByteArray keys.
 

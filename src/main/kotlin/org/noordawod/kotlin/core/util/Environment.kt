@@ -31,10 +31,35 @@ import org.noordawod.kotlin.core.extension.withoutTrailingSlash
 /**
  * Let the app know in which environment they're executing in.
  */
-enum class Environment constructor(val identifier: String, val label: String) {
-  DEVEL("devel", "Development"),
-  BETA("beta", "Beta"),
-  PRODUCTION("production", "Production");
+enum class Environment constructor(
+  /**
+   * A machine-friendly identifier with all characters lower-cased.
+   */
+  val identifier: String,
+
+  /**
+   * A human-friendly identifier.
+   */
+  val label: String,
+
+  /**
+   * Whether this is the [DEVEL] environment.
+   */
+  val isDevel: Boolean,
+
+  /**
+   * Whether this is the [BETA] environment.
+   */
+  val isBeta: Boolean,
+
+  /**
+   * Whether this is the [PRODUCTION] environment.
+   */
+  val isProduction: Boolean
+) {
+  DEVEL("devel", "Development", true, false, false),
+  BETA("beta", "Beta", false, true, false),
+  PRODUCTION("production", "Production", false, false, true);
 
   /**
    * Returns this [Environment]'s identifier.
@@ -56,7 +81,7 @@ enum class Environment constructor(val identifier: String, val label: String) {
     /**
      * Returns a new [Environment] matching the specified [identifier] on success, null otherwise.
      */
-    fun of(identifier: String): Environment? {
+    fun from(identifier: String): Environment? {
       val identifierLowerCased = identifier.toLowerCase()
       for (environment in values()) {
         if (environment.identifier == identifierLowerCased) {
