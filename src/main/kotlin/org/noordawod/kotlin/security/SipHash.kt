@@ -45,21 +45,11 @@ class SipHash internal constructor(private val key: ByteArray) {
   private var accumulatorCount = 0 // counter of bytes being accumulated
 
   /**
-   * Returns a SIP hash for the passed string, or null of it's empty.
+   * Calculates the SipHash as a [Long] number for the specified [bytes].
+   *
+   * Note: this method is NOT thread safe.
    */
-  fun compute(string: String?): ByteArray? =
-    if (string.isNullOrBlank()) null else asBytes(string)
-
-  /**
-   * Returns a SIP hash for the passed [ByteArray], or null of it's empty.
-   */
-  fun compute(buffer: ByteArray?): ByteArray? =
-    if (true == buffer?.isNotEmpty()) asBytes(buffer) else null
-
-  /**
-   * Hashes a [ByteArray] and return result as a long number.
-   */
-  fun asLong(bytes: ByteArray): Long {
+  fun computeAsLong(bytes: ByteArray): Long {
     reset()
     for (aByte in bytes) {
       updateHash(aByte)
@@ -68,63 +58,12 @@ class SipHash internal constructor(private val key: ByteArray) {
   }
 
   /**
-   * Hashes a [ByteArray] and return result as a [ByteArray].
-   */
-  fun asBytes(bytes: ByteArray): ByteArray = SipHashFactory.longToBytes(asLong(bytes))
-
-  /**
-   * Hashes a String value and return result as a [ByteArray].
-   */
-  fun asBytes(string: String?): ByteArray? =
-    if (string.isNullOrEmpty()) null else asBytes(string.toByteArray())
-
-  /**
-   * Hashes a String value and return result as a [ByteArray].
-   */
-  fun asBytesOrEmpty(string: String?, fallback: ByteArray = byteArrayOf()): ByteArray =
-    if (string.isNullOrEmpty()) fallback else asBytes(string.toByteArray())
-
-  /**
-   * Hashes a long number and return result as a [ByteArray].
-   */
-  fun asBytes(number: Long): ByteArray = asBytes(SipHashFactory.longToBytes(number))
-
-  /**
-   * Hashes a number and return result as a [ByteArray].
-   */
-  fun asBytes(number: Number): ByteArray = asBytes(number.toLong())
-
-  /**
-   * Hashes a [ByteArray] and returns the result as a hexadecimal string.
-   */
-  fun asHex(bytes: ByteArray): String = SipHashFactory.toHex(asBytes(bytes))
-
-  /**
-   * Hashes a String and returns the result as a hexadecimal string.
-   */
-  fun asHex(string: String): String = SipHashFactory.toHex(asBytes(string.toByteArray()))
-
-  /**
-   * Hashes a number and returns the result as a hexadecimal string.
-   */
-  fun asHex(number: Long): String = SipHashFactory.toHex(asBytes(number))
-
-  /**
-   * Hashes a number and returns the result as a hexadecimal string.
-   */
-  fun asHex(number: Number): String = SipHashFactory.toHex(asBytes(number))
-
-  /**
-   * Hashes an input stream and returns the result as a hexadecimal string.
+   * Calculates the SipHash as a [Long] number from input read via the specified [stream].
+   *
+   * Note: this method is NOT thread safe.
    */
   @Throws(IOException::class)
-  fun asHex(stream: InputStream): String = SipHashFactory.toHex(asBytes(stream))
-
-  /**
-   * Hashes an input stream and returns the result as a long number.
-   */
-  @Throws(IOException::class)
-  fun asLong(stream: InputStream): Long {
+  fun computeAsLong(stream: InputStream): Long {
     reset()
     var aByte = stream.read()
     while (-1 != aByte) {
@@ -135,10 +74,97 @@ class SipHash internal constructor(private val key: ByteArray) {
   }
 
   /**
-   * Hashes an input stream and return the result as a [ByteArray].
+   * Returns a SIP hash for the passed string, or null of it's empty.
+   */
+  fun computeAsLong(string: String?, ignoreCase: Boolean = false): ByteArray? =
+    if (string.isNullOrBlank()) {
+      null
+    } else {
+      val normalized = if (ignoreCase) string.toLowerCase() else string
+      computeAsBytes(normalized.toByteArray())
+    }
+
+  /**
+   * Returns a SIP hash for the passed [ByteArray], or null of it's empty.
+   */
+  fun computeAsLong(buffer: ByteArray?): ByteArray? =
+    if (true == buffer?.isNotEmpty()) computeAsBytes(buffer) else null
+
+  /**
+   * Hashes a String value and return result as a [ByteArray].
+   */
+  fun computeOr(
+    string: String?,
+    ignoreCase: Boolean,
+    fallback: ByteArray = byteArrayOf()
+  ): ByteArray =
+    if (string.isNullOrEmpty()) {
+      fallback
+    } else {
+      val normalized = if (ignoreCase) string.toLowerCase() else string
+      computeAsBytes(normalized.toByteArray())
+    }
+
+  /**
+   * Hashes a long number and return result as a [ByteArray].
+   */
+  fun computeAsLong(number: Long): ByteArray =
+    computeAsBytes(SipHashFactory.longToBytes(number))
+
+  /**
+   * Hashes a number and return result as a [ByteArray].
+   */
+  fun computeAsLong(number: Number): ByteArray =
+    computeAsLong(number.toLong())
+
+  /**
+   * Hashes a [ByteArray] and returns the result as a hexadecimal string.
+   */
+  fun computeAsHex(bytes: ByteArray): String =
+    SipHashFactory.toHex(computeAsBytes(bytes))
+
+  /**
+   * Hashes a String and returns the result as a hexadecimal string.
+   */
+  fun computeAsHex(string: String?, ignoreCase: Boolean = false): String? =
+    if (string.isNullOrEmpty()) {
+      null
+    } else {
+      val normalized = if (ignoreCase) string.toLowerCase() else string
+      SipHashFactory.toHex(computeAsBytes(normalized.toByteArray()))
+    }
+
+  /**
+   * Hashes a number and returns the result as a hexadecimal string.
+   */
+  fun computeAsHex(number: Long): String =
+    SipHashFactory.toHex(computeAsLong(number))
+
+  /**
+   * Hashes a number and returns the result as a hexadecimal string.
+   */
+  fun computeAsHex(number: Number): String =
+    SipHashFactory.toHex(computeAsLong(number))
+
+  /**
+   * Hashes an input stream and returns the result as a hexadecimal string.
    */
   @Throws(IOException::class)
-  fun asBytes(stream: InputStream): ByteArray = SipHashFactory.longToBytes(asLong(stream))
+  fun computeAsHex(stream: InputStream): String =
+    SipHashFactory.toHex(computeAsBytes(stream))
+
+  /**
+   * Hashes an input stream and returns the result as a [ByteArray].
+   */
+  @Throws(IOException::class)
+  fun computeAsBytes(stream: InputStream): ByteArray =
+    SipHashFactory.longToBytes(computeAsLong(stream))
+
+  /**
+   * Hashes the specified [bytes] and returns the result as a [ByteArray].
+   */
+  fun computeAsBytes(bytes: ByteArray): ByteArray =
+    SipHashFactory.longToBytes(computeAsLong(bytes))
 
   /**
    * The current state of hash, v0,v1,v2,v3, as hex digits in BigEndian format.

@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.4 (Mar 29 2020)
+    Renamed methods in SipHash and introduced an option to ignore case for strings.
+
 1.1.3 (Mar 29 2020)
     Added a couple of constants for time calculations.
 
