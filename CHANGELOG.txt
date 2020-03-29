@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.1 (Mar 29 2020)
+    Added implementations a Map with ByteArray keys.
+
 1.1.0 (Mar 29 2020)
     Added implementations for Base62, Base64, and SipHash, and few other handy functions
     to deal with byte arrays and byte-based conversions.
