@@ -29,7 +29,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStreamReader
-import java.nio.charset.StandardCharsets
 
 /**
  * Handles loading k:v properties into a [Properties] class using *.properties files.
@@ -53,7 +52,7 @@ open class Properties protected constructor(private val props: java.util.Propert
     checkNotDestroyed()
 
     fun mergeFrom(fis: FileInputStream) {
-      InputStreamReader(fis, StandardCharsets.UTF_8).use {
+      InputStreamReader(fis, Charsets.UTF_8).use {
         val fileProps = java.util.Properties()
         fileProps.load(it)
         fileProps.forEach { k, v -> props[k.toString()] = v }

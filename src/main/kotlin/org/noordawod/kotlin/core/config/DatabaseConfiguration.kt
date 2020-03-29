@@ -39,8 +39,20 @@ open class DatabaseConfiguration constructor(
   val db: String
 ) {
   companion object {
+    /**
+     * The default encoding is UTF-8.
+     */
     const val DEFAULT_ENCODING: String = "utf8"
+
+    /**
+     * Default collation is UTF-8, general and case-insensitive.
+     */
     const val DEFAULT_COLLATION: String = "utf8_general_ci"
+
+    /**
+     * Extended collation is UTF-8 and up to 4 bytes in length, suitable for storing
+     * emoticons and other recent additions to the Unicode universe.
+     */
     const val EXTENDED_COLLATION: String = "utf8mb4_general_ci"
   }
 }

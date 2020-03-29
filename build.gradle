@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin'
-version = '1.0.5'
+version = '1.1.0'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 buildscript {
@@ -58,4 +58,5 @@ dependencies {
     implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jackson}"
     implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.jackson}"
     implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
+    implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
 }

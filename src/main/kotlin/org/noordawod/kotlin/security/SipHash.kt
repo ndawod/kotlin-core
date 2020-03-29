@@ -1,0 +1,349 @@
+/*
+ * The MIT License
+ *
+ * Copyright 2020 Noor Dawod. All rights reserved.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is furnished to do
+ * so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "MagicNumber")
+
+package org.noordawod.kotlin.security
+
+import java.io.IOException
+import java.io.InputStream
+
+/**
+ * An implementation of SipHashes algorithm for hashing short, arbitrary data. Adapted from
+ * original code written by Forward Computing and Control Pty. Ltd. (www.forward.com.au).
+ *
+ * Note: this class is NOT thread-safe.
+ */
+@Suppress("TooManyFunctions")
+class SipHash internal constructor(private val key: ByteArray) {
+  private var value0: Long = 0
+  private var value1: Long = 0
+  private var value2: Long = 0
+  private var value3: Long = 0
+  private var byteCounter: Byte = 0 // hold number of msg bytes % 256
+  private var accumulator: Long = 0 // accumulates bytes until we have 8 in number
+  private var accumulatorCount = 0 // counter of bytes being accumulated
+
+  /**
+   * Returns a SIP hash for the passed string, or null of it's empty.
+   */
+  fun compute(string: String?): ByteArray? =
+    if (string.isNullOrBlank()) null else asBytes(string)
+
+  /**
+   * Returns a SIP hash for the passed [ByteArray], or null of it's empty.
+   */
+  fun compute(buffer: ByteArray?): ByteArray? =
+    if (true == buffer?.isNotEmpty()) asBytes(buffer) else null
+
+  /**
+   * Hashes a [ByteArray] and return result as a long number.
+   */
+  fun asLong(bytes: ByteArray): Long {
+    reset()
+    for (aByte in bytes) {
+      updateHash(aByte)
+    }
+    return finish() // result in v0
+  }
+
+  /**
+   * Hashes a [ByteArray] and return result as a [ByteArray].
+   */
+  fun asBytes(bytes: ByteArray): ByteArray = SipHashFactory.longToBytes(asLong(bytes))
+
+  /**
+   * Hashes a String value and return result as a [ByteArray].
+   */
+  fun asBytes(string: String?): ByteArray? =
+    if (string.isNullOrEmpty()) null else asBytes(string.toByteArray())
+
+  /**
+   * Hashes a String value and return result as a [ByteArray].
+   */
+  fun asBytesOrEmpty(string: String?, fallback: ByteArray = byteArrayOf()): ByteArray =
+    if (string.isNullOrEmpty()) fallback else asBytes(string.toByteArray())
+
+  /**
+   * Hashes a long number and return result as a [ByteArray].
+   */
+  fun asBytes(number: Long): ByteArray = asBytes(SipHashFactory.longToBytes(number))
+
+  /**
+   * Hashes a number and return result as a [ByteArray].
+   */
+  fun asBytes(number: Number): ByteArray = asBytes(number.toLong())
+
+  /**
+   * Hashes a [ByteArray] and returns the result as a hexadecimal string.
+   */
+  fun asHex(bytes: ByteArray): String = SipHashFactory.toHex(asBytes(bytes))
+
+  /**
+   * Hashes a String and returns the result as a hexadecimal string.
+   */
+  fun asHex(string: String): String = SipHashFactory.toHex(asBytes(string.toByteArray()))
+
+  /**
+   * Hashes a number and returns the result as a hexadecimal string.
+   */
+  fun asHex(number: Long): String = SipHashFactory.toHex(asBytes(number))
+
+  /**
+   * Hashes a number and returns the result as a hexadecimal string.
+   */
+  fun asHex(number: Number): String = SipHashFactory.toHex(asBytes(number))
+
+  /**
+   * Hashes an input stream and returns the result as a hexadecimal string.
+   */
+  @Throws(IOException::class)
+  fun asHex(stream: InputStream): String = SipHashFactory.toHex(asBytes(stream))
+
+  /**
+   * Hashes an input stream and returns the result as a long number.
+   */
+  @Throws(IOException::class)
+  fun asLong(stream: InputStream): Long {
+    reset()
+    var aByte = stream.read()
+    while (-1 != aByte) {
+      updateHash(aByte.toByte())
+      aByte = stream.read()
+    }
+    return finish() // result in v0
+  }
+
+  /**
+   * Hashes an input stream and return the result as a [ByteArray].
+   */
+  @Throws(IOException::class)
+  fun asBytes(stream: InputStream): ByteArray = SipHashFactory.longToBytes(asLong(stream))
+
+  /**
+   * The current state of hash, v0,v1,v2,v3, as hex digits in BigEndian format.
+   */
+  override fun toString(): String {
+    var result = ""
+    var bytes: ByteArray = convertToBytes(value0)
+    var hexStr: String = SipHashFactory.toHex(bytes, 0, bytes.size)
+    result += "v0=$hexStr "
+    bytes = convertToBytes(value1)
+    hexStr = SipHashFactory.toHex(bytes, 0, bytes.size)
+    result += "v1=$hexStr "
+    bytes = convertToBytes(value2)
+    hexStr = SipHashFactory.toHex(bytes, 0, bytes.size)
+    result += "v2=$hexStr "
+    bytes = convertToBytes(value3)
+    hexStr = SipHashFactory.toHex(bytes, 0, bytes.size)
+    result += "v3=$hexStr "
+    return result
+  }
+
+  private fun reset() {
+    value0 = 0x736f6d6570736575L
+    value1 = 0x646f72616e646f6dL
+    value2 = 0x6c7967656e657261L
+    value3 = 0x7465646279746573L
+    val long0 = SipHashFactory.bytesToLong(key, 0)
+    val long1 = SipHashFactory.bytesToLong(key, 8)
+    value0 = value0 xor long0
+    value1 = value1 xor long1
+    value2 = value2 xor long0
+    value3 = value3 xor long1
+    byteCounter = 0 // to track number of msg byte % 256
+  }
+
+  /**
+   * Add a byte to the hash and increment the message length count % 256.
+   *
+   * The bytes are accumulated until there are 8 of them and then the
+   * corresponding long (read from the bytes as LittleEndian format) is added to
+   * the hash.
+   */
+  private fun updateHash(b: Byte) {
+    byteCounter++ // mod 256 since this counter is only 1 byte
+    accumulator = accumulator or (b.toLong() and 0xFF shl accumulatorCount * 8)
+    accumulatorCount++
+    if (accumulatorCount >= ByteUtils.LONG_BYTES) {
+      // hash it now
+      value3 = value3 xor accumulator
+      sipHashRound()
+      sipHashRound()
+      value0 = value0 xor accumulator
+      // clear counter and long
+      accumulatorCount = 0
+      accumulator = 0
+    }
+  }
+
+  /**
+   * Call this to complete the hash by processing any remaining bytes and adding
+   * the msg length.
+   *
+   * This method returns the hash as long. Use one of the utility methods,
+   * longToByteLE or longToByte to convert the long to bytes in LittleEndian or
+   * BigEndian format respectively and then use toHex to convert the [ByteArray] to a
+   * string of hex digits for display or transmission.
+   */
+  private fun finish(): Long {
+    val oldByteCounter = byteCounter
+
+    // Pad out the last long with zeros, leave one space for the message
+    // length % 256
+    while (accumulatorCount < ByteUtils.LONG_BYTES - 1) { // leave one byte for length
+      updateHash(0.toByte())
+    }
+
+    // add the message length
+    // this will force the last long to be added to the hash
+    updateHash(oldByteCounter)
+
+    // finish off the hash
+    value2 = value2 xor 0xFF
+    sipHashRound()
+    sipHashRound()
+    sipHashRound()
+    sipHashRound()
+
+    // calculate the final result
+    // over writes v0
+    val result = value0 xor value1 xor value2 xor value3
+    reset()
+    return result
+  }
+
+  /**
+   * Preform a siphash_round() on the current state.
+   */
+  private fun sipHashRound() {
+    value0 += value1
+    value2 += value3
+    value1 = rotateLeft(value1, 13)
+    value3 = rotateLeft(value3, 16)
+    value1 = value1 xor value0
+    value3 = value3 xor value2
+    value0 = rotateLeft(value0, 32)
+    value2 += value1
+    value0 += value3
+    value1 = rotateLeft(value1, 17)
+    value3 = rotateLeft(value3, 21)
+    value1 = value1 xor value2
+    value3 = value3 xor value0
+    value2 = rotateLeft(value2, 32)
+  }
+
+  companion object {
+    /**
+     * Rotate long left by shift bits. bits rotated off to the left are put back
+     * on the right.
+     */
+    private fun rotateLeft(l: Long, shift: Int): Long =
+      l shl shift or l ushr 64 - shift
+
+    /**
+     * Convert a long to bytes in BigEndian format (Java is a BigEndian platform).
+     */
+    private fun convertToBytes(value: Long): ByteArray {
+      val aByte = ByteArray(8)
+      for (loop in 0..7) {
+        aByte[7 - loop] = (value ushr 8 * loop and 0xFF).toByte()
+      }
+      return aByte
+    }
+  }
+}
+
+/**
+ * Helper extension function to convert a [String] to a [ByteArray] suitable for use as a
+ * [SipHash] key.
+ */
+fun String.toSipHashKey(): ByteArray = toByteArray(Charsets.ISO_8859_1).let {
+  require(16 == it.size) {
+    "String must be encoded in ${Charsets.ISO_8859_1.name()} " +
+      "and exactly 16 characters long."
+  }
+  it
+}
+
+/**
+ * Create a new [SipHash] object with a 16 byte key.
+ */
+class SipHashFactory constructor(private val key: ByteArray) {
+  init {
+    require(16 == key.size) { "Key must be exactly 16 bytes long." }
+  }
+
+  /**
+   * Returns a new [SipHash] instance.
+   *
+   * Note: [SipHash] is NOT thread-safe.
+   */
+  fun newInstance(): SipHash = SipHash(key)
+
+  companion object {
+    /**
+     * Converts [ByteArray] in LittleEndian format to a long.
+     */
+    fun bytesToLong(bytes: ByteArray, offset: Int): Long {
+      require(bytes.size - offset >= 8) {
+        "Less then 8 bytes starting from offset: $offset"
+      }
+      var result: Long = 0
+      for (loop in 0..7) {
+        result = result or (bytes[loop + offset].toLong() and 0xFF shl 8 * loop)
+      }
+      return result
+    }
+
+    /**
+     * Convert a long to bytes in LittleEndian format.
+     */
+    fun longToBytes(value: Long): ByteArray {
+      val bytes = ByteArray(8)
+      for (loop in 0..7) {
+        bytes[loop] = (value ushr 8 * loop and 0xFF).toByte()
+      }
+      return bytes
+    }
+
+    /**
+     * Convert a [ByteArray] to Hex Digits.
+     */
+    fun toHex(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size): String {
+      require(bytes.size - offset >= length) {
+        "Less then $length bytes starting from offset: $offset"
+      }
+      val buffer = CharArray(length * 2)
+      var loop = 0
+      var bufferPos = 0
+      var anInt: Int
+      while (loop < length) {
+        anInt = bytes[offset + loop++].toInt()
+        buffer[bufferPos++] = ByteUtils.HEX_CHARS[anInt ushr 4 and 0x0F]
+        buffer[bufferPos++] = ByteUtils.HEX_CHARS[anInt and 0x0F]
+      }
+      return String(buffer)
+    }
+  }
+}

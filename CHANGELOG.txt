@@ -4,6 +4,10 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.0 (Mar 29 2020)
+    Added implementations for Base62, Base64, and SipHash, and few other handy functions
+    to deal with byte arrays and byte-based conversions.
+
 1.0.5 (Mar 26 2020)
     Fix a small error in configuring the connection encoding ("utf8mb4" -> "utf8").
 
