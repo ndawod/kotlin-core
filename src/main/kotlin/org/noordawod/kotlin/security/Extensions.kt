@@ -30,14 +30,7 @@ package org.noordawod.kotlin.security
  * an empty [ByteArray] otherwise.
  */
 fun String?.byteArray(siphash: SipHash, trim: Boolean = true): ByteArray =
-  siphash.computeOr(if (trim) this?.trim() else this)
-
-/**
- * Hashes a [String] value after converting it to lower-case using [SipHash] and returns the
- * value as a [ByteArray] on success, an empty [ByteArray] otherwise.
- */
-fun String?.lowerCaseByteArray(siphash: SipHash, trim: Boolean = true): ByteArray =
-  siphash.computeOr((if (trim) this?.trim() else this)?.toLowerCase())
+  siphash.asByteArrayOr(if (trim) this?.trim() else this)
 
 /**
  * Returns a [ByteArray] representation of this [Base62]-encoded [String] value.
@@ -48,21 +41,21 @@ fun String?.base62(fallback: ByteArray = byteArrayOf()): ByteArray =
 /**
  * Hashes a [ByteArray] using [SipHash] and returns the value as a hexadecimal [String].
  */
-fun ByteArray.hashId(siphash: SipHash): String = siphash.computeAsHex(this)
+fun ByteArray.hashId(siphash: SipHash): String = siphash.asHex(this)
 
 /**
  * Hashes an optional [ByteArray] using [SipHash] and returns the value as a
  * hexadecimal [String] on success, null otherwise.
  */
 fun ByteArray?.hashIdOrNull(siphash: SipHash): String? =
-  if (null == this) null else siphash.computeAsHex(this)
+  if (null == this) null else siphash.asHex(this)
 
 /**
  * Hashes an optional [ByteArray] using [SipHash] and returns the value as a
  * hexadecimal [String] on success, an empty [String] otherwise.
  */
 fun ByteArray?.hashIdOrEmpty(siphash: SipHash): String =
-  if (null == this) "" else siphash.computeAsHex(this)
+  if (null == this) "" else siphash.asHex(this)
 
 /**
  * Returns a [Base62] representation of this [ByteArray] value.
