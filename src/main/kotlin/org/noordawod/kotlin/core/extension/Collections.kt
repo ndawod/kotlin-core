@@ -21,42 +21,16 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group = 'org.noordawod.kotlin'
-version = '1.1.6'
-description = 'Auxiliary methods and functions for the Kotlin programming language.'
+@file:Suppress("unused")
 
-buildscript {
-    apply from: 'gradle/config.gradle'
+package org.noordawod.kotlin.core.extension
 
-    repositories {
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
+/**
+ * Returns an empty new [MutableMap] with the specified initial [capacity].
+ */
+fun <K, V> mutableMapWith(capacity: Int): MutableMap<K, V> = LinkedHashMap(capacity)
 
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}"
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://jitpack.io'
-    }
-}
-
-apply from: 'gradle/jvm.gradle'
-apply from: 'gradle/kotlin.gradle'
-apply from: 'gradle/detekt.gradle'
-
-dependencies {
-    implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jackson}"
-    implementation "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${versions.jackson}"
-    implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
-    implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
-}
+/**
+ * Returns an empty new [MutableList] with the specified initial [capacity].
+ */
+fun <V> mutableListWith(capacity: Int): MutableList<V> = ArrayList(capacity)

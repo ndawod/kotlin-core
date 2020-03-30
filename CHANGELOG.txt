@@ -4,6 +4,10 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.6 (Mar 30 2020)
+    Added a couple of extension functions to create mutable Maps or Lists with a specific
+    initial capacity.
+
 1.1.4-1.1.5 (Mar 29 2020)
     Renamed methods in SipHash and introduced an option to ignore case for strings.
 
