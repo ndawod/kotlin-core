@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.7 (Apr 1 2020)
+    Added "ipAddr" property to ServerConfiguration.
+
 1.1.6 (Mar 30 2020)
     Added a couple of extension functions to create mutable Maps or Lists with a specific
     initial capacity.

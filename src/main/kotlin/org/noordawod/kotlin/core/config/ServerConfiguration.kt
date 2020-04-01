@@ -33,6 +33,7 @@ package org.noordawod.kotlin.core.config
  */
 open class ServerConfiguration constructor(
   val host: String,
+  val ipAddr: String,
   val port: Int,
   val threads: ServerThreadsConfiguration,
   val buffer: ServerBufferConfiguration
