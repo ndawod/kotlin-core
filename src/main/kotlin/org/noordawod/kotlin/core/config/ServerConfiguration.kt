@@ -21,12 +21,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "CanBeParameter")
 
 package org.noordawod.kotlin.core.config
 
 /**
- * Defines configuration of an Undertow server when starting it up.
+ * Defines configuration of a typical multi-threaded server.
  *
  * @see <a href="https://tinyurl.com/t8yyhxm">Assembling a Server Manually</a>
  * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
@@ -37,10 +37,15 @@ open class ServerConfiguration constructor(
   val port: Int,
   val threads: ServerThreadsConfiguration,
   val buffer: ServerBufferConfiguration
-)
+) {
+  /**
+   * Returns the combination of this server's hostname and port, separated by a colon.
+   */
+  val hostAndPort: String = "$host:$port"
+}
 
 /**
- * Defines the threading configuration of an Undertow server.
+ * Defines the threading configuration of a multi-threaded server.
  *
  * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
  * @see <a href="http://xnio.jboss.org/">XNIO</a>
