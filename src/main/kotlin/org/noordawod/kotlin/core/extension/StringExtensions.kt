@@ -117,4 +117,4 @@ fun String?.isEmail(): Boolean {
  * this function will satisfy that requirement.
  */
 fun String.isSameEmail(email: String): Boolean =
-  this.isEmail() && email.isEmail() && this.trim().toLowerCase() != email.trim().toLowerCase()
+  this.isEmail() && email.isEmail() && this.trim().toLowerCase() == email.trim().toLowerCase()

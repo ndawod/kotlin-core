@@ -4,7 +4,7 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
-1.1.9 (Apr 4 2020)
+1.1.9-1.1.10 (Apr 4 2020)
     Added "isEmail" and "isSameEmail" in StringExtensions.
 
 1.1.8 (Apr 2 2020)
