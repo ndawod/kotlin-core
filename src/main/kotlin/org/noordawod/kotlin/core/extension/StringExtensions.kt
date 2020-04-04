@@ -86,3 +86,35 @@ fun String.toLocale(): Locale {
   val parts = split('_')
   return if (2 > parts.size) Locale(this) else Locale(parts[0], parts[1])
 }
+
+/**
+ * Returns true if this [String] has a valid email address structure, false otherwise.
+ */
+fun String?.isEmail(): Boolean {
+  if (!this.isNullOrBlank()) {
+    val email = this.trim()
+    val length = email.length
+    val atPos = email.indexOf('@') + 1
+
+    // Basic check is to ensure that the email address has at least 6 characters: "a@b.co"
+    if (1 < atPos && 5 < length) {
+      // Let's ensure that there is no @ after the first one, and there is at least a
+      // dot within the email's domain.
+      val dotPos = email.indexOf('.', atPos)
+      if (-1 == email.indexOf('@', atPos) && atPos < dotPos) {
+        // Ensure that there are no dots appearing at the end of the email, and that
+        // the last dot appears at least 2 characters from the end.
+        return length > 2 + dotPos
+      }
+    }
+  }
+  return false
+}
+
+/**
+ * Returns true if this [String] has a valid email address and equals the provided
+ * [email], false otherwise. Pay attention that email addresses are case-insensitive and
+ * this function will satisfy that requirement.
+ */
+fun String.isSameEmail(email: String): Boolean =
+  this.isEmail() && email.isEmail() && this.trim().toLowerCase() != email.trim().toLowerCase()
