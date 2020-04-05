@@ -35,8 +35,14 @@ fun String?.byteArray(siphash: SipHash, trim: Boolean = true): ByteArray =
 /**
  * Returns a [ByteArray] representation of this [Base62]-encoded [String] value.
  */
-fun String?.base62(fallback: ByteArray = byteArrayOf()): ByteArray =
-  if (null == this) fallback else ByteUtils.fromBase62(this)
+fun String.base62(): ByteArray = ByteUtils.fromBase62(this)
+
+/**
+ * Returns a [ByteArray] representation of this [Base62]-encoded [String] value on
+ * success, null otherwise.
+ */
+fun String?.base62(@Suppress("UNUSED_PARAMETER") jvm: ByteArray = byteArrayOf()): ByteArray? =
+  if (null == this) null else ByteUtils.fromBase62(this)
 
 /**
  * Hashes a [ByteArray] using [SipHash] and returns the value as a hexadecimal [String].
@@ -66,5 +72,5 @@ fun ByteArray.base62(): String = ByteUtils.toBase62(this)
  * Returns an optional [Base62] representation of this [ByteArray] value on success,
  * null otherwise.
  */
-fun ByteArray?.base62(fallback: String = ""): String =
-  if (null == this) fallback else ByteUtils.toBase62(this)
+fun ByteArray?.base62(@Suppress("UNUSED_PARAMETER") jvm: String = ""): String? =
+  if (null == this) null else ByteUtils.toBase62(this)
