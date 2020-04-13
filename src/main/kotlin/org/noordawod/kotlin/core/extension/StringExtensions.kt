@@ -96,6 +96,18 @@ fun String?.isEmail(): Boolean {
     val length = email.length
     val atPos = email.indexOf('@') + 1
 
+    // If either of these is not allowed.
+    if (
+      -1 < email.indexOf(' ') ||
+      -1 < email.indexOf(10.toChar()) ||
+      -1 < email.indexOf(13.toChar()) ||
+      -1 < email.indexOf(8.toChar()) ||
+      -1 < email.indexOf(0.toChar()) ||
+      -1 < email.indexOf(9.toChar())
+    ) {
+      return false;
+    }
+
     // Basic check is to ensure that the email address has at least 6 characters: "a@b.co"
     if (1 < atPos && 5 < length) {
       // Let's ensure that there is no @ after the first one, and there is at least a

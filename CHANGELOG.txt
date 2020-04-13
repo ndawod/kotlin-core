@@ -4,6 +4,9 @@ Latest version: 1.0.0
 
 This documents the changes between versions:
 
+1.1.13 (Apr 13 2020)
+    Fix isEmail() method to check for disallowed characters.
+
 1.1.12 (Apr 6 2020)
     Added a new ExecutorService class to simplify offloading code on different threads.
 
