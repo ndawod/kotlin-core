@@ -23,22 +23,23 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.core.config
+package org.noordawod.kotlin.db
+
+import java.sql.SQLException
 
 /**
- * An [Array] of [TranslationConfiguration].
+ * Generic database connection interface.
  */
-typealias TranslationsConfiguration = Array<TranslationConfiguration>
+interface Connection {
+  /**
+   * Executes the specified [statement] and returns how many rows were affected.
+   */
+  @Throws(SQLException::class)
+  fun execute(statement: String): Int
 
-/**
- * Defines the base directory location for a particular locale. The directory would contain
- * *.properties files containing lines in the form:
- *
- * key-id-1 = "Some localized message"
- * key-id-2 = "Another localized message"
- */
-@kotlinx.serialization.Serializable
-open class TranslationConfiguration constructor(
-  val locale: String,
-  val file: String
-)
+  /**
+   * Queries the database with the specified [statement] and returns the first result as an [Int].
+   */
+  @Throws(SQLException::class)
+  fun queryForLong(statement: String): Long
+}

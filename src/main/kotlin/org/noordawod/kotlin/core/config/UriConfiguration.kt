@@ -21,50 +21,45 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate", "CanBeParameter")
+@file:Suppress("unused")
 
 package org.noordawod.kotlin.core.config
 
 /**
- * Defines configuration of a typical multi-threaded server.
- *
- * @see <a href="https://tinyurl.com/t8yyhxm">Assembling a Server Manually</a>
- * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
+ * A configuration describing a URI comprising of protocol, host, port and base path.
  */
 @kotlinx.serialization.Serializable
-open class ServerConfiguration constructor(
+data class UriConfiguration constructor(
+  val protocol: String,
   val host: String,
-  val ipAddr: String,
-  val port: Int,
-  val threads: ServerThreadsConfiguration,
-  val buffer: ServerBufferConfiguration
+  val port: Int = 0,
+  val path: String = "/"
 ) {
-  /**
-   * Returns the combination of this server's hostname and port, separated by a colon.
-   */
-  val hostAndPort: String = "$host:$port"
+  @Suppress("MagicNumber")
+  override fun toString(): String {
+    val builder = StringBuilder(128)
+    if (host.isNotBlank()) {
+      if (protocol.isNotBlank()) {
+        builder.append(protocol)
+        builder.append(":")
+      }
+      builder.append("//")
+      builder.append(host)
+
+      // If the port is unusual (not 80 for http, and not 443 for https), we'll add it.
+      @Suppress("ComplexCondition", "MagicNumber")
+      if (
+        0 != port &&
+        (443 != port || !"https".equals(protocol, ignoreCase = true)) &&
+        (80 != port || !"http".equals(protocol, ignoreCase = true))
+      ) {
+        builder.append(":")
+        builder.append(port)
+      }
+    }
+    if (path.isNotBlank()) {
+      builder.append(path)
+    }
+    return builder.toString()
+  }
 }
-
-/**
- * Defines the threading configuration of a multi-threaded server.
- *
- * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
- * @see <a href="http://xnio.jboss.org/">XNIO</a>
- */
-@kotlinx.serialization.Serializable
-data class ServerThreadsConfiguration constructor(
-  val io: Int,
-  val worker: Int
-)
-
-/**
- * Defines the configuration a buffer pool tied to listeners.
- *
- * @see <a href="https://tinyurl.com/v2c7p3u">Buffer Pool</a>
- * @see <a href="https://tinyurl.com/ww4xyct">Listeners</a>
- */
-@kotlinx.serialization.Serializable
-data class ServerBufferConfiguration constructor(
-  val size: Int,
-  val perRegion: Int
-)

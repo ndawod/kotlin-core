@@ -90,6 +90,7 @@ fun String.toLocale(): Locale {
 /**
  * Returns true if this [String] has a valid email address structure, false otherwise.
  */
+@Suppress("ComplexCondition", "MagicNumber")
 fun String?.isEmail(): Boolean {
   if (!this.isNullOrBlank()) {
     val email = this.trim()
@@ -105,7 +106,7 @@ fun String?.isEmail(): Boolean {
       -1 < email.indexOf(0.toChar()) ||
       -1 < email.indexOf(9.toChar())
     ) {
-      return false;
+      return false
     }
 
     // Basic check is to ensure that the email address has at least 6 characters: "a@b.co"

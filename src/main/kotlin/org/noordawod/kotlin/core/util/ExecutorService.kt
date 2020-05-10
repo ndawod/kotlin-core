@@ -98,7 +98,7 @@ class ExecutorService private constructor(keepAlive: Duration) {
   }
 
   private fun ensureNotDestroyed() {
-    if (isDestroyed) {
+    check(!isDestroyed) {
       throw IllegalStateException("This executor service instance is destroyed.")
     }
   }

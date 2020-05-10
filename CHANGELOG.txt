@@ -1,11 +1,11 @@
 Project: kotlin-core
 Description: Auxiliary methods and functions for the Kotlin programming language.
-Latest version: 1.0.0
 
 This documents the changes between versions:
 
-1.1.13 (Apr 13 2020)
-    Fix isEmail() method to check for disallowed characters.
+2.0.0 (May 9 2020)
+    Dropped using FasterXML for parsing Yaml files, opted to use Kotlin's serialization library.
+    Added a simple file-based database migrator runner.
 
 1.1.12 (Apr 6 2020)
     Added a new ExecutorService class to simplify offloading code on different threads.
