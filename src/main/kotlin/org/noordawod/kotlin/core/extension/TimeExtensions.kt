@@ -30,7 +30,7 @@ import kotlin.math.absoluteValue
 /**
  * How many milliseconds in one second.
  */
-const val MILLIS_IN_1_SECOND: Long = 1_000L
+const val MILLIS_IN_1_SECOND: Long = 1000L
 
 /**
  * How many seconds in one hour.

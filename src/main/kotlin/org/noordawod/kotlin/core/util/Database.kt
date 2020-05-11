@@ -25,9 +25,7 @@
 
 package org.noordawod.kotlin.core.util
 
-import java.sql.DriverManager
-import java.sql.SQLException
-import java.util.regex.Pattern
+import net.moznion.uribuildertiny.URIBuilderTiny
 
 /**
  * Utility functions for databases.
@@ -49,6 +47,77 @@ object Database {
   const val DOUBLE_QUOTE_CHAR: Char = '"'
 
   /**
+   * Default collation is wide and even includes emoticons.
+   */
+  const val DEFAULT_COLLATION: String = "utf8mb4_general_ci"
+
+  /**
+   * How long in milliseconds until a client can connect to a server.
+   */
+  const val DEFAULT_CONNECT_TIMEOUT: Long = 2000L
+
+  /**
+   * How long in milliseconds until a socket can connect to a destination.
+   */
+  const val DEFAULT_SOCKET_TIMEOUT: Long = 2000L
+
+  /**
+   * Sets the timezone of the server.
+   */
+  const val DEFAULT_TIMEZONE: String = "UTC"
+
+  /**
+   * Returns the database connection URI string based on input parameters.
+   *
+   * @param protocol the associated URI protocol (scheme) for this JDBC driver
+   * @param host host name of the database server
+   * @param port database server's connection port
+   * @param user username to authenticate against the database server
+   * @param pass password to authenticate against the database server
+   * @param schema main database schema name to attach to
+   * @param collation collation to choose after connecting to database server
+   * @param connectTimeout timeout in seconds to wait for a connection
+   * @param socketTimeout timeout in seconds for the socket to connect
+   * @param serverTimezone timezone to use in the server after connection
+   * @return the final URI to connect to the JDBC database server
+   *
+   * @see <a href="https://tinyurl.com/yagm2clw">Connector/J Configuration Properties</a>
+   */
+  @Suppress("LongParameterList")
+  fun uri(
+    protocol: String,
+    host: String,
+    port: Int,
+    user: String,
+    pass: String,
+    schema: String,
+    collation: String = DEFAULT_COLLATION,
+    connectTimeout: Long = DEFAULT_CONNECT_TIMEOUT,
+    socketTimeout: Long = DEFAULT_SOCKET_TIMEOUT,
+    serverTimezone: String = DEFAULT_TIMEZONE
+  ): String = URIBuilderTiny()
+    .setScheme(protocol)
+    .setHost(host)
+    .setPort(port)
+    .setPaths(schema)
+    .setQueryParameters(
+      mapOf<String, Any>(
+        "user" to user,
+        "password" to pass,
+        "connectionCollation" to collation,
+        "useUnicode" to true.toString(),
+        "useSSL" to false.toString(),
+        "useCompression" to false.toString(),
+        "autoReconnect" to true.toString(),
+        "connectTimeout" to "$connectTimeout",
+        "socketTimeout" to "$socketTimeout",
+        "serverTimezone" to serverTimezone
+      )
+    )
+    .build()
+    .toString()
+
+  /**
    * The characters that most databases need to escape.
    */
   @Suppress("MagicNumber")
@@ -65,14 +134,14 @@ object Database {
   /**
    * Matches one or more white-space characters.
    */
-  val WHITE_SPACES = Pattern.compile("\\s+")
+  val WHITE_SPACES = java.util.regex.Pattern.compile("\\s+")
 
   /**
    * Prints a list of database drivers currently loaded in the JVM. Used primarily for
    * debugging.
    */
   fun showDatabaseDrivers(uri: String) {
-    val drivers = DriverManager.getDrivers()
+    val drivers = java.sql.DriverManager.getDrivers()
     if (null == drivers || !drivers.hasMoreElements()) {
       System.err.println("No database drivers are registered!")
     } else {
@@ -82,7 +151,7 @@ object Database {
         val acceptsURL = try {
           driver.acceptsURL(uri)
           true
-        } catch (ignored: SQLException) {
+        } catch (ignored: java.sql.SQLException) {
           false
         }
         println("  Class: " + driver.javaClass.name)

@@ -21,11 +21,11 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("unused")
 
 package org.noordawod.kotlin.core.config
 
-import net.moznion.uribuildertiny.URIBuilderTiny
+import org.noordawod.kotlin.core.util.Database
 
 /**
  * Generic database configuration suitable for most database drivers.
@@ -38,9 +38,9 @@ data class DatabaseConfiguration constructor(
   val driver: String,
 
   /**
-   * The associated URI scheme (protocol) for this JDBC driver.
+   * The associated URI protocol (scheme) for this JDBC driver.
    */
-  val scheme: String,
+  val protocol: String,
 
   /**
    * IP address of the database server.
@@ -75,68 +75,7 @@ data class DatabaseConfiguration constructor(
   /**
    * Returns the connection URI string for this instance.
    */
-  val uri: String = uri(driver, host, port, user, pass, schema)
-
-  companion object {
-    /**
-     * Default collation is UTF-8, general and case-insensitive.
-     */
-    const val DEFAULT_COLLATION: String = "utf8mb4_general_ci"
-
-    /**
-     * How long in milliseconds until a client can connect to a server.
-     */
-    const val DEFAULT_CONNECT_TIMEOUT: Long = 2_000L
-
-    /**
-     * How long in milliseconds until a socket can connect to a destination.
-     */
-    const val DEFAULT_SOCKET_TIMEOUT: Long = 2_000L
-
-    /**
-     * Sets the timezone of the server.
-     */
-    const val DEFAULT_TIMEZONE: String = "UTC"
-
-    /**
-     * Returns the connection URI string based in input parameters.
-     *
-     * @see <a href="https://tinyurl.com/yagm2clw">Connector/J Configuration Properties</a>
-     */
-    @Suppress("LongParameterList")
-    fun uri(
-      scheme: String,
-      host: String,
-      port: Int,
-      user: String,
-      pass: String,
-      schema: String,
-      collation: String = DEFAULT_COLLATION,
-      connectTimeout: Long = DEFAULT_CONNECT_TIMEOUT,
-      socketTimeout: Long = DEFAULT_SOCKET_TIMEOUT,
-      serverTimezone: String = DEFAULT_TIMEZONE
-    ): String = URIBuilderTiny()
-      .setScheme(scheme)
-      .setHost(host)
-      .setPort(port)
-      .setPaths(schema)
-      .setQueryParameters(
-        mapOf<String, Any>(
-          "user" to user,
-          "password" to pass,
-          "connectionCollation" to collation,
-          "useUnicode" to true.toString(),
-          "useSSL" to false.toString(),
-          "useCompression" to false.toString(),
-          "autoReconnect" to true.toString(),
-          "connectTimeout" to "$connectTimeout",
-          "socketTimeout" to "$socketTimeout",
-          "serverTimezone" to serverTimezone
-        )
-      )
-      .build()
-      .toString()
-  }
+  val uri: String = Database.uri(protocol, host, port, user, pass, schema)
 }
 
 /**
@@ -150,9 +89,9 @@ data class DatabaseMigrationConfiguration constructor(
   val driver: String,
 
   /**
-   * The associated URI scheme (protocol) for this JDBC driver.
+   * The associated URI protocol (scheme) for this JDBC driver.
    */
-  val scheme: String,
+  val protocol: String,
 
   /**
    * IP address of the database server.
@@ -192,7 +131,7 @@ data class DatabaseMigrationConfiguration constructor(
   /**
    * Returns the connection URI string for this instance.
    */
-  val uri: String = DatabaseConfiguration.uri(scheme, host, port, user, pass, schema)
+  val uri: String = Database.uri(protocol, host, port, user, pass, schema)
 }
 
 /**
@@ -206,9 +145,9 @@ data class DatabasePoolConfiguration constructor(
   val driver: String,
 
   /**
-   * The associated URI scheme (protocol) for this JDBC driver.
+   * The associated URI protocol (scheme) for this JDBC driver.
    */
-  val scheme: String,
+  val protocol: String,
 
   /**
    * IP address of the database server.
@@ -248,7 +187,7 @@ data class DatabasePoolConfiguration constructor(
   /**
    * Returns the connection URI string for this instance.
    */
-  val uri: String = DatabaseConfiguration.uri(scheme, host, port, user, pass, schema)
+  val uri: String = Database.uri(protocol, host, port, user, pass, schema)
 }
 
 /**

@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.0.1 (May 11 2020)
+    Fixed a bug when generating a database URI.
+
 2.0.0 (May 9 2020)
     Dropped using FasterXML for parsing Yaml files, opted to use Kotlin's serialization library.
     Added a simple file-based database migrator runner.
