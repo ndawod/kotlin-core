@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.0.2 (May 11 2020)
+    Fixed a bug when parsing the SQL migration file.
+
 2.0.1 (May 11 2020)
     Fixed a bug when generating a database URI.
 

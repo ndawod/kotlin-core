@@ -35,7 +35,7 @@ import java.util.regex.Pattern
 /**
  * Carriage-Return [Pattern] matcher.
  */
-private val CR_PATTERN = Pattern.compile("\\n")
+private val CR_PATTERN = Pattern.compile("\\r")
 
 /**
  * This class can migrate the database schema to its most recent defined version (above).
@@ -76,20 +76,20 @@ class Migrator constructor(
     println("- Current version: $nextVersion")
 
     // Go over all migrations and run them one after the other.
-    for (tableMigration in migrations) {
+    for (migration in migrations) {
       // Check if the migrations table is locked.
       if (isLocked) {
         throw SQLException("Migration table is locked, is another process active?")
       }
 
       // Get the next migration plan and check if it's already executed.
-      if (tableMigration.version <= nextVersion) {
+      if (migration.version <= nextVersion) {
         continue
       }
 
       // Migration plans must be continuous.
       nextVersion++
-      if (tableMigration.version != nextVersion) {
+      if (migration.version != nextVersion) {
         // Either this is a migration we did before, or out of sync.
         throw SQLException(
           "Migration plan #$nextVersion is not continuous," +
@@ -111,11 +111,11 @@ class Migrator constructor(
 
       // Perform the upgrade command.
       try {
-        lastCommand = performMigration(tableMigration, nextVersion)
+        lastCommand = performMigration(migration, nextVersion)
       } catch (e: SQLException) {
         migrationError = e
       } finally {
-        performFinally(tableMigration, migrationError, lastCommand)
+        performFinally(migration, migrationError, lastCommand)
       }
     }
 
@@ -159,7 +159,7 @@ class Migrator constructor(
 
     // Read all commands in the upgrade file.
     val upgradeCommands: String = readFile(upgradeFile)
-      ?: throw SQLException("Migration plan #$nextVersion is empty! ()")
+      ?: throw SQLException("Migration plan #$nextVersion is empty! ($upgradeFile)")
 
     // Execute the pre-execution code.
     migration.executePre(connection)
@@ -278,8 +278,8 @@ class Migrator constructor(
   }
 
   private fun parseCommands(commands: String): List<String> {
-    return ArrayList<String>(512).apply {
-      // Flatten the SQL commands into a giant one-liner ending with a CR.
+    return ArrayList<String>(1024).apply {
+      // Flatten the SQL commands into a giant one-liner ending with a LF.
       val sqlDump = CR_PATTERN.matcher(commands).replaceAll(" ") + "\n"
 
       // Scan the string looking for individual commands ending with a semi colon.
