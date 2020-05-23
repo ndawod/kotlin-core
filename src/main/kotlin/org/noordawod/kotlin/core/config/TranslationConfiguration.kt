@@ -38,7 +38,7 @@ typealias TranslationsConfiguration = Array<TranslationConfiguration>
  * key-id-2 = "Another localized message"
  */
 @kotlinx.serialization.Serializable
-open class TranslationConfiguration constructor(
+data class TranslationConfiguration constructor(
   val locale: String,
   val file: String
 )

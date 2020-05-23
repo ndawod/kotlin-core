@@ -32,7 +32,7 @@ package org.noordawod.kotlin.core.config
  * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
  */
 @kotlinx.serialization.Serializable
-open class ServerConfiguration constructor(
+data class ServerConfiguration constructor(
   val host: String,
   val ipAddr: String,
   val port: Int,
