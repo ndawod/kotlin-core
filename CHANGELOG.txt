@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.2.0 (May 24 2020)
+    Removed all database-related code to kotlin-ormlite.
+
 2.1.0 (May 24 2020)
     Remove FasterXML dependency.
 
