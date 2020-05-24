@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin'
-version = '2.0.3'
+version = '2.1.0'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 apply plugin: 'kotlinx-serialization'
@@ -57,8 +57,6 @@ apply from: 'gradle/kotlin.gradle'
 apply from: 'gradle/detekt.gradle'
 
 dependencies {
-    implementation "com.fasterxml.jackson.core:jackson-databind:${versions.jackson}"
-    implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${versions.jackson}"
     implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
     implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
 }

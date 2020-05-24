@@ -25,8 +25,6 @@
 
 package org.noordawod.kotlin.security
 
-import com.fasterxml.jackson.annotation.JsonCreator
-import com.fasterxml.jackson.annotation.JsonValue
 import java.util.concurrent.ThreadLocalRandom
 import java.util.regex.Pattern
 import javax.xml.bind.DatatypeConverter
@@ -356,14 +354,12 @@ enum class ByteArrayStrength(val length: Int) {
    */
   SECRET(ByteArrayLength.SECRET);
 
-  @JsonValue
   override fun toString(): String = name
 
   companion object {
     /**
      * Returns a [ByteArrayStrength] for a valid [strength], [fallback] otherwise.
      */
-    @JsonCreator
     fun from(strength: Int, fallback: ByteArrayStrength = NORMAL): ByteArrayStrength {
       for (value in values()) {
         if (value.length == strength) {
