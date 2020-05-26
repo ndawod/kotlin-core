@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package org.noordawod.kotlin.core.util
 
@@ -30,31 +30,19 @@ import org.noordawod.kotlin.core.extension.withoutTrailingSlash
 
 /**
  * Let the app know in which environment they're executing in.
+ *
+ * @param identifier a machine-friendly identifier with all characters lower-cased
+ * @param label a human-friendly identifier
+ * @param isDevel whether this is the [DEVEL] environment
+ * @param isBeta whether this is the [BETA] environment
+ * @param isProduction whether this is the [PRODUCTION] environment
+ *
  */
 enum class Environment constructor(
-  /**
-   * A machine-friendly identifier with all characters lower-cased.
-   */
   val identifier: String,
-
-  /**
-   * A human-friendly identifier.
-   */
   val label: String,
-
-  /**
-   * Whether this is the [DEVEL] environment.
-   */
   val isDevel: Boolean,
-
-  /**
-   * Whether this is the [BETA] environment.
-   */
   val isBeta: Boolean,
-
-  /**
-   * Whether this is the [PRODUCTION] environment.
-   */
   val isProduction: Boolean
 ) {
   DEVEL("devel", "Development", true, false, false),

@@ -32,6 +32,8 @@ import java.util.TreeMap
 
 /**
  * Provides support for a [Map] where the keys are of type [ByteArray].
+ *
+ * @param V types of values that can be stored in this [ByteArrayMap]
  */
 class ByteArrayMap<V> : TreeMap<ByteArray, V>(COMPARATOR) {
   /**
@@ -95,6 +97,8 @@ class ByteArrayComparator : Comparator<ByteArray> {
 
 /**
  * Provides wrapping of [ByteArray] values that can be compared using [Comparable].
+ *
+ * @param bytes the bytes to wrap
  */
 class ByteArrayWrapper private constructor(val bytes: ByteArray) : Comparable<ByteArrayWrapper> {
   override operator fun compareTo(other: ByteArrayWrapper): Int =

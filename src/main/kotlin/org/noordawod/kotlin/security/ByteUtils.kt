@@ -285,6 +285,11 @@ object ByteArrayLength {
   const val SHORT: Int = 16
 
   /**
+   * A [ByteArray] with a capacity to hold either an IPv4 or IPv6 address.
+   */
+  const val IP_ADDR: Int = SHORT
+
+  /**
    * A [ByteArray] with a capacity of 17 bytes, suitable for storing a MQTT client identifier.
    */
   const val MQTT: Int = 17
@@ -312,6 +317,8 @@ object ByteArrayLength {
 
 /**
  * Lengths of common [ByteArray] keys for storing hashes in database.
+ *
+ * @param length strength of this instance
  */
 enum class ByteArrayStrength(val length: Int) {
   /**
@@ -328,6 +335,11 @@ enum class ByteArrayStrength(val length: Int) {
    * A [ByteArray] with a capacity of 16 bytes.
    */
   SHORT(ByteArrayLength.SHORT),
+
+  /**
+   * A [ByteArray] with a capacity to hold either an IPv4 or IPv6 address.
+   */
+  IP_ADDR(ByteArrayLength.IP_ADDR),
 
   /**
    * A [ByteArray] with a capacity of 17 bytes, suitable for storing a MQTT client identifier.

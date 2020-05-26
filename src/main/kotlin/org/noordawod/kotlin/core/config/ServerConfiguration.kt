@@ -28,6 +28,12 @@ package org.noordawod.kotlin.core.config
 /**
  * Defines configuration of a typical multi-threaded server.
  *
+ * @param host the public host name of this server
+ * @param ipAddr which IP address to bind to when starting the server
+ * @param port which port to bind to when starting the server
+ * @param threads configuration to run a multi-threaded server properly
+ * @param buffer configuration for the buffer pool tied to listeners
+ *
  * @see <a href="https://tinyurl.com/t8yyhxm">Assembling a Server Manually</a>
  * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
  */
@@ -48,6 +54,9 @@ data class ServerConfiguration constructor(
 /**
  * Defines the threading configuration of a multi-threaded server.
  *
+ * @param io maximum number of XNIO I/O threads
+ * @param worker maximum number of XNIO worker threads
+ *
  * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
  * @see <a href="http://xnio.jboss.org/">XNIO</a>
  */
@@ -59,6 +68,9 @@ data class ServerThreadsConfiguration constructor(
 
 /**
  * Defines the configuration a buffer pool tied to listeners.
+ *
+ * @param size size of buffer pool
+ * @param perRegion size of buffer pool per region
  *
  * @see <a href="https://tinyurl.com/v2c7p3u">Buffer Pool</a>
  * @see <a href="https://tinyurl.com/ww4xyct">Listeners</a>

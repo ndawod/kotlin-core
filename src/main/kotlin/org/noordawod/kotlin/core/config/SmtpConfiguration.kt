@@ -27,6 +27,13 @@ package org.noordawod.kotlin.core.config
 
 /**
  * Describes the configuration of an SMTP server and how to connect to it.
+ *
+ * @param host host name of mail server
+ * @param port [host] port to connect to
+ * @param ssl whether the [host] supports SSL or not
+ * @param auth optional connection authentication configuration
+ * @param emails optional list of commonly-used email addresses
+ * @param logging whether to log sending emails or not
  */
 @kotlinx.serialization.Serializable
 data class SmtpConfiguration constructor(
@@ -40,6 +47,9 @@ data class SmtpConfiguration constructor(
 
 /**
  * Describes the authentication required by an SMTP server in order to be able to send emails.
+ *
+ * @param user authentication username
+ * @param pass authentication password
  */
 @kotlinx.serialization.Serializable
 data class SmtpAuthConfiguration constructor(
@@ -49,6 +59,16 @@ data class SmtpAuthConfiguration constructor(
 
 /**
  * List of common email addresses used in our website.
+ *
+ * @param sender email address to use for the "Sender:" header
+ * @param bounce email address to use for "Return-Address:" header
+ * @param feedback optional email address to receive feedback
+ * @param account optional email address for account-related messages
+ * @param newsletter optional email address for newsletter-related messages
+ * @param investor optional email address for investor-related messages
+ * @param media optional email address for media-related messages
+ * @param privacy optional email address for privacy-related messages
+ * @param support optional email address for support-related messages
  */
 @kotlinx.serialization.Serializable
 data class SmtpEmails(

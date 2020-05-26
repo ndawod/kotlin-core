@@ -27,6 +27,11 @@ package org.noordawod.kotlin.core.config
 
 /**
  * A configuration describing a URI comprising of protocol, host, port and base path.
+ *
+ * @param protocol the protocol part, such as "https"
+ * @param host the host name part, such as "www.example.com"
+ * @param port the port part, if known or non-standard, or 0 to use standard one per protocol
+ * @param path the path part, such as "/path/to/file.html"
  */
 @kotlinx.serialization.Serializable
 data class UriConfiguration constructor(

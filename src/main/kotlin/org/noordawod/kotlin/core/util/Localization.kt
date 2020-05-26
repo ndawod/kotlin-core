@@ -30,18 +30,11 @@ import org.noordawod.kotlin.core.extension.sameLanguageAs
 /**
  * Binds a [java.util.Locale] and [Properties], the latter holds translations for the
  * specified [locale].
+ *
+ * @param locale the [java.util.Locale] associated with this [Localization] instance
+ * @param translation the localized translations associated with [locale]
  */
-open class Localization(
-  /**
-   * The [java.util.Locale] associated with this [Localization] instance.
-   */
-  val locale: java.util.Locale,
-
-  /**
-   * The localized translations associated with [locale].
-   */
-  val translation: Properties
-) {
+open class Localization(val locale: java.util.Locale, val translation: Properties) {
   companion object {
     /**
      * Loads [Localization] from the specified [file].
