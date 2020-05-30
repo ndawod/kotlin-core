@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.2.2 (May 31 2020)
+    Added a new parseEmail() extension function in StringExtensions.
+
 2.2.1 (May 26 2020)
     Adjusted few values in the module, and upgraded to Detekt 1.9.1.
 

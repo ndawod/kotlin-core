@@ -88,41 +88,49 @@ fun String.toLocale(): Locale {
 }
 
 /**
- * Returns true if this [String] has a valid email address structure, false otherwise.
+ * Returns parsed parts (account and domain) if this [String] is a valid email, null
+ * if the email address is invalid.
  */
 @Suppress("ComplexCondition", "MagicNumber")
-fun String?.isEmail(): Boolean {
+fun String?.parseEmail(): Pair<String, String>? {
   if (!this.isNullOrBlank()) {
     val email = this.trim()
     val length = email.length
     val atPos = email.indexOf('@') + 1
 
-    // If either of these is not allowed.
+    // Basic check to ensure that the email address has at least 6 characters ("a@b.co") and
+    // that it doesn't contain invalid characters.
     if (
-      -1 < email.indexOf(' ') ||
-      -1 < email.indexOf(10.toChar()) ||
-      -1 < email.indexOf(13.toChar()) ||
-      -1 < email.indexOf(8.toChar()) ||
-      -1 < email.indexOf(0.toChar()) ||
-      -1 < email.indexOf(9.toChar())
+      1 < atPos && 5 < length && (
+        -1 == email.indexOf(' ') ||
+          -1 == email.indexOf(10.toChar()) ||
+          -1 == email.indexOf(13.toChar()) ||
+          -1 == email.indexOf(8.toChar()) ||
+          -1 == email.indexOf(0.toChar()) ||
+          -1 == email.indexOf(9.toChar())
+        )
     ) {
-      return false
-    }
-
-    // Basic check is to ensure that the email address has at least 6 characters: "a@b.co"
-    if (1 < atPos && 5 < length) {
       // Let's ensure that there is no @ after the first one, and there is at least a
       // dot within the email's domain.
       val dotPos = email.indexOf('.', atPos)
-      if (-1 == email.indexOf('@', atPos) && atPos < dotPos) {
-        // Ensure that there are no dots appearing at the end of the email, and that
-        // the last dot appears at least 2 characters from the end.
-        return length > 2 + dotPos
+
+      // Ensure that there are no dots appearing at the end of the email, and that
+      // the last dot appears at least 2 characters from the end.
+      if (-1 == email.indexOf('@', atPos) && atPos < dotPos && length > 2 + dotPos) {
+        val account = email.substring(0, atPos - 1)
+        val domainName = email.substring(atPos)
+        return account to domainName
       }
     }
   }
-  return false
+  return null
 }
+
+/**
+ * Returns true if this [String] has a valid email address structure, false otherwise.
+ */
+@Suppress("ComplexCondition", "MagicNumber")
+fun String?.isEmail(): Boolean = null != parseEmail()
 
 /**
  * Returns true if this [String] has a valid email address and equals the provided
