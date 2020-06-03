@@ -21,42 +21,28 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group = 'org.noordawod.kotlin'
-version = '2.2.3'
-description = 'Auxiliary methods and functions for the Kotlin programming language.'
+@file:Suppress("unused")
 
-apply plugin: 'kotlinx-serialization'
+package org.noordawod.kotlin.core.util
 
-buildscript {
-    apply from: 'gradle/config.gradle'
+/**
+ * Extends [ByteArrayOutputStream][java.io.ByteArrayOutputStream] and implements its reset()
+ * method to actually reset the internal buffer to its initial capacity.
+ *
+ * @param capacity initial size of the buffer
+ */
+class CloseableByteArrayOutputStream @Throws(IllegalArgumentException::class) constructor(
+  @Suppress("MemberVisibilityCanBePrivate")
+  val capacity: Int = 32
+) : java.io.ByteArrayOutputStream(capacity) {
+  override fun reset() {
+    super.reset()
+    buf = ByteArray(capacity)
+  }
 
-    repositories {
-        jcenter()
-        maven {
-            url "https://plugins.gradle.org/m2/"
-        }
-    }
-
-    dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
-        classpath "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}"
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}"
-    }
-}
-
-repositories {
-    mavenCentral()
-    jcenter()
-    maven {
-        url 'https://jitpack.io'
-    }
-}
-
-apply from: 'gradle/jvm.gradle'
-apply from: 'gradle/kotlin.gradle'
-apply from: 'gradle/detekt.gradle'
-
-dependencies {
-    implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
-    implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
+  override fun close() {
+    super.close()
+    count = 0
+    buf = ByteArray(0)
+  }
 }
