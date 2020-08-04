@@ -61,10 +61,9 @@ fun String.withoutSlashes() = withoutLeadingSlash().withoutTrailingSlash()
  * Returns a [String] where the specified [string] appears at its end.
  */
 fun String.withTrailing(string: String): String {
-  val length = length
+  val length = this.length
   val stringLength = string.length
-
-  return if (length < stringLength || string != substring(0, length - stringLength)) {
+  return if (length < stringLength || string != substring(length - stringLength)) {
     "$this$string"
   } else {
     this

@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.2.4 (August 4 2020)
+    Fixed a bug with withTrailing() function.
+
 2.2.3 (June 3 2020)
     Added a new CloseableByteArrayOutputStream class.
 
