@@ -107,6 +107,19 @@ fun java.util.Date?.offsetDateTimeOr(
 ): java.time.OffsetDateTime = (this ?: fallback).toInstant().atOffset(java.time.ZoneOffset.UTC)
 
 /**
+ * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.
+ */
+fun java.time.OffsetDateTime?.date(): java.util.Date? =
+  if (null == this) null else java.util.Date(toInstant().toEpochMilli())
+
+/**
+ * Converts this [java.util.Date], or [fallback] if null, into a [java.time.OffsetDateTime].
+ */
+fun java.time.OffsetDateTime?.dateOr(
+  fallback: java.time.OffsetDateTime = java.time.OffsetDateTime.now()
+): java.util.Date = java.util.Date((this ?: fallback).toInstant().toEpochMilli())
+
+/**
  * Adds the amount of [millis] to this [java.util.Date] instance, and returns it.
  */
 fun java.util.Date.plusMillis(millis: Long): java.util.Date =

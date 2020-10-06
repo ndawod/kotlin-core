@@ -3,8 +3,8 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
-2.2.5-2.2.6 (October 6 2020)
-    Added a couple of methods to convert a Date to an OffsetDateTime.
+2.2.5-2.2.7 (October 6 2020)
+    Added a couple of methods to convert a Date to an OffsetDateTime, and vice versa.
 
 2.2.4 (August 4 2020)
     Fixed a bug with withTrailing() function.
