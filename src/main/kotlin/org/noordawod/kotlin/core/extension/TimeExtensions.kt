@@ -67,18 +67,44 @@ fun Long?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date 
   if (null == this) fallback else java.util.Date(this)
 
 /**
- * Converts an optional [java.util.Date] into an [Int] representing the seconds that passed
- * since UNIX epoch on success, null otherwise.
+ * Converts this optional [java.util.Date] into a [Long] representing the milliseconds that
+ * passed since UNIX epoch on success, null otherwise.
  */
-fun java.util.Date?.epoch(): Int? =
-  if (null == this) null else (this.time / MILLIS_IN_1_SECOND).toInt()
+fun java.util.Date?.millisecondsSinceEpoch(): Long? = this?.time
 
 /**
- * Converts an optional [java.util.Date] into an [Int] representing the seconds that passed
- * since UNIX epoch on success, current time otherwise.
+ * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
+ * the milliseconds that passed since UNIX epoch on success.
  */
-fun java.util.Date?.epochOr(fallback: java.util.Date = java.util.Date()): Int =
-  ((this ?: fallback).time / MILLIS_IN_1_SECOND).toInt()
+fun java.util.Date?.millisecondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Long =
+  (this ?: fallback).time
+
+/**
+ * Converts this optional [java.util.Date] into a [Long] representing the seconds that
+ * passed since UNIX epoch on success, null otherwise.
+ */
+fun java.util.Date?.secondsSinceEpoch(): Int? =
+  ((millisecondsSinceEpoch() ?: 0) / MILLIS_IN_1_SECOND).toInt()
+
+/**
+ * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
+ * the seconds that passed since UNIX epoch on success.
+ */
+fun java.util.Date?.secondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Int =
+  (millisecondsSinceEpochOr(fallback) / MILLIS_IN_1_SECOND).toInt()
+
+/**
+ * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.
+ */
+fun java.util.Date?.offsetDateTime(): java.time.OffsetDateTime? =
+  if (null == this) null else toInstant().atOffset(java.time.ZoneOffset.UTC)
+
+/**
+ * Converts this [java.util.Date], or [fallback] if null, into a [java.time.OffsetDateTime].
+ */
+fun java.util.Date?.offsetDateTimeOr(
+  fallback: java.util.Date = java.util.Date()
+): java.time.OffsetDateTime = (this ?: fallback).toInstant().atOffset(java.time.ZoneOffset.UTC)
 
 /**
  * Adds the amount of [millis] to this [java.util.Date] instance, and returns it.
