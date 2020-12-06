@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.3.0 (December 6 2020)
+    Bump Kotlin plugin and libraries versions.
+
 2.2.9 (October 7 2020)
     Revert back to using older Kotlin version due to problems with serialization.
 
