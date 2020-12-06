@@ -21,8 +21,6 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
-
 package org.noordawod.kotlin.core.extension
 
 import java.io.File

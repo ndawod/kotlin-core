@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "TooManyFunctions")
+@file:Suppress("TooManyFunctions")
 
 package org.noordawod.kotlin.core.extension
 

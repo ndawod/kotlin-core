@@ -28,7 +28,6 @@ ext.versions = [
     kotlin: '1.4.20',
     kotlin_coroutines: '1.4.1',
     kotlin_serialization: '1.0.1',
-    kotlin_serialization_runtime: '0.20.0-1.4-M3',
     uribuilder_tiny: '2.7.1',
     seruco_base62: '0.1.3'
 ]

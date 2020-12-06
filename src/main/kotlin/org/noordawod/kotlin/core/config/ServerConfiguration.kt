@@ -21,15 +21,13 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate", "CanBeParameter")
-
 package org.noordawod.kotlin.core.config
 
 /**
  * Defines configuration of a typical multi-threaded server.
  *
- * @param host the public host name of this server
  * @param ipAddr which IP address to bind to when starting the server
+ * @param host the public host name of this server
  * @param port which port to bind to when starting the server
  * @param threads configuration to run a multi-threaded server properly
  * @param buffer configuration for the buffer pool tied to listeners
@@ -39,8 +37,8 @@ package org.noordawod.kotlin.core.config
  */
 @kotlinx.serialization.Serializable
 data class ServerConfiguration constructor(
-  val host: String,
   val ipAddr: String,
+  val host: String,
   val port: Int,
   val threads: ServerThreadsConfiguration,
   val buffer: ServerBufferConfiguration
