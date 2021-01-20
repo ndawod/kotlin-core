@@ -33,14 +33,34 @@ import kotlin.math.absoluteValue
 const val MILLIS_IN_1_SECOND: Long = 1000L
 
 /**
+ * How many seconds in one minute.
+ */
+const val SECONDS_IN_1_MINUTE: Long = 60L
+
+/**
+ * How many milliseconds in one minute.
+ */
+const val MILLIS_IN_1_MINUTE: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_MINUTE
+
+/**
  * How many seconds in one hour.
  */
 const val SECONDS_IN_1_HOUR: Long = 3_600L
 
 /**
+ * How many milliseconds in one hour.
+ */
+const val MILLIS_IN_1_HOUR: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_HOUR
+
+/**
  * How many seconds in one day.
  */
 const val SECONDS_IN_1_DAY: Long = 86_400L
+
+/**
+ * How many milliseconds in one day.
+ */
+const val MILLIS_IN_1_DAY: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_DAY
 
 /**
  * Converts an optional [Int] into a [java.util.Date] on success, null otherwise.
@@ -142,6 +162,17 @@ fun java.util.Date.plusSeconds(seconds: Long): java.util.Date =
 fun java.util.Date.plusSeconds(seconds: Int): java.util.Date = plusSeconds(seconds.toLong())
 
 /**
+ * Adds the amount of [minutes] to this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.plusMinutes(minutes: Long): java.util.Date =
+  plusMillis(minutes * MILLIS_IN_1_MINUTE)
+
+/**
+ * Adds the amount of [minutes] to this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.plusMinutes(minutes: Int): java.util.Date = plusMinutes(minutes.toLong())
+
+/**
  * Subtracts the amount of [millis] from this [java.util.Date] instance, and returns it.
  */
 fun java.util.Date.minusMillis(millis: Long): java.util.Date =
@@ -162,3 +193,14 @@ fun java.util.Date.minusSeconds(seconds: Long): java.util.Date =
  * Subtracts the amount of [seconds] from this [java.util.Date] instance, and returns it.
  */
 fun java.util.Date.minusSeconds(seconds: Int): java.util.Date = minusSeconds(seconds.toLong())
+
+/**
+ * Subtracts the amount of [minutes] from this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.minusMinutes(minutes: Long): java.util.Date =
+  minusMillis(minutes * MILLIS_IN_1_MINUTE)
+
+/**
+ * Subtracts the amount of [minutes] from this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.minusMinutes(minutes: Int): java.util.Date = minusMinutes(minutes.toLong())
