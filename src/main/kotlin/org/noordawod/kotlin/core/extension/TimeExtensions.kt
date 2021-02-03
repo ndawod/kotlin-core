@@ -28,14 +28,24 @@ package org.noordawod.kotlin.core.extension
 import kotlin.math.absoluteValue
 
 /**
- * How many milliseconds in one second.
+ * How many hours in one day.
  */
-const val MILLIS_IN_1_SECOND: Long = 1000L
+const val HOURS_IN_1_DAY: Long = 24L
+
+/**
+ * How many minutes in one hour.
+ */
+const val MINUTES_IN_1_HOUR: Long = 60L
 
 /**
  * How many seconds in one minute.
  */
 const val SECONDS_IN_1_MINUTE: Long = 60L
+
+/**
+ * How many milliseconds in one second.
+ */
+const val MILLIS_IN_1_SECOND: Long = 1000L
 
 /**
  * How many milliseconds in one minute.
@@ -45,7 +55,7 @@ const val MILLIS_IN_1_MINUTE: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_MINUTE
 /**
  * How many seconds in one hour.
  */
-const val SECONDS_IN_1_HOUR: Long = 3_600L
+const val SECONDS_IN_1_HOUR: Long = SECONDS_IN_1_MINUTE * MINUTES_IN_1_HOUR
 
 /**
  * How many milliseconds in one hour.
@@ -55,7 +65,7 @@ const val MILLIS_IN_1_HOUR: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_HOUR
 /**
  * How many seconds in one day.
  */
-const val SECONDS_IN_1_DAY: Long = 86_400L
+const val SECONDS_IN_1_DAY: Long = SECONDS_IN_1_HOUR * HOURS_IN_1_DAY
 
 /**
  * How many milliseconds in one day.
