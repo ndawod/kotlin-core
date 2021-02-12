@@ -77,12 +77,9 @@ fun String.withExtension(extension: String): String {
 }
 
 /**
- * Converts a [String] with the format "xx_YY" (xx=language, YY=country) to a [Locale].
+ * Converts a [String] to a [Locale] using [Locale.forLanguageTag].
  */
-fun String.toLocale(): Locale {
-  val parts = split('_')
-  return if (2 > parts.size) Locale(this) else Locale(parts[0], parts[1])
-}
+fun String.toLocale(): Locale = Locale.forLanguageTag(this)
 
 /**
  * Returns parsed parts (account and domain) if this [String] is a valid email, null
