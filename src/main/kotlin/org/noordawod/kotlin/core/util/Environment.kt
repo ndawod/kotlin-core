@@ -70,7 +70,7 @@ enum class Environment constructor(
      * Returns a new [Environment] matching the specified [identifier] on success, null otherwise.
      */
     fun from(identifier: String): Environment? {
-      val identifierLowerCased = identifier.toLowerCase()
+      val identifierLowerCased = identifier.toLowerCase(java.util.Locale.ENGLISH)
       for (environment in values()) {
         if (environment.identifier == identifierLowerCased) {
           return environment

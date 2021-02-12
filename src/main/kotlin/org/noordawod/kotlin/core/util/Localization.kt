@@ -25,6 +25,7 @@
 
 package org.noordawod.kotlin.core.util
 
+import org.noordawod.kotlin.core.extension.sameCountryAs
 import org.noordawod.kotlin.core.extension.sameLanguageAs
 
 /**
@@ -75,9 +76,23 @@ fun TranslationsMap.hasLanguage(language: String): Boolean =
   null != keys.firstOrNull { it.sameLanguageAs(language) }
 
 /**
- * Returns a [Localization] for the specified [language] on success, null otherwise.
+ * Returns a [Localization] for the specified [language] on success,
+ * null otherwise.
  */
 fun TranslationsMap.localizationFor(language: String): Localization? {
-  val locale: java.util.Locale? = keys.firstOrNull { it.sameLanguageAs(language) }
+  val locale: java.util.Locale? = keys.firstOrNull {
+    it.sameLanguageAs(language)
+  }
+  return if (null != locale) get(locale) else null
+}
+
+/**
+ * Returns a [Localization] for the specified [language] and [country] on success,
+ * null otherwise.
+ */
+fun TranslationsMap.localizationFor(language: String, country: String): Localization? {
+  val locale: java.util.Locale? = keys.firstOrNull {
+    it.sameLanguageAs(language) && it.sameCountryAs(country)
+  }
   return if (null != locale) get(locale) else null
 }

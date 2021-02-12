@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.3.4 (February 12 2021)
+    Bump dependencies versions, minor refinements to existing functions.
+
 2.3.3 (February 3 2021)
     Add few handy constants.
 

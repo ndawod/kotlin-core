@@ -26,6 +26,21 @@ package org.noordawod.kotlin.core.extension
 import java.util.Locale
 
 /**
+ * Returns the 2-character language code for this [Locale] with the old language codes converted
+ * to their new variations. The language codes are:
+ *
+ * "iw": "he"
+ * "ji": "yi"
+ * "in": "id"
+ */
+fun Locale.getNewLanguage(): String = when (val language = language.toLowerCase(Locale.ENGLISH)) {
+  "iw" -> "he"
+  "ji" -> "yi"
+  "in" -> "id"
+  else -> language
+}
+
+/**
  * Checks whether two [Locale]s have the same language regardless of countries.
  */
 fun Locale.sameLanguageAs(other: Locale) = sameLanguageAs(other.language)
@@ -34,7 +49,7 @@ fun Locale.sameLanguageAs(other: Locale) = sameLanguageAs(other.language)
  * Checks whether this [Locale]'s language is the same as the specified [other] language.
  */
 fun Locale.sameLanguageAs(other: String) = language.equals(
-  when (other.toLowerCase()) {
+  when (other.toLowerCase(Locale.ENGLISH)) {
     "he" -> "iw"
     "yi" -> "ji"
     "id" -> "in"
@@ -42,6 +57,11 @@ fun Locale.sameLanguageAs(other: String) = language.equals(
   },
   ignoreCase = true
 )
+
+/**
+ * Checks whether this [Locale]'s country is the same as the specified [other] country.
+ */
+fun Locale.sameCountryAs(other: String) = country.equals(other, ignoreCase = true)
 
 /**
  * Checks whether the writing direction of this [Locale]'s language is right-to-left.
@@ -69,21 +89,6 @@ fun Locale.startAlignment(): String = if (isRightToLeft()) "right" else "left"
  * language ("right", "left").
  */
 fun Locale.endAlignment(): String = if (isRightToLeft()) "left" else "right"
-
-/**
- * Returns the 2-character language code for this [Locale] with the old language codes converted
- * to their new variations. The language codes are:
- *
- * "iw": "he"
- * "ji": "yi"
- * "in": "id"
- */
-fun Locale.getNewLanguage(): String = when (val language = language.toLowerCase()) {
-  "iw" -> "he"
-  "ji" -> "yi"
-  "in" -> "id"
-  else -> language
-}
 
 /**
  * List of right-to-left languages.

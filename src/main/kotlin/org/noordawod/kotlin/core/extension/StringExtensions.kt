@@ -135,4 +135,4 @@ fun String?.isEmail(): Boolean = null != parseEmail()
  * this function will satisfy that requirement.
  */
 fun String.isSameEmail(email: String): Boolean =
-  this.isEmail() && email.isEmail() && this.trim().toLowerCase() == email.trim().toLowerCase()
+  isEmail() && email.isEmail() && trim().equals(email.trim(), ignoreCase = true)
