@@ -27,18 +27,9 @@ import java.util.Locale
 
 /**
  * Returns the 2-character language code for this [Locale] with the old language codes converted
- * to their new variations. The language codes are:
- *
- * "iw": "he"
- * "ji": "yi"
- * "in": "id"
+ * to their new variations.
  */
-fun Locale.getNewLanguage(): String = when (val language = language.toLowerCase(Locale.ENGLISH)) {
-  "iw" -> "he"
-  "ji" -> "yi"
-  "in" -> "id"
-  else -> language
-}
+fun Locale.getNewLanguage(): String = language.getNewLanguage()
 
 /**
  * Checks whether two [Locale]s have the same language regardless of countries.
@@ -48,15 +39,8 @@ fun Locale.sameLanguageAs(other: Locale) = sameLanguageAs(other.language)
 /**
  * Checks whether this [Locale]'s language is the same as the specified [other] language.
  */
-fun Locale.sameLanguageAs(other: String) = language.equals(
-  when (other.toLowerCase(Locale.ENGLISH)) {
-    "iw" -> "he"
-    "yi" -> "ji"
-    "id" -> "in"
-    else -> other
-  },
-  ignoreCase = true
-)
+fun Locale.sameLanguageAs(other: String) =
+  language.equals(other.getNewLanguage(), ignoreCase = true)
 
 /**
  * Checks whether this [Locale]'s country is the same as the specified [other] country.
@@ -94,18 +78,16 @@ fun Locale.endAlignment(): String = if (isRightToLeft()) "left" else "right"
  * List of right-to-left languages.
  */
 private val rtlLanguages: Set<String> by lazy {
-  val set = mutableSetOf<String>()
-  set.add(Locale("ar").stripExtensions().language) // Arabic
-  set.add(Locale("dv").stripExtensions().language) // Divehi
-  set.add(Locale("fa").stripExtensions().language) // Persian
-  set.add(Locale("ha").stripExtensions().language) // Hausa
-  set.add(Locale("he").stripExtensions().language) // Hebrew
-  set.add(Locale("iw").stripExtensions().language) // Hebrew
-  set.add(Locale("ji").stripExtensions().language) // Yiddish
-  set.add(Locale("ps").stripExtensions().language) // Pashto
-  set.add(Locale("sd").stripExtensions().language) // Sindhi
-  set.add(Locale("ug").stripExtensions().language) // Uighur
-  set.add(Locale("ur").stripExtensions().language) // Urdu
-  set.add(Locale("yi").stripExtensions().language) // Yiddish
-  set
+  mutableSetOf<String>().apply {
+    add(Locale("ar").stripExtensions().language) // Arabic
+    add(Locale("dv").stripExtensions().language) // Divehi
+    add(Locale("fa").stripExtensions().language) // Persian
+    add(Locale("ha").stripExtensions().language) // Hausa
+    add(Locale("iw").stripExtensions().language) // Hebrew
+    add(Locale("ji").stripExtensions().language) // Yiddish
+    add(Locale("ps").stripExtensions().language) // Pashto
+    add(Locale("sd").stripExtensions().language) // Sindhi
+    add(Locale("ug").stripExtensions().language) // Uighur
+    add(Locale("ur").stripExtensions().language) // Urdu
+  }
 }

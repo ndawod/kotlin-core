@@ -133,3 +133,20 @@ fun String?.isEmail(): Boolean = null != parseEmail()
  */
 fun String.isSameEmail(email: String): Boolean =
   isEmail() && email.isEmail() && trim().equals(email.trim(), ignoreCase = true)
+
+/**
+ * Given that this is a 2-character language code, returns the new language variation for an
+ * old language code.
+ *
+ * The language codes are:
+ *
+ * "he": "iw"
+ * "id": "in"
+ * "yi": "ji"
+ */
+fun String.getNewLanguage(): String = when (val language = toLowerCase(Locale.ENGLISH)) {
+  "he" -> "iw"
+  "id" -> "in"
+  "yi" -> "ji"
+  else -> language
+}
