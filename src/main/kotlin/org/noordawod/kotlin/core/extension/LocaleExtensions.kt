@@ -50,7 +50,7 @@ fun Locale.sameLanguageAs(other: Locale) = sameLanguageAs(other.language)
  */
 fun Locale.sameLanguageAs(other: String) = language.equals(
   when (other.toLowerCase(Locale.ENGLISH)) {
-    "he" -> "iw"
+    "iw" -> "he"
     "yi" -> "ji"
     "id" -> "in"
     else -> other
