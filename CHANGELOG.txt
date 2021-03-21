@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.3.8 (March 21 2021)
+    Bump up dependencies versions.
+
 2.3.6-2.3.7 (March 6 2021)
     Fix a bug when returning new locale value for deprecated "he" language.
 
