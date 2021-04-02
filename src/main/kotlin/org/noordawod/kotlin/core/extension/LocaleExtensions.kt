@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@file:Suppress("unused")
+
 package org.noordawod.kotlin.core.extension
 
 import java.util.Locale
@@ -83,7 +85,7 @@ private val rtlLanguages: Set<String> by lazy {
     add(Locale("dv").stripExtensions().language) // Divehi
     add(Locale("fa").stripExtensions().language) // Persian
     add(Locale("ha").stripExtensions().language) // Hausa
-    add(Locale("iw").stripExtensions().language) // Hebrew
+    add(Locale("he").stripExtensions().language) // Hebrew
     add(Locale("ji").stripExtensions().language) // Yiddish
     add(Locale("ps").stripExtensions().language) // Pashto
     add(Locale("sd").stripExtensions().language) // Sindhi

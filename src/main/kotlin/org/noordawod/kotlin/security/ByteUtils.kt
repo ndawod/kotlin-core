@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate", "MagicNumber")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "MagicNumber")
 
 package org.noordawod.kotlin.security
 

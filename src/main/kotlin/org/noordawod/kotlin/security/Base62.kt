@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("MemberVisibilityCanBePrivate", "MagicNumber")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "MagicNumber")
 
 package org.noordawod.kotlin.security
 
@@ -114,9 +114,11 @@ class Base62 {
     Charsets.ISO_8859_1
   )
 
+  @Suppress("SameParameterValue")
   private fun encodeInternal(string: String, source: Charset, target: Charset): String =
     String(instance.encode(string.toByteArray(source)), target)
 
+  @Suppress("SameParameterValue")
   private fun decodeInternal(string: String, source: Charset, target: Charset): String =
     String(decode(string.toByteArray(source)), target)
 

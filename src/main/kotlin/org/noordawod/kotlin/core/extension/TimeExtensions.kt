@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("TooManyFunctions")
+@file:Suppress("unused", "TooManyFunctions")
 
 package org.noordawod.kotlin.core.extension
 
@@ -113,8 +113,9 @@ fun java.util.Date?.millisecondsSinceEpochOr(fallback: java.util.Date = java.uti
  * Converts this optional [java.util.Date] into a [Long] representing the seconds that
  * passed since UNIX epoch on success, null otherwise.
  */
-fun java.util.Date?.secondsSinceEpoch(): Int? =
-  ((millisecondsSinceEpoch() ?: 0) / MILLIS_IN_1_SECOND).toInt()
+fun java.util.Date?.secondsSinceEpoch(): Int? = millisecondsSinceEpoch()?.let {
+  (it / MILLIS_IN_1_SECOND).toInt()
+}
 
 /**
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing

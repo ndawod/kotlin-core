@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@file:Suppress("unused")
+
 package org.noordawod.kotlin.core.extension
 
 import java.io.File
@@ -140,13 +142,13 @@ fun String.isSameEmail(email: String): Boolean =
  *
  * The language codes are:
  *
- * "he": "iw"
- * "id": "in"
- * "yi": "ji"
+ * "iw": "he"
+ * "in": "id"
+ * "ji": "yi"
  */
 fun String.getNewLanguage(): String = when (val language = toLowerCase(Locale.ENGLISH)) {
-  "he" -> "iw"
-  "id" -> "in"
-  "yi" -> "ji"
+  "iw" -> "he"
+  "in" -> "id"
+  "ji" -> "yi"
   else -> language
 }
