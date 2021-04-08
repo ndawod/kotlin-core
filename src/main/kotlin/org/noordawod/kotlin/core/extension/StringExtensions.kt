@@ -139,16 +139,13 @@ fun String.isSameEmail(email: String): Boolean =
 /**
  * Given that this is a 2-character language code, returns the new language variation for an
  * old language code.
- *
- * The language codes are:
- *
- * "iw": "he"
- * "in": "id"
- * "ji": "yi"
  */
-fun String.getNewLanguage(): String = when (val language = toLowerCase(Locale.ENGLISH)) {
-  "iw" -> "he"
-  "in" -> "id"
-  "ji" -> "yi"
-  else -> language
+fun String.getNewLanguage(): String {
+  val language = toLowerCase(Locale.ENGLISH)
+  for (locale in NewLocaleLanguage.values()) {
+    if (language == locale.oldCode) {
+      return locale.newCode
+    }
+  }
+  return language
 }

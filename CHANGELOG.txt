@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.4.1 (April 8 2021)
+    Fix a bug with equality of locales languages.
+
 2.4.0 (April 2 2021)
     Include removed Java EE libraries necessary for Java 11 and beyond.
 

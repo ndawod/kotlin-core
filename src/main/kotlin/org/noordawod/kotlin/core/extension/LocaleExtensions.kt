@@ -21,17 +21,71 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MatchingDeclarationName")
 
 package org.noordawod.kotlin.core.extension
 
 import java.util.Locale
 
 /**
+ * Maps old language codes to new ones. This follows the ISO standard for 2-letter languages.
+ *
+ * @param oldCode the old language code
+ * @param newCode the new language code
+ */
+@Suppress("MemberVisibilityCanBePrivate")
+enum class NewLocaleLanguage constructor(val oldCode: String, val newCode: String) {
+  HEBREW("iw", "he"),
+  INDONESIAN("in", "id"),
+  YIDDISH("ji", "yi");
+
+  companion object {
+    /**
+     * Attempts to decode a language [code] and match it against [oldCode] or [newCode],
+     * returns the matching [NewLocaleLanguage] on success, null otherwise.
+     *
+     * @param code the code value to match
+     */
+    fun decode(code: Any?): NewLocaleLanguage? {
+      if (null != code) {
+        val normalizedCode = "$code".toLowerCase(Locale.ENGLISH)
+        for (locale in values()) {
+          if (locale.oldCode == normalizedCode || locale.newCode == normalizedCode) {
+            return locale
+          }
+        }
+      }
+      return null
+    }
+  }
+}
+
+/**
  * Returns the 2-character language code for this [Locale] with the old language codes converted
  * to their new variations.
  */
 fun Locale.getNewLanguage(): String = language.getNewLanguage()
+
+/**
+ * Returns the value of [Locale.toString] where the old language codes are converted to their
+ * new variations.
+ */
+fun Locale.toNewString(): String {
+  val localeString = toString()
+  val lowerCaseLocaleString = localeString.toLowerCase(Locale.ENGLISH)
+  for (locale in NewLocaleLanguage.values()) {
+    if (lowerCaseLocaleString == locale.oldCode) {
+      return locale.newCode
+    }
+    if (
+      lowerCaseLocaleString.startsWith("${locale.oldCode}_") ||
+      lowerCaseLocaleString.startsWith("${locale.oldCode}-")
+    ) {
+      return "${locale.newCode}${localeString.substring(locale.oldCode.length)}"
+    }
+  }
+  return localeString
+}
 
 /**
  * Checks whether two [Locale]s have the same language regardless of countries.
@@ -42,7 +96,7 @@ fun Locale.sameLanguageAs(other: Locale) = sameLanguageAs(other.language)
  * Checks whether this [Locale]'s language is the same as the specified [other] language.
  */
 fun Locale.sameLanguageAs(other: String) =
-  language.equals(other.getNewLanguage(), ignoreCase = true)
+  language.getNewLanguage().equals(other.getNewLanguage(), ignoreCase = true)
 
 /**
  * Checks whether this [Locale]'s country is the same as the specified [other] country.
@@ -52,7 +106,8 @@ fun Locale.sameCountryAs(other: String) = country.equals(other, ignoreCase = tru
 /**
  * Checks whether the writing direction of this [Locale]'s language is right-to-left.
  */
-fun Locale.isRightToLeft(): Boolean = rtlLanguages.contains(stripExtensions().language)
+fun Locale.isRightToLeft(): Boolean =
+  rtlLanguages.contains(stripExtensions().language.getNewLanguage())
 
 /**
  * Checks whether the writing direction of this [Locale]'s language is left-to-right.
