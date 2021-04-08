@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.4.2 (April 8 2021)
+    Fix a bug when checking for locale directionality (rtl/ltr).
+
 2.4.1 (April 8 2021)
     Fix a bug with equality of locales languages.
 

@@ -106,8 +106,7 @@ fun Locale.sameCountryAs(other: String) = country.equals(other, ignoreCase = tru
 /**
  * Checks whether the writing direction of this [Locale]'s language is right-to-left.
  */
-fun Locale.isRightToLeft(): Boolean =
-  rtlLanguages.contains(stripExtensions().language.getNewLanguage())
+fun Locale.isRightToLeft(): Boolean = rtlLanguages.contains(stripExtensions().language)
 
 /**
  * Checks whether the writing direction of this [Locale]'s language is left-to-right.
