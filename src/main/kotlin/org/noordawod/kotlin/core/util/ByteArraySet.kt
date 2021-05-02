@@ -21,9 +21,38 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@file:Suppress("unused")
+
 package org.noordawod.kotlin.core.util
 
 /**
  * Provides support for a [Set] of [ByteArray] objects.
  */
-class ByteArraySet : java.util.TreeSet<ByteArray>(ByteArrayComparator)
+class ByteArraySet : java.util.TreeSet<ByteArray>(ByteArrayComparator) {
+  companion object {
+    /**
+     * Returns a [ByteArraySet] from a list of [ByteArray] objects.
+     *
+     * @param list list of [ByteArray] objects
+     */
+    fun from(list: Iterable<ByteArray>): ByteArraySet = ByteArraySet().apply {
+      list.forEach(::add)
+    }
+
+    /**
+     * Returns a [ByteArraySet] from a list of [T] by transforming each of its items through
+     * a transformer function.
+     *
+     * @param list list of [ByteArray] objects
+     * @param transform transformer function for the [list]'s items
+     */
+    inline fun <T> from(
+      list: Iterable<T>,
+      transform: (T) -> ByteArray
+    ): ByteArraySet = ByteArraySet().apply {
+      list.forEach {
+        add(transform(it))
+      }
+    }
+  }
+}
