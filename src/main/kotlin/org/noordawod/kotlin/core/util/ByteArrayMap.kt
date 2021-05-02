@@ -25,17 +25,12 @@
 
 package org.noordawod.kotlin.core.util
 
-import java.util.ArrayList
-import java.util.Comparator
-import java.util.HashSet
-import java.util.TreeMap
-
 /**
  * Provides support for a [Map] where the keys are of type [ByteArray].
  *
  * @param V types of values that can be stored in this [ByteArrayMap]
  */
-class ByteArrayMap<V> : TreeMap<ByteArray, V>(COMPARATOR) {
+class ByteArrayMap<V> : java.util.TreeMap<ByteArray, V>(ByteArrayComparator) {
   /**
    * Associates the specified value with the specified key in this map. If the map previously
    * contained a mapping for the key, the old value is replaced.
@@ -62,36 +57,6 @@ class ByteArrayMap<V> : TreeMap<ByteArray, V>(COMPARATOR) {
         this.add(v)
       }
     }
-
-    /**
-     * Reusable [Comparator] for comparing [ByteArray] tuples.
-     */
-    val COMPARATOR: Comparator<ByteArray> = ByteArrayComparator()
-  }
-}
-
-/**
- * A simple [Comparator] to for [ByteArray] tuples.
- */
-class ByteArrayComparator : Comparator<ByteArray> {
-  override fun compare(o1: ByteArray?, o2: ByteArray?): Int {
-    return when {
-      null != o1 && null != o2 && o1.size != o2.size -> o1.size - o2.size
-      null != o1 && null != o2 -> {
-        var result = 0
-        var idx = -1
-        while (o1.size > ++idx) {
-          if (o1[idx] != o2[idx]) {
-            result = o1[idx] - o2[idx]
-            break
-          }
-        }
-        result
-      }
-      null == o1 && null == o2 -> 0
-      null == o1 -> -1
-      else -> 1
-    }
   }
 }
 
@@ -102,7 +67,7 @@ class ByteArrayComparator : Comparator<ByteArray> {
  */
 class ByteArrayWrapper private constructor(val bytes: ByteArray) : Comparable<ByteArrayWrapper> {
   override operator fun compareTo(other: ByteArrayWrapper): Int =
-    ByteArrayMap.COMPARATOR.compare(bytes, other.bytes)
+    ByteArrayComparator.compare(bytes, other.bytes)
 
   override fun equals(other: Any?): Boolean =
     other is ByteArrayWrapper && bytes.contentEquals(other.bytes) ||
