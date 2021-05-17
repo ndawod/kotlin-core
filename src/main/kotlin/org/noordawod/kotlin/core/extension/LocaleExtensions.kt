@@ -48,7 +48,7 @@ enum class NewLocaleLanguage constructor(val oldCode: String, val newCode: Strin
      */
     fun decode(code: Any?): NewLocaleLanguage? {
       if (null != code) {
-        val normalizedCode = "$code".toLowerCase(Locale.ENGLISH)
+        val normalizedCode = "$code".lowercase(Locale.ENGLISH)
         for (locale in values()) {
           if (locale.oldCode == normalizedCode || locale.newCode == normalizedCode) {
             return locale
@@ -72,7 +72,7 @@ fun Locale.getNewLanguage(): String = language.getNewLanguage()
  */
 fun Locale.toNewString(): String {
   val localeString = toString()
-  val lowerCaseLocaleString = localeString.toLowerCase(Locale.ENGLISH)
+  val lowerCaseLocaleString = localeString.lowercase(Locale.ENGLISH)
   for (locale in NewLocaleLanguage.values()) {
     if (lowerCaseLocaleString == locale.oldCode) {
       return locale.newCode

@@ -132,7 +132,7 @@ object ByteUtils {
    * Encodes the given binary data to hexadecimal string.
    */
   fun toHex(bytes: ByteArray, escape: Boolean = false): String {
-    val hex = DatatypeConverter.printHexBinary(bytes).toLowerCase(java.util.Locale.ENGLISH)
+    val hex = DatatypeConverter.printHexBinary(bytes).lowercase(java.util.Locale.ENGLISH)
     return if (escape) "x'$hex'" else hex
   }
 

@@ -82,7 +82,7 @@ class SipHash internal constructor(private val key: ByteArray) {
     if (string.isNullOrBlank()) {
       null
     } else {
-      val normalized = if (ignoreCase) string.toLowerCase() else string
+      val normalized = if (ignoreCase) string.lowercase() else string
       asByteArray(normalized.toByteArray())
     }
 
@@ -99,7 +99,7 @@ class SipHash internal constructor(private val key: ByteArray) {
     if (string.isNullOrEmpty()) {
       fallback
     } else {
-      val normalized = if (ignoreCase) string.toLowerCase() else string
+      val normalized = if (ignoreCase) string.lowercase() else string
       asByteArrayOr(normalized.toByteArray())
     }
 
@@ -159,7 +159,7 @@ class SipHash internal constructor(private val key: ByteArray) {
     if (string.isNullOrEmpty()) {
       null
     } else {
-      val normalized = if (ignoreCase) string.toLowerCase() else string
+      val normalized = if (ignoreCase) string.lowercase() else string
       SipHashFactory.toHex(asByteArrayOr(normalized.toByteArray()))
     }
 

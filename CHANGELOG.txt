@@ -3,7 +3,7 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
-2.4.5 (May 17 2021)
+2.4.5-2.4.6 (May 17 2021)
     Bump up dependencies versions.
 
 2.4.3-2.4.4 (May 2 2021)
