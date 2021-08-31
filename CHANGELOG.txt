@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.4.11 (August 31, 2021)
+    Bump up dependencies versions.
+
 2.4.9-2.4.10 (August 31, 2021)
     Gradle 7 removed Maven; need to add it for publishing artifacts.
 
