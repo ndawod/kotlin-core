@@ -116,7 +116,7 @@ object ByteUtils {
    */
   fun isHex(bytes: ByteArray): Boolean {
     for (b in bytes) {
-      if (-1 == HEX_STRING.indexOf(b.toChar())) {
+      if (-1 == HEX_STRING.indexOf(b.toInt().toChar())) {
         return false
       }
     }
@@ -254,7 +254,7 @@ object ByteUtils {
    */
   fun indexOf(bytes: ByteArray, aChar: Char): Int {
     val length = bytes.size
-    val aByte = aChar.toByte()
+    val aByte = aChar.code.toByte()
     var pos = -1
     while (length > ++pos) {
       if (aByte == bytes[pos]) {

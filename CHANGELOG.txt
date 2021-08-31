@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.4.8 (August 31, 2021)
+    Replace deprecated calls with new ones.
+
 2.4.7 (August 31, 2021)
     Add new extension functions to parse and check URLs.
 
