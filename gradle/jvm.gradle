@@ -29,6 +29,7 @@ sourceCompatibility = versions.jdk
 targetCompatibility = versions.jdk
 
 javadoc {
+    // noinspection GroovyAssignabilityCheck
     options {
         charSet = encoding
         docEncoding = encoding
@@ -38,5 +39,6 @@ javadoc {
 dependencies {
     implementation "javax.xml.bind:jaxb-api:${versions.java_ee}"
     implementation "com.sun.xml.bind:jaxb-core:${versions.java_ee}"
+    // noinspection GradlePackageUpdate
     implementation "com.sun.xml.bind:jaxb-impl:${versions.java_ee}"
 }

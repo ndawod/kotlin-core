@@ -21,11 +21,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "TooManyFunctions")
 
 package org.noordawod.kotlin.core.extension
 
 import java.io.File
+import java.net.MalformedURLException
 import java.util.Locale
 
 /**
@@ -125,7 +126,6 @@ fun String?.parseEmail(): Pair<String, String>? {
 /**
  * Returns true if this [String] has a valid email address structure, false otherwise.
  */
-@Suppress("ComplexCondition", "MagicNumber")
 fun String?.isEmail(): Boolean = null != parseEmail()
 
 /**
@@ -137,11 +137,25 @@ fun String.isSameEmail(email: String): Boolean =
   isEmail() && email.isEmail() && trim().equals(email.trim(), ignoreCase = true)
 
 /**
+ * Returns a [URL][java.net.URL] if this [String] is a valid URL, null otherwise.
+ */
+fun String?.parseUrl(): java.net.URL? = try {
+  java.net.URL(this)
+} catch (ignored: MalformedURLException) {
+  null
+}
+
+/**
+ * Returns true if this [String] is a valid URL, false otherwise.
+ */
+fun String?.isUrl(): Boolean = null != parseUrl()
+
+/**
  * Given that this is a 2-character language code, returns the new language variation for an
  * old language code.
  */
 fun String.getNewLanguage(): String {
-  val language = toLowerCase(Locale.ENGLISH)
+  val language = lowercase(Locale.ENGLISH)
   for (locale in NewLocaleLanguage.values()) {
     if (language == locale.oldCode) {
       return locale.newCode
