@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin'
-version = '2.4.9'
+version = '2.4.10'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 apply plugin: 'kotlinx-serialization'
@@ -34,6 +34,7 @@ buildscript {
 
     repositories {
         mavenCentral()
+        mavenLocal()
         google()
         gradlePluginPortal()
         maven {
