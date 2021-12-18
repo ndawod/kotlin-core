@@ -97,6 +97,12 @@ fun Long?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date 
   if (null == this) fallback else java.util.Date(this)
 
 /**
+ * Returns a [java.util.Date] if this Date is non-null and [java.util.Date.getTime] is
+ * positive, null otherwise.
+ */
+fun java.util.Date?.normalized(): java.util.Date? = if (null == this || 1L > time) null else this
+
+/**
  * Converts this optional [java.util.Date] into a [Long] representing the milliseconds that
  * passed since UNIX epoch on success, null otherwise.
  */

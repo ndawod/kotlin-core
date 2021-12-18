@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.4.14 (December 18, 2021)
+    Add new extension date-/time-related functions.
+
 2.4.13 (December 18, 2021)
     Bump up dependencies versions.
 
