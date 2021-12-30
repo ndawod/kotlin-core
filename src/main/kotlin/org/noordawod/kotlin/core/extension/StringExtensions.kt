@@ -30,6 +30,11 @@ import java.net.MalformedURLException
 import java.util.Locale
 
 /**
+ * A signature of a [Pair] of two [strings][String].
+ */
+typealias PairOfStrings = Pair<String, String>
+
+/**
  * Strips any trailing slash characters (value of [File.separatorChar]) from this [String].
  */
 fun String.withoutTrailingSlash(): String {
@@ -89,7 +94,7 @@ fun String.toLocale(): Locale = Locale.forLanguageTag(this)
  * if the email address is invalid.
  */
 @Suppress("ComplexCondition", "MagicNumber")
-fun String?.parseEmail(): Pair<String, String>? {
+fun String?.parseEmail(): PairOfStrings? {
   if (!this.isNullOrBlank()) {
     val email = this.trim()
     val length = email.length
@@ -121,6 +126,16 @@ fun String?.parseEmail(): Pair<String, String>? {
     }
   }
   return null
+}
+
+/**
+ * Returns an email address for the provided [Pair] of strings on success, null otherwise.
+ */
+fun PairOfStrings?.asEmail(): String? {
+  val first = this?.first?.trim()
+  val second = this?.second?.trim()
+
+  return if (first.isNullOrEmpty() || second.isNullOrEmpty()) null else "$first@$second"
 }
 
 /**
