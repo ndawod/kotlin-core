@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Noor Dawod. All rights reserved.
+ * Copyright 2021 Noor Dawod. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,31 +21,37 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "TooManyFunctions")
 
 package org.noordawod.kotlin.core.extension
 
 /**
- * Returns a new empty [MutableList] with the specified initial [capacity].
+ * Converts an [Int] value to its [String] representation.
+ *
+ * @param opacity apply a constant opacity value (0..255) to the color
+ * @param dash whether to add a '#' character in the beginning, defaults to false
  */
-fun <V> mutableListWith(capacity: Int): MutableList<V> = ArrayList(capacity)
+@Suppress("MagicNumber")
+fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
+  val buffer = StringBuffer(9)
+  if (dash) {
+    buffer.append('#')
+  }
 
-/**
- * Returns a new empty and unordered [MutableMap] with the specified initial [capacity].
- */
-fun <K, V> mutableMapWith(capacity: Int): MutableMap<K, V> = HashMap(capacity)
+  @Suppress("UnclearPrecedenceOfBinaryExpression")
+  val opacityValue = opacity ?: color shr 24 and 0xff
+  val redValue = color shr 16 and 0xff
+  val greenValue = color shr 8 and 0xff
+  val blueValue = color and 0xff
 
-/**
- * Returns a new empty and ordered [MutableMap] with the specified initial [capacity].
- */
-fun <K, V> mutableOrderedMapWith(capacity: Int): MutableMap<K, V> = LinkedHashMap(capacity)
+  // Only add opacity if it's not 255 (0xff).
+  if (opacityValue in 0..254) {
+    buffer.append(Integer.toHexString(opacityValue))
+  }
 
-/**
- * Returns a new empty and unordered [MutableSet] with the specified initial [capacity].
- */
-fun <V> mutableSetWith(capacity: Int): MutableSet<V> = HashSet(capacity)
+  buffer.append(Integer.toHexString(redValue))
+  buffer.append(Integer.toHexString(greenValue))
+  buffer.append(Integer.toHexString(blueValue))
 
-/**
- * Returns a new empty and ordered [MutableSet] with the specified initial [capacity].
- */
-fun <V> mutableOrderedSetWith(capacity: Int): MutableSet<V> = LinkedHashSet(capacity)
+  buffer.toString().uppercase(java.util.Locale.ENGLISH)
+}

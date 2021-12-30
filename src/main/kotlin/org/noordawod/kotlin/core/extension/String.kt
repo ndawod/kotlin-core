@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "TooManyFunctions")
+@file:Suppress("unused", "TooManyFunctions", "MagicNumber")
 
 package org.noordawod.kotlin.core.extension
 
@@ -85,9 +85,91 @@ fun String.withExtension(extension: String): String {
 }
 
 /**
+ * Trims white spaces from this string; returns the trimmed string if non-empty on
+ * success, null otherwise.
+ */
+fun String?.trimOrNull(): String? {
+  val trimmed = this?.trim()
+
+  return if (trimmed.isNullOrEmpty()) null else trimmed
+}
+
+/**
+ * Trims white spaces from this string; returns the trimmed string if non-empty on
+ * success, [fallback] otherwise.
+ */
+fun String?.trimOr(fallback: String): String {
+  val trimmed = trimOrNull()
+
+  return if (trimmed.isNullOrEmpty()) fallback else trimmed
+}
+
+/**
+ * Trims white spaces from this string and returns it on success, otherwise returns the
+ * empty string.
+ */
+fun String?.trimOrBlank(): String = trimOr("")
+
+/**
+ * Converts this String into a [Locale] if valid, null otherwise.
+ */
+@Suppress("MagicNumber")
+fun String?.toLocaleOrNull(): Locale? =
+  if (null != this && (2 == length || 5 == length)) toLocaleImpl() else null
+
+/**
+ * Converts this String into a [Locale] if valid, [fallback] otherwise.
+ */
+@Suppress("MagicNumber")
+fun String?.toLocaleOr(fallback: Locale): Locale {
+  if (null != this && (2 == length || 5 == length)) {
+    val locale = toLocaleImpl()
+    if (null != locale) {
+      return locale
+    }
+  }
+  return fallback
+}
+
+/**
  * Converts a [String] to a [Locale] using [Locale.forLanguageTag].
  */
 fun String.toLocale(): Locale = Locale.forLanguageTag(this)
+
+/**
+ * Returns this String if it's a valid 2-letter country code, null otherwise.
+ *
+ * @param uppercase whether to return an upper- or lower-case country code
+ */
+@Suppress("NestedBlockDepth")
+fun String?.ensureCountryCode(uppercase: Boolean = true): String? {
+  val country = this?.trimOrNull()?.uppercase()
+
+  if (null != country) {
+    val isoCountries = Locale.getISOCountries()
+    for (isoCountry in isoCountries) {
+      if (isoCountry == country) {
+        return if (uppercase) country else country.lowercase()
+      }
+    }
+  }
+
+  return null
+}
+
+/**
+ * Given that this is a 2-character language code, returns the new language variation for an
+ * old language code.
+ */
+fun String.getNewLanguage(): String {
+  val language = lowercase(Locale.ENGLISH)
+  for (locale in NewLocaleLanguage.values()) {
+    if (language == locale.oldCode) {
+      return locale.newCode
+    }
+  }
+  return language
+}
 
 /**
  * Returns parsed parts (account and domain) if this [String] is a valid email, null
@@ -166,15 +248,56 @@ fun String?.parseUrl(): java.net.URL? = try {
 fun String?.isUrl(): Boolean = null != parseUrl()
 
 /**
- * Given that this is a 2-character language code, returns the new language variation for an
- * old language code.
+ * Converts a [String] value to its [Int] representation.
+ *
+ * @param opacity apply a constant opacity value (0..255) to the color
  */
-fun String.getNewLanguage(): String {
-  val language = lowercase(Locale.ENGLISH)
-  for (locale in NewLocaleLanguage.values()) {
-    if (language == locale.oldCode) {
-      return locale.newCode
-    }
+fun String?.toColor(opacity: Int? = null): Int? {
+  var color = this?.trimOrNull() ?: return null
+
+  if ('#' == color[0]) {
+    color = color.substring(1)
   }
-  return language
+
+  var opacityValue: Int
+  val redValue: Int
+  val greenValue: Int
+  val blueValue: Int
+
+  when (color.length) {
+    3 -> {
+      opacityValue = 0xff
+      redValue = Integer.parseInt("${color[0]}${color[0]}", 16)
+      greenValue = Integer.parseInt("${color[1]}${color[1]}", 16)
+      blueValue = Integer.parseInt("${color[2]}${color[2]}", 16)
+    }
+    6 -> {
+      opacityValue = 0xff
+      redValue = Integer.parseInt(color.substring(0, 2), 16)
+      greenValue = Integer.parseInt(color.substring(2, 2), 16)
+      blueValue = Integer.parseInt(color.substring(4, 2), 16)
+    }
+    8 -> {
+      opacityValue = Integer.parseInt(color.substring(0, 2), 16)
+      redValue = Integer.parseInt(color.substring(2, 2), 16)
+      greenValue = Integer.parseInt(color.substring(4, 2), 16)
+      blueValue = Integer.parseInt(color.substring(6, 2), 16)
+    }
+    else -> return null
+  }
+
+  if (null != opacity && opacity in 0..255) {
+    opacityValue = opacity
+  }
+
+  return (opacityValue shl 24) + (redValue shl 16) + (greenValue shl 8) + blueValue
+}
+
+private fun String.toLocaleImpl(): Locale? {
+  val parts = replace("-", "_").split('_')
+  return try {
+    if (1 < parts.size) Locale(parts[0], parts[1]) else Locale(parts[0])
+  } catch (ignored: Throwable) {
+    null
+  }
 }

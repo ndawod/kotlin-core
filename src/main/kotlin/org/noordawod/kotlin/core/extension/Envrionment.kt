@@ -25,27 +25,41 @@
 
 package org.noordawod.kotlin.core.extension
 
-/**
- * Returns a new empty [MutableList] with the specified initial [capacity].
- */
-fun <V> mutableListWith(capacity: Int): MutableList<V> = ArrayList(capacity)
+import org.noordawod.kotlin.core.util.Environment
 
 /**
- * Returns a new empty and unordered [MutableMap] with the specified initial [capacity].
+ * Returns the appropriate log level for this [Environment] instance.
  */
-fun <K, V> mutableMapWith(capacity: Int): MutableMap<K, V> = HashMap(capacity)
+fun Environment.logLevel(): String = when {
+  isDevel -> "DEBUG"
+  isBeta -> "WARNING"
+  else -> "ERROR"
+}
 
 /**
- * Returns a new empty and ordered [MutableMap] with the specified initial [capacity].
+ * Returns the default timeout, in seconds, based on this [Environment].
  */
-fun <K, V> mutableOrderedMapWith(capacity: Int): MutableMap<K, V> = LinkedHashMap(capacity)
+@Suppress("MagicNumber")
+fun Environment?.timeoutInSeconds(): Int = when (this) {
+  Environment.DEVEL -> 5
+  Environment.BETA -> 20
+  Environment.PRODUCTION -> 30
+  null -> 10
+}
 
 /**
- * Returns a new empty and unordered [MutableSet] with the specified initial [capacity].
+ * Returns the default timeout, in milliseconds, based on this [Environment].
  */
-fun <V> mutableSetWith(capacity: Int): MutableSet<V> = HashSet(capacity)
+fun Environment?.timeoutInMilliseconds(): Long = timeoutInSeconds() * MILLIS_IN_1_SECOND
 
 /**
- * Returns a new empty and ordered [MutableSet] with the specified initial [capacity].
+ * Returns the base directory for this [Environment] where ".well-known" files are stored.
  */
-fun <V> mutableOrderedSetWith(capacity: Int): MutableSet<V> = LinkedHashSet(capacity)
+fun Environment.wellKnownDirectory() =
+  "well-known${java.io.File.separatorChar}$this"
+
+/**
+ * Returns the path to a ".well-known" [file] based on this [Environment].
+ */
+fun Environment.wellKnownFile(file: String) =
+  "${wellKnownDirectory()}${java.io.File.separatorChar}$file"

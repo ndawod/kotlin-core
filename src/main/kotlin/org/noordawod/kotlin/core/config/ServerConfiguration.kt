@@ -26,12 +26,12 @@
 package org.noordawod.kotlin.core.config
 
 /**
- * Defines configuration of a typical multi-threaded server.
+ * Defines configuration of a typical multithreaded server.
  *
  * @param ipAddr which IP address to bind to when starting the server
  * @param host the public host name of this server
  * @param port which port to bind to when starting the server
- * @param threads configuration to run a multi-threaded server properly
+ * @param threads configuration to run a multithreaded server properly
  * @param buffer configuration for the buffer pool tied to listeners
  *
  * @see <a href="https://tinyurl.com/t8yyhxm">Assembling a Server Manually</a>
@@ -52,7 +52,7 @@ data class ServerConfiguration constructor(
 }
 
 /**
- * Defines the threading configuration of a multi-threaded server.
+ * Defines the threading configuration of a multithreaded server.
  *
  * @param io maximum number of XNIO I/O threads
  * @param worker maximum number of XNIO worker threads

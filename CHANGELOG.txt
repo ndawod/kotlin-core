@@ -3,8 +3,11 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.5.0 (December 30, 2021)
+    Add many new extension functions.
+
 2.4.15 (December 30, 2021)
-    Add a new String-related extension function.
+    Add new String-related extension functions.
 
 2.4.14 (December 18, 2021)
     Add new date-/time-related extension functions.

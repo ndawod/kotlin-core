@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2020 Noor Dawod. All rights reserved.
+ * Copyright 2021 Noor Dawod. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -21,31 +21,20 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "TooManyFunctions")
 
 package org.noordawod.kotlin.core.extension
 
 /**
- * Returns a new empty [MutableList] with the specified initial [capacity].
+ * Detects the type of this [Class] as follows:
+ *
+ * - Returns a Class&lt;[Map]&gt; if the type is a descendant of [Map].
+ * - Returns a Class&lt;[Collection]&gt; if the type is a descendant of [Collection].
+ * - Otherwise, returns the same [Class].
  */
-fun <V> mutableListWith(capacity: Int): MutableList<V> = ArrayList(capacity)
-
-/**
- * Returns a new empty and unordered [MutableMap] with the specified initial [capacity].
- */
-fun <K, V> mutableMapWith(capacity: Int): MutableMap<K, V> = HashMap(capacity)
-
-/**
- * Returns a new empty and ordered [MutableMap] with the specified initial [capacity].
- */
-fun <K, V> mutableOrderedMapWith(capacity: Int): MutableMap<K, V> = LinkedHashMap(capacity)
-
-/**
- * Returns a new empty and unordered [MutableSet] with the specified initial [capacity].
- */
-fun <V> mutableSetWith(capacity: Int): MutableSet<V> = HashSet(capacity)
-
-/**
- * Returns a new empty and ordered [MutableSet] with the specified initial [capacity].
- */
-fun <V> mutableOrderedSetWith(capacity: Int): MutableSet<V> = LinkedHashSet(capacity)
+@Suppress("UNCHECKED_CAST")
+fun Class<in Any>.simplifyType(): Class<Any> = when {
+  Map::class.java.isAssignableFrom(this) -> Map::class.java
+  Collection::class.java.isAssignableFrom(this) -> Collection::class.java
+  else -> this
+} as Class<Any>
