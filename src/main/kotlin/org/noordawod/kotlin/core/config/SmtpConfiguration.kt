@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate", "LongParameterList")
 
 package org.noordawod.kotlin.core.config
 
@@ -36,14 +36,30 @@ package org.noordawod.kotlin.core.config
  * @param logging whether to log sending emails or not
  */
 @kotlinx.serialization.Serializable
-data class SmtpConfiguration constructor(
+open class SmtpConfiguration constructor(
   val host: String,
   val port: Int,
   val ssl: Boolean? = false,
   val auth: SmtpAuthConfiguration? = null,
   val emails: SmtpEmails? = null,
   val logging: Boolean? = false
-)
+) {
+  override fun equals(other: Any?): Boolean = other is SmtpConfiguration &&
+    other.host == host &&
+    other.port == port &&
+    other.ssl == ssl &&
+    other.auth == auth &&
+    other.emails == emails &&
+    other.logging == logging
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = port +
+    host.hashCode() * 1609 +
+    ssl.hashCode() * 947 +
+    auth.hashCode() * 457 +
+    emails.hashCode() * 1627 +
+    logging.hashCode() * 3499
+}
 
 /**
  * Describes the authentication required by an SMTP server in order to be able to send emails.
@@ -52,10 +68,17 @@ data class SmtpConfiguration constructor(
  * @param pass authentication password
  */
 @kotlinx.serialization.Serializable
-data class SmtpAuthConfiguration constructor(
+open class SmtpAuthConfiguration constructor(
   val user: String,
   val pass: String
-)
+) {
+  override fun equals(other: Any?): Boolean = other is SmtpAuthConfiguration &&
+    other.user == user &&
+    other.pass == pass
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = user.hashCode() * 349 + pass.hashCode() * 1609
+}
 
 /**
  * List of common email addresses used in our website.
@@ -71,7 +94,7 @@ data class SmtpAuthConfiguration constructor(
  * @param support optional email address for support-related messages
  */
 @kotlinx.serialization.Serializable
-data class SmtpEmails(
+open class SmtpEmails(
   val sender: String,
   val bounce: String,
   val feedback: String? = null,
@@ -81,4 +104,26 @@ data class SmtpEmails(
   val media: String? = null,
   val privacy: String? = null,
   val support: String? = null
-)
+) {
+  override fun equals(other: Any?): Boolean = other is SmtpEmails &&
+    other.sender == sender &&
+    other.bounce == bounce &&
+    other.feedback == feedback &&
+    other.account == account &&
+    other.newsletter == newsletter &&
+    other.investor == investor &&
+    other.media == media &&
+    other.privacy == privacy &&
+    other.support == support
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = sender.hashCode() +
+    bounce.hashCode() * 1609 +
+    feedback.hashCode() * 947 +
+    account.hashCode() * 457 +
+    newsletter.hashCode() * 1627 +
+    investor.hashCode() * 3499 +
+    media.hashCode() * 79 +
+    privacy.hashCode() * 419 +
+    support.hashCode() * 709
+}

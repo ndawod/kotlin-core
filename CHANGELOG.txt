@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.6.0 (February 8, 2022)
+    Change data classes to open classes.
+
 2.5.0 (December 30, 2021)
     Add many new extension functions.
 
@@ -64,7 +67,7 @@ This documents the changes between versions:
     Bump Kotlin plugin and libraries versions.
 
 2.2.9 (October 7, 2020)
-    Revert back to using older Kotlin version due to problems with serialization.
+    Revert to using older Kotlin version due to problems with serialization.
 
 2.2.8 (October 7, 2020)
     Bump versions due to changes in Kotlin Serialization libraries.

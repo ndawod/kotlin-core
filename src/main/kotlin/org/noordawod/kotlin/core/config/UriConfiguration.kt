@@ -21,12 +21,12 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package org.noordawod.kotlin.core.config
 
 /**
- * A configuration describing a URI comprising of protocol, host, port and base path.
+ * A configuration describing a URI consisting of protocol, host, port and base path.
  *
  * @param protocol the protocol part, such as "https"
  * @param host the host name part, such as "www.example.com"
@@ -34,7 +34,7 @@ package org.noordawod.kotlin.core.config
  * @param path the path part, such as "/path/to/file.html"
  */
 @kotlinx.serialization.Serializable
-data class UriConfiguration constructor(
+open class UriConfiguration constructor(
   val protocol: String,
   val host: String,
   val port: Int = 0,
@@ -67,4 +67,16 @@ data class UriConfiguration constructor(
     }
     return builder.toString()
   }
+
+  override fun equals(other: Any?): Boolean = other is UriConfiguration &&
+    other.protocol == protocol &&
+    other.host == host &&
+    other.port == port &&
+    other.path == path
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = port +
+    protocol.hashCode() * 1609 +
+    host.hashCode() * 2269 +
+    path.hashCode() * 947
 }

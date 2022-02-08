@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package org.noordawod.kotlin.core.config
 
@@ -38,7 +38,7 @@ package org.noordawod.kotlin.core.config
  * @see <a href="https://tinyurl.com/wdrwhe7">Architecture Overview</a>
  */
 @kotlinx.serialization.Serializable
-data class ServerConfiguration constructor(
+open class ServerConfiguration constructor(
   val ipAddr: String,
   val host: String,
   val port: Int,
@@ -49,6 +49,20 @@ data class ServerConfiguration constructor(
    * Returns the combination of this server's hostname and port, separated by a colon.
    */
   val hostAndPort: String = "$host:$port"
+
+  override fun equals(other: Any?): Boolean = other is ServerConfiguration &&
+    other.ipAddr == ipAddr &&
+    other.host == host &&
+    other.port == port &&
+    other.threads == threads &&
+    other.buffer == buffer
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = port +
+    ipAddr.hashCode() * 1609 +
+    host.hashCode() * 2269 +
+    threads.hashCode() * 947 +
+    buffer.hashCode() * 457
 }
 
 /**
@@ -61,10 +75,17 @@ data class ServerConfiguration constructor(
  * @see <a href="http://xnio.jboss.org/">XNIO</a>
  */
 @kotlinx.serialization.Serializable
-data class ServerThreadsConfiguration constructor(
+open class ServerThreadsConfiguration constructor(
   val io: Int,
   val worker: Int
-)
+) {
+  override fun equals(other: Any?): Boolean = other is ServerThreadsConfiguration &&
+    other.io == io &&
+    other.worker == worker
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = io * 349 + worker * 1609
+}
 
 /**
  * Defines the configuration a buffer pool tied to listeners.
@@ -76,7 +97,14 @@ data class ServerThreadsConfiguration constructor(
  * @see <a href="https://tinyurl.com/ww4xyct">Listeners</a>
  */
 @kotlinx.serialization.Serializable
-data class ServerBufferConfiguration constructor(
+open class ServerBufferConfiguration constructor(
   val size: Int,
   val perRegion: Int
-)
+) {
+  override fun equals(other: Any?): Boolean = other is ServerBufferConfiguration &&
+    other.size == size &&
+    other.perRegion == perRegion
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = size * 349 + perRegion * 1609
+}

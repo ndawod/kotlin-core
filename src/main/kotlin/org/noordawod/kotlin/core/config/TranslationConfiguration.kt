@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MemberVisibilityCanBePrivate")
 
 package org.noordawod.kotlin.core.config
 
@@ -41,7 +41,14 @@ typealias TranslationsConfiguration = Array<TranslationConfiguration>
  * @param file location of associated file
  */
 @kotlinx.serialization.Serializable
-data class TranslationConfiguration constructor(
+open class TranslationConfiguration constructor(
   val locale: String,
   val file: String
-)
+) {
+  override fun equals(other: Any?): Boolean = other is TranslationConfiguration &&
+    other.locale == locale &&
+    other.file == file
+
+  @Suppress("MagicNumber")
+  override fun hashCode(): Int = locale.hashCode() * 349 + file.hashCode() * 1609
+}

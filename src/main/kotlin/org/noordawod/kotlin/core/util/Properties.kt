@@ -32,9 +32,15 @@ import java.io.InputStreamReader
 
 /**
  * Handles loading k:v properties into a [Properties] class using *.properties files.
+ *
+ * @param props initial properties to load from memory
  */
 open class Properties protected constructor(private val props: java.util.Properties) {
   private var destroyed = false
+
+  override fun equals(other: Any?): Boolean = other is Properties && other.props == props
+
+  override fun hashCode(): Int = props.hashCode()
 
   /**
    * Destroys this instance and clears its memory.
@@ -132,7 +138,10 @@ open class Properties protected constructor(private val props: java.util.Propert
 }
 
 /**
- * The base [Exception] for [Properties].
+ * The base [errors class][Exception] for [Properties].
+ *
+ * @param message the message describing the error
+ * @param cause optional Exception which caused the error
  */
 open class PropertiesException(
   message: String,
@@ -141,6 +150,9 @@ open class PropertiesException(
 
 /**
  * Denotes that a [Properties] instance has been destroyed and no longer can be used.
+ *
+ * @param message the message describing the error
+ * @param cause optional Exception which caused the error
  */
 class PropertiesDestroyedException(
   message: String,

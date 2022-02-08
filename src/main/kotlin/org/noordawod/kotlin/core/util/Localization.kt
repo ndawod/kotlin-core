@@ -36,6 +36,12 @@ import org.noordawod.kotlin.core.extension.sameLanguageAs
  * @param translation the localized translations associated with [locale]
  */
 open class Localization(val locale: java.util.Locale, val translation: Properties) {
+  override fun equals(other: Any?): Boolean = other is Localization &&
+    other.locale == locale &&
+    other.translation == translation
+
+  override fun hashCode(): Int = locale.hashCode() * 349 + translation.hashCode() * 1609
+
   companion object {
     /**
      * Loads [Localization] from the specified [file].
