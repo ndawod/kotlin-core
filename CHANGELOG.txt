@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+2.6.1 (February 27, 2022)
+    Rename few properties in `SmtpEmails` data class.
+
 2.6.0 (February 8, 2022)
     Change data classes to open classes.
 

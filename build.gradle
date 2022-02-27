@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin'
-version = '2.6.0'
+version = '2.6.1'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 apply plugin: 'kotlinx-serialization'
@@ -36,7 +36,7 @@ buildscript {
         google()
         gradlePluginPortal()
         maven {
-            url "https://plugins.gradle.org/m2/"
+            url 'https://plugins.gradle.org/m2/'
         }
     }
 

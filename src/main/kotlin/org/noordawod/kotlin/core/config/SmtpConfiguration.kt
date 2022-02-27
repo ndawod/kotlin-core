@@ -83,8 +83,8 @@ open class SmtpAuthConfiguration constructor(
 /**
  * List of common email addresses used in our website.
  *
- * @param sender email address to use for the "Sender:" header
- * @param bounce email address to use for "Return-Address:" header
+ * @param sender email address to use for "Return-Path:" envelope header
+ * @param replyTo email address to use for the "Reply-To:" message header
  * @param feedback optional email address to receive feedback
  * @param account optional email address for account-related messages
  * @param newsletter optional email address for newsletter-related messages
@@ -96,7 +96,7 @@ open class SmtpAuthConfiguration constructor(
 @kotlinx.serialization.Serializable
 open class SmtpEmails(
   val sender: String,
-  val bounce: String,
+  val replyTo: String,
   val feedback: String? = null,
   val account: String? = null,
   val newsletter: String? = null,
@@ -107,7 +107,7 @@ open class SmtpEmails(
 ) {
   override fun equals(other: Any?): Boolean = other is SmtpEmails &&
     other.sender == sender &&
-    other.bounce == bounce &&
+    other.replyTo == replyTo &&
     other.feedback == feedback &&
     other.account == account &&
     other.newsletter == newsletter &&
@@ -118,7 +118,7 @@ open class SmtpEmails(
 
   @Suppress("MagicNumber")
   override fun hashCode(): Int = sender.hashCode() +
-    bounce.hashCode() * 1609 +
+    replyTo.hashCode() * 1609 +
     feedback.hashCode() * 947 +
     account.hashCode() * 457 +
     newsletter.hashCode() * 1627 +
