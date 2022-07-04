@@ -21,8 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-group = 'org.noordawod.kotlin'
-version = '2.6.2'
+group = 'org.noordawod'
+version = '2.7.0'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 apply plugin: 'kotlinx-serialization'
