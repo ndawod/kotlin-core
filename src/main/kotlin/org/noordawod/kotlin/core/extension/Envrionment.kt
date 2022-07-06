@@ -31,6 +31,7 @@ import org.noordawod.kotlin.core.util.Environment
  * Returns the appropriate log level for this [Environment] instance.
  */
 fun Environment.logLevel(): String = when {
+  isLocal -> "DEBUG"
   isDevel -> "DEBUG"
   isBeta -> "WARNING"
   else -> "ERROR"
@@ -41,10 +42,10 @@ fun Environment.logLevel(): String = when {
  */
 @Suppress("MagicNumber")
 fun Environment?.timeoutInSeconds(): Int = when (this) {
-  Environment.DEVEL -> 5
+  Environment.LOCAL -> 5
+  Environment.DEVEL, null -> 10
   Environment.BETA -> 20
   Environment.PRODUCTION -> 30
-  null -> 10
 }
 
 /**

@@ -33,6 +33,7 @@ import org.noordawod.kotlin.core.extension.withoutTrailingSlash
  *
  * @param identifier a machine-friendly identifier with all characters lower-cased
  * @param label a human-friendly identifier
+ * @param isLocal whether this is the [LOCAL] environment
  * @param isDevel whether this is the [DEVEL] environment
  * @param isBeta whether this is the [BETA] environment
  * @param isProduction whether this is the [PRODUCTION] environment
@@ -41,13 +42,69 @@ import org.noordawod.kotlin.core.extension.withoutTrailingSlash
 enum class Environment constructor(
   val identifier: String,
   val label: String,
+  val isLocal: Boolean,
   val isDevel: Boolean,
   val isBeta: Boolean,
   val isProduction: Boolean
 ) {
-  DEVEL("devel", "Development", true, false, false),
-  BETA("beta", "Beta", false, true, false),
-  PRODUCTION("production", "Production", false, false, true);
+  /**
+   * Local-only environment.
+   *
+   * In this environment, applications are connecting to the localhost only as developers are
+   * busy writing new features and fixing bugs.
+   */
+  LOCAL(
+    "local",
+    "Local-only",
+    true,
+    false,
+    false,
+    false
+  ),
+
+  /**
+   * Development environment.
+   *
+   * Much like the [LOCAL] environment, but the applications can be deployed remotely as well.
+   */
+  DEVEL(
+    "devel",
+    "Development",
+    false,
+    true,
+    false,
+    false
+  ),
+
+  /**
+   * Beta (Staging) environment.
+   *
+   * In this environment, applications are deployed on a staging, usually remote, server where
+   * beta users are able to test it out before the final deployment to [PRODUCTION].
+   */
+  BETA(
+    "beta",
+    "Beta",
+    false,
+    false,
+    true,
+    false
+  ),
+
+  /**
+   * Production environment.
+   *
+   * In this environment, applications are considered rock-solid and are available for
+   * consumption by the intended users.
+   */
+  PRODUCTION(
+    "production",
+    "Production",
+    false,
+    false,
+    false,
+    true
+  );
 
   /**
    * Returns this [Environment]'s identifier.

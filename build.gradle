@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod'
-version = '2.7.0'
+version = '2.7.1'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 apply plugin: 'kotlinx-serialization'
