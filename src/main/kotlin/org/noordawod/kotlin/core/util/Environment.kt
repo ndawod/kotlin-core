@@ -39,6 +39,7 @@ import org.noordawod.kotlin.core.extension.withoutTrailingSlash
  * @param isProduction whether this is the [PRODUCTION] environment
  *
  */
+@Suppress("LongParameterList")
 enum class Environment constructor(
   val identifier: String,
   val label: String,
