@@ -22,8 +22,9 @@
  */
 
 group = 'org.noordawod'
-version = '2.7.2'
+version = '2.7.3'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
+buildDir = 'build'
 
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.github.ben-manes.versions'
@@ -51,6 +52,7 @@ buildscript {
 repositories {
     mavenCentral()
     google()
+    gradlePluginPortal()
     maven {
         url 'https://jitpack.io'
     }
