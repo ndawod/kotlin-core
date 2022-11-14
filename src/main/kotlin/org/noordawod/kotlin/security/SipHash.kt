@@ -34,7 +34,6 @@ import java.io.InputStream
  *
  * Note: this class is NOT thread-safe.
  */
-@Suppress("TooManyFunctions")
 class SipHash internal constructor(private val key: ByteArray) {
   private var value0: Long = 0
   private var value1: Long = 0

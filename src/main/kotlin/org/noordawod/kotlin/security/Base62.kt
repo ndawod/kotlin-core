@@ -30,7 +30,6 @@ import java.nio.charset.Charset
 /**
  * A class that provides an implementation for Base62 encoding.
  */
-@Suppress("TooManyFunctions")
 class Base62 {
   /**
    * Base62 provider implementation using the GMP implementation.

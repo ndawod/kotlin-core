@@ -61,6 +61,21 @@ enum class NewLocaleLanguage constructor(val oldCode: String, val newCode: Strin
 }
 
 /**
+ * Returns the String representation of this [Locale][java.util.Locale].
+ */
+fun Locale.stringify(): String = toLanguageTag()
+
+/**
+ * Returns the lowercase String representation of this [Locale][java.util.Locale].
+ */
+fun Locale.lowercase(): String = stringify().lowercase()
+
+/**
+ * Returns the uppercase String representation of this [Locale][java.util.Locale].
+ */
+fun Locale.uppercase(): String = stringify().uppercase()
+
+/**
  * Returns the 2-character language code for this [Locale] with the old language codes converted
  * to their new variations.
  */

@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "TooManyFunctions", "MagicNumber")
+@file:Suppress("unused", "MagicNumber")
 
 package org.noordawod.kotlin.core.extension
 
@@ -130,11 +130,6 @@ fun String?.toLocaleOr(fallback: Locale): Locale {
   }
   return fallback
 }
-
-/**
- * Converts a [String] to a [Locale] using [Locale.forLanguageTag].
- */
-fun String.toLocale(): Locale = Locale.forLanguageTag(this)
 
 /**
  * Returns this String if it's a valid 2-letter country code, null otherwise.

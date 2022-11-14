@@ -37,7 +37,6 @@ private val BASE62: Base62 = Base62()
 /**
  * Helper methods for dealing with bytes and [ByteArray].
  */
-@Suppress("TooManyFunctions")
 object ByteUtils {
   /**
    * A secure random number generator.
