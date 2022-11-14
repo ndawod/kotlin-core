@@ -25,7 +25,7 @@ ext.encoding = 'UTF-8'
 ext.versions = [
     jdk: JavaVersion.VERSION_11,
     versions_outdated: '0.44.0',
-    detekt: '1.21.0',
+    detekt: '1.22.0-RC3',
     kotlin: '1.7.20', // https://kotlinlang.org/docs/releases.html#release-details
     kotlin_coroutines: '1.6.4',
     kotlin_serialization: '1.4.1',
