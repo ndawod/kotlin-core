@@ -23,35 +23,15 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.core.extension
+package org.noordawod.kotlin.core.util
 
 /**
- * Converts an [Int] value to its [String] representation.
- *
- * @param opacity apply a constant opacity value (0..255) to the color
- * @param dash whether to add a '#' character in the beginning, defaults to false
+ * A reusable [SecureRandom][java.security.SecureRandom] instance for any use.
  */
-@Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
-  }
+val secureRandom = java.security.SecureRandom()
 
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
-
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
-  }
-
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
-}
+/**
+ * Returns a random UUID string on each call.
+ */
+val randomUuid: String
+  get() = java.util.UUID.randomUUID().toString()

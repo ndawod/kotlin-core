@@ -21,37 +21,31 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
-
-package org.noordawod.kotlin.core.extension
+package org.noordawod.kotlin.core.logger
 
 /**
- * Converts an [Int] value to its [String] representation.
+ * Types of log message we support. To keep it simple, only 3 types are defined.
  *
- * @param opacity apply a constant opacity value (0..255) to the color
- * @param dash whether to add a '#' character in the beginning, defaults to false
+ * @param value a human-friendly short description of the enum entry
  */
-@Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
-  }
+enum class LogType constructor(val value: String) {
+  /**
+   * A log type suitable for information related to debugging. Most messages will use this
+   * type.
+   */
+  INFO("info"),
 
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
+  /**
+   * A log type for warnings, or non-breaking errors. Such situations the app is able to
+   * recover from and still produce a meaningful response.
+   */
+  WARNING("warning"),
 
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
-  }
+  /**
+   * A log type for breaking errors. Such situations cause the app to stop abruptly and report
+   * an error to the client.
+   */
+  ERROR("error");
 
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
+  override fun toString(): String = value
 }

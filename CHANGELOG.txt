@@ -3,6 +3,10 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.0.0 (December 10, 2022)
+    Introduce massive refactor which brings Dagger and more common classes and
+    auxiliary extension functions.
+
 2.8.0 (November 14, 2022)
     Upgrade Detekt rules, add a couple of extension functions and remove another.
 

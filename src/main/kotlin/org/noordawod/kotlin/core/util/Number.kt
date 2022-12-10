@@ -23,35 +23,22 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.core.extension
+package org.noordawod.kotlin.core.util
 
 /**
- * Converts an [Int] value to its [String] representation.
- *
- * @param opacity apply a constant opacity value (0..255) to the color
- * @param dash whether to add a '#' character in the beginning, defaults to false
+ * Rounds a [Float] number to 0.5 increments.
  */
-@Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
-  }
+fun Float.roundToHalf(): Float = kotlin.math.round(this * 2f) / 2f
 
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
+/**
+ * Rounds a [Double] number to 0.5 increments.
+ */
+fun Double.roundToHalf(): Double = kotlin.math.round(this * 2) / 2
 
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
-  }
-
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
-}
+/**
+ * Given that `this` is the total number of entries, and [capacity] is the number of entries in
+ * one page, this function returns the overall number of pages needed for proper pagination.
+ *
+ * @param capacity number of entries in one page
+ */
+fun Int.pagesCount(capacity: Int): Int = kotlin.math.ceil(toFloat() / capacity).toInt()

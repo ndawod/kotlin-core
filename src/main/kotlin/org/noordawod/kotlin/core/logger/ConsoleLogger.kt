@@ -23,35 +23,25 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.core.extension
+package org.noordawod.kotlin.core.logger
 
 /**
- * Converts an [Int] value to its [String] representation.
+ * A [Logger] that simply prints log messages to the console.
  *
- * @param opacity apply a constant opacity value (0..255) to the color
- * @param dash whether to add a '#' character in the beginning, defaults to false
+ * @param environment the runtime environment of the logger
  */
-@Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
+class ConsoleLogger constructor(environment: String) : BaseSimpleLogger(environment) {
+  override fun log(
+    type: LogType,
+    tag: String,
+    message: String,
+    error: Throwable?
+  ) {
+    val logMessage = logMessage(type, tag, message)
+    if (null != error) {
+      println("$error")
+      error.printStackTrace()
+    }
+    println(logMessage)
   }
-
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
-
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
-  }
-
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
 }

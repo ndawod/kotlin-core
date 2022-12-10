@@ -22,10 +22,11 @@
  */
 
 group = 'org.noordawod'
-version = '2.7.7'
+version = '3.0.0'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 buildDir = 'build'
 
+apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.github.ben-manes.versions'
 
@@ -61,8 +62,13 @@ repositories {
 apply from: "$rootDir/gradle/jvm.gradle"
 apply from: "$rootDir/gradle/kotlin.gradle"
 apply from: "$rootDir/gradle/detekt.gradle"
+apply from: "$rootDir/gradle/dagger.gradle"
 
 dependencies {
     implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
     implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
+    implementation "com.github.aelstad:keccakj:${versions.aelstad_keccakj}"
+    implementation "com.ibm.icu:icu4j:${versions.icu4j}"
+    implementation "com.google.guava:guava:${versions.guava}"
+    implementation "com.auth0:java-jwt:${versions.auth0_jwt}"
 }

@@ -25,9 +25,7 @@
 
 package org.noordawod.kotlin.core.extension
 
-import java.io.File
-import java.net.MalformedURLException
-import java.util.Locale
+import org.noordawod.kotlin.core.util.ImageDimension
 
 /**
  * A signature of a [Pair] of two [strings][String].
@@ -35,31 +33,33 @@ import java.util.Locale
 typealias PairOfStrings = Pair<String, String>
 
 /**
- * Strips any trailing slash characters (value of [File.separatorChar]) from this [String].
+ * Strips any trailing slash characters
+ * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
 fun String.withoutTrailingSlash(): String {
   var endIndex = length
-  while (0 < endIndex && File.separatorChar == this[endIndex - 1]) {
+  while (0 < endIndex && java.io.File.separatorChar == this[endIndex - 1]) {
     endIndex--
   }
   return substring(0, endIndex)
 }
 
 /**
- * Strips any leading slash characters (value of [File.separatorChar]) from this [String].
+ * Strips any leading slash characters
+ * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
 fun String.withoutLeadingSlash(): String {
   var startIndex = 0
   val length = length
-  while (length > startIndex && File.separatorChar == this[startIndex]) {
+  while (length > startIndex && java.io.File.separatorChar == this[startIndex]) {
     startIndex++
   }
   return substring(startIndex)
 }
 
 /**
- * Strips any leading and trailing slash characters (value of [File.separatorChar]) from
- * this [String].
+ * Strips any leading and trailing slash characters
+ * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
 fun String.withoutSlashes() = withoutLeadingSlash().withoutTrailingSlash()
 
@@ -111,25 +111,54 @@ fun String?.trimOr(fallback: String): String {
 fun String?.trimOrBlank(): String = trimOr("")
 
 /**
- * Converts this String into a [Locale] if valid, null otherwise.
+ * Returns [fallback] if this String is null, otherwise whether this String is equal to
+ * either "1" or "true".
+ *
+ * @param fallback default value when this String is null
+ */
+fun String?.toBooleanOr(fallback: Boolean = false): Boolean {
+  val value = this?.lowercase(java.util.Locale.ENGLISH)
+  return if (null == value) fallback else "1" == value || "true" == value
+}
+
+/**
+ * Converts this String into a [Locale][java.util.Locale] if valid, null otherwise.
  */
 @Suppress("MagicNumber")
-fun String?.toLocaleOrNull(): Locale? =
+fun String?.toLocaleOrNull(): java.util.Locale? =
   if (null != this && (2 == length || 5 == length)) toLocaleImpl() else null
 
 /**
- * Converts this String into a [Locale] if valid, [fallback] otherwise.
+ * Converts this String into a [Locale][java.util.Locale] if valid, [fallback] otherwise.
  */
 @Suppress("MagicNumber")
-fun String?.toLocaleOr(fallback: Locale): Locale {
-  if (null != this && (2 == length || 5 == length)) {
-    val locale = toLocaleImpl()
-    if (null != locale) {
-      return locale
-    }
+fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale =
+  toLocaleOrNull() ?: fallback
+
+/**
+ * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
+ * null otherwise.
+ */
+fun Collection<String>?.toLocales(): Collection<java.util.Locale>? =
+  if (null == this || isEmpty()) null else iterator().toLocalesImpl(size)
+
+/**
+ * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
+ * null otherwise.
+ */
+fun List<String>?.toLocales(): List<java.util.Locale>? =
+  if (null == this || isEmpty()) {
+    null
+  } else {
+    iterator().toLocalesImpl(size) as List<java.util.Locale>
   }
-  return fallback
-}
+
+/**
+ * Returns an array of [Locale][java.util.Locale]s matching these strings on success,
+ * null otherwise.
+ */
+fun Array<String>?.toLocales(): Array<java.util.Locale>? =
+  if (null == this || isEmpty()) null else iterator().toLocalesImpl(size)?.toTypedArray()
 
 /**
  * Returns this String if it's a valid 2-letter country code, null otherwise.
@@ -141,7 +170,7 @@ fun String?.ensureCountryCode(uppercase: Boolean = true): String? {
   val country = this?.trimOrNull()?.uppercase()
 
   if (null != country) {
-    val isoCountries = Locale.getISOCountries()
+    val isoCountries = java.util.Locale.getISOCountries()
     for (isoCountry in isoCountries) {
       if (isoCountry == country) {
         return if (uppercase) country else country.lowercase()
@@ -157,7 +186,7 @@ fun String?.ensureCountryCode(uppercase: Boolean = true): String? {
  * old language code.
  */
 fun String.getNewLanguage(): String {
-  val language = lowercase(Locale.ENGLISH)
+  val language = lowercase(java.util.Locale.ENGLISH)
   for (locale in NewLocaleLanguage.values()) {
     if (language == locale.oldCode) {
       return locale.newCode
@@ -233,7 +262,7 @@ fun String.isSameEmail(email: String): Boolean =
  */
 fun String?.parseUrl(): java.net.URL? = try {
   java.net.URL(this)
-} catch (ignored: MalformedURLException) {
+} catch (ignored: java.net.MalformedURLException) {
   null
 }
 
@@ -288,11 +317,103 @@ fun String?.toColor(opacity: Int? = null): Int? {
   return (opacityValue shl 24) + (redValue shl 16) + (greenValue shl 8) + blueValue
 }
 
-private fun String.toLocaleImpl(): Locale? {
+/**
+ * Normalized this string to act as a handle having the allowed dictionary characters; returns
+ * the normalized handle on success, null otherwise.
+ *
+ * If the string includes other characters, they'll be removed.
+ *
+ * @param dictionary allowed list of characters expressed as a regexp pattern
+ * @param ignoreCase whether to ignore the string's case, defaults to lower casing it
+ */
+fun String?.normalizedHandle(
+  dictionary: java.util.regex.Pattern,
+  ignoreCase: Boolean = true
+): String? {
+  this ?: return null
+
+  var normalizedHandle = if (ignoreCase) trim().lowercase() else trim()
+
+  normalizedHandle = StringBuilder(length.coerceAtLeast(1))
+    .apply {
+      normalizedHandle.forEach {
+        if (dictionary.matcher("$it").matches()) {
+          append(it)
+        }
+      }
+    }
+    .toString()
+
+  return normalizedHandle.ifEmpty { null }
+}
+
+/**
+ * Normalized this string to act as a lowercase key; returns the normalized key on
+ * success, null otherwise.
+ */
+fun String?.normalizedKey(): String? {
+  val normalizedKey = trimOrNull()?.lowercase()
+
+  return if (isNullOrEmpty()) null else normalizedKey
+}
+
+/**
+ * Returns an [ImageDimension] matching this string on success, null otherwise.
+ */
+fun String?.imageDimension(): ImageDimension? {
+  val normalizedString = this?.trim()
+  if (normalizedString.isNullOrEmpty()) {
+    return null
+  }
+
+  val xPosition = normalizedString.indexOf('x')
+  if (0 > xPosition) {
+    return null
+  }
+
+  val width = normalizedString
+    .substring(0, xPosition)
+    .toIntOrNull()
+  if (null == width || 0 > width) {
+    return null
+  }
+
+  val height = normalizedString
+    .substring(1 + xPosition)
+    .toIntOrNull()
+  if (null == height || 0 > height) {
+    return null
+  }
+
+  return ImageDimension(width, height)
+}
+
+private fun String.toLocaleImpl(): java.util.Locale? {
   val parts = replace("-", "_").split('_')
   return try {
-    if (1 < parts.size) Locale(parts[0], parts[1]) else Locale(parts[0])
+    if (1 < parts.size) java.util.Locale(parts[0], parts[1]) else java.util.Locale(parts[0])
   } catch (ignored: Throwable) {
     null
   }
+}
+
+private fun Iterator<String>.toLocalesImpl(size: Int): Collection<java.util.Locale>? {
+  val result = mutableListWith<java.util.Locale>(size)
+
+  for (string in this) {
+    val normalizedString = string.trimOrNull() ?: continue
+    val stringParts = normalizedString
+      .replace('_', '-')
+      .split('-')
+      .ifEmpty { null } ?: continue
+
+    result.add(
+      java.util.Locale(
+        stringParts[0],
+        if (1 < stringParts.size) stringParts[1] else ""
+      )
+    )
+  }
+
+  return if (result.isEmpty()) null else result
 }

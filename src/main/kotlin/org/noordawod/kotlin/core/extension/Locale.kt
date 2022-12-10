@@ -28,37 +28,9 @@ package org.noordawod.kotlin.core.extension
 import java.util.Locale
 
 /**
- * Maps old language codes to new ones. This follows the ISO standard for 2-letter languages.
- *
- * @param oldCode the old language code
- * @param newCode the new language code
+ * Returns the String representation of this [Locale][java.util.Locale].
  */
-@Suppress("MemberVisibilityCanBePrivate")
-enum class NewLocaleLanguage constructor(val oldCode: String, val newCode: String) {
-  HEBREW("iw", "he"),
-  INDONESIAN("in", "id"),
-  YIDDISH("ji", "yi");
-
-  companion object {
-    /**
-     * Attempts to decode a language [code] and match it against [oldCode] or [newCode],
-     * returns the matching [NewLocaleLanguage] on success, null otherwise.
-     *
-     * @param code the code value to match
-     */
-    fun decode(code: Any?): NewLocaleLanguage? {
-      if (null != code) {
-        val normalizedCode = "$code".lowercase(Locale.ENGLISH)
-        for (locale in values()) {
-          if (locale.oldCode == normalizedCode || locale.newCode == normalizedCode) {
-            return locale
-          }
-        }
-      }
-      return null
-    }
-  }
-}
+fun Locale.normalizedLocale(): String = toLanguageTag().lowercase()
 
 /**
  * Returns the String representation of this [Locale][java.util.Locale].
@@ -144,6 +116,39 @@ fun Locale.startAlignment(): String = if (isRightToLeft()) "right" else "left"
  * language ("right", "left").
  */
 fun Locale.endAlignment(): String = if (isRightToLeft()) "left" else "right"
+
+/**
+ * Maps old language codes to new ones. This follows the ISO standard for 2-letter languages.
+ *
+ * @param oldCode the old language code
+ * @param newCode the new language code
+ */
+@Suppress("MemberVisibilityCanBePrivate")
+internal enum class NewLocaleLanguage constructor(val oldCode: String, val newCode: String) {
+  HEBREW("iw", "he"),
+  INDONESIAN("in", "id"),
+  YIDDISH("ji", "yi");
+
+  companion object {
+    /**
+     * Attempts to decode a language [code] and match it against [oldCode] or [newCode],
+     * returns the matching [NewLocaleLanguage] on success, null otherwise.
+     *
+     * @param code the code value to match
+     */
+    fun decode(code: Any?): NewLocaleLanguage? {
+      if (null != code) {
+        val normalizedCode = "$code".lowercase(Locale.ENGLISH)
+        for (locale in values()) {
+          if (locale.oldCode == normalizedCode || locale.newCode == normalizedCode) {
+            return locale
+          }
+        }
+      }
+      return null
+    }
+  }
+}
 
 /**
  * List of right-to-left languages.

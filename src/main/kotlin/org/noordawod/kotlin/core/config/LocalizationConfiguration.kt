@@ -23,35 +23,24 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.core.extension
+package org.noordawod.kotlin.core.config
 
 /**
- * Converts an [Int] value to its [String] representation.
+ * Configuration for localizing this module. In order to support multiple localizations, one needs
+ * to provide a base [TranslationConfiguration] in the Yaml configuration file, and adjacent to it
+ * a translations key consisting of a list of [TranslationConfiguration].
  *
- * @param opacity apply a constant opacity value (0..255) to the color
- * @param dash whether to add a '#' character in the beginning, defaults to false
+ * @param base base [translation][TranslationConfiguration] to use (fallback)
+ * @param translations other [translations][TranslationsConfiguration] defined, optional
  */
-@Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
-  }
+@kotlinx.serialization.Serializable
+data class LocalizationConfiguration(
+  val base: TranslationConfiguration,
+  val translations: TranslationsConfiguration?
+) {
+  // Stops Detekt and the IDE from reporting "ArrayInDataClass" warning.
+  override fun equals(other: Any?): Boolean = super.equals(other)
 
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
-
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
-  }
-
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
+  // Stops Detekt and the IDE from reporting "ArrayInDataClass" warning.
+  override fun hashCode(): Int = super.hashCode()
 }

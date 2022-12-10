@@ -21,37 +21,36 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+package org.noordawod.kotlin.core.logger
 
-package org.noordawod.kotlin.core.extension
+import org.noordawod.kotlin.core.repository.PublicId
 
 /**
- * Converts an [Int] value to its [String] representation.
+ * Reports a warning about a public identifier that is not a proper hash value.
  *
- * @param opacity apply a constant opacity value (0..255) to the color
- * @param dash whether to add a '#' character in the beginning, defaults to false
+ * @param tag log tag to use
+ * @param publicId problematic hash value
  */
-@Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
-  }
+fun Logger.hashValueWarning(tag: String, publicId: PublicId) {
+  warning(tag, "Unable to calculate hash value: '$publicId'")
+}
 
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
+/**
+ * Reports a warning about a data model that cannot be converted to an entity.
+ *
+ * @param tag log tag to use
+ * @param model model that cannot be converted
+ */
+fun Logger.modelWarning(tag: String, model: Any) {
+  warning(tag, "Cannot convert model to entity: $model")
+}
 
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
-  }
-
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
+/**
+ * Reports a warning about an entity that cannot be converted to a data model.
+ *
+ * @param tag log tag to use
+ * @param entity entity that cannot be converted
+ */
+fun Logger.entityWarning(tag: String, entity: Any) {
+  warning(tag, "Cannot convert entity to model: $entity")
 }
