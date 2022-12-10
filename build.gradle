@@ -22,11 +22,10 @@
  */
 
 group = 'org.noordawod'
-version = '3.0.0'
+version = '3.0.2'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 buildDir = 'build'
 
-apply plugin: 'kotlin-kapt'
 apply plugin: 'kotlinx-serialization'
 apply plugin: 'com.github.ben-manes.versions'
 
@@ -61,6 +60,7 @@ repositories {
 
 apply from: "$rootDir/gradle/jvm.gradle"
 apply from: "$rootDir/gradle/kotlin.gradle"
+apply from: "$rootDir/gradle/kapt.gradle"
 apply from: "$rootDir/gradle/detekt.gradle"
 apply from: "$rootDir/gradle/dagger.gradle"
 
