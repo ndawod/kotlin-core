@@ -25,16 +25,20 @@ apply from: "$rootDir/gradle/config.gradle"
 
 apply plugin: 'kotlin'
 
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = versions.jdk
+        verbose = true
+    }
+}
+
 project.afterEvaluate {
     tasks.withType(JavaCompile) {
         compileKotlin {
-            // noinspection GrUnresolvedAccess
-            kotlinOptions.jvmTarget = versions.jdk
-        }
-
-        compileTestKotlin {
-            // noinspection GrUnresolvedAccess
-            kotlinOptions.jvmTarget = versions.jdk
+            kotlinOptions {
+                jvmTarget = versions.jdk
+                verbose = true
+            }
         }
     }
 }
