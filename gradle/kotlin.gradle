@@ -27,12 +27,26 @@ apply plugin: 'kotlin'
 
 compileKotlin {
     // noinspection GrUnresolvedAccess
-    kotlinOptions.jvmTarget = versions.jdk
+    kotlinOptions.jvmTarget = "${versions.jdk}"
 }
 
 compileTestKotlin {
     // noinspection GrUnresolvedAccess
-    kotlinOptions.jvmTarget = versions.jdk
+    kotlinOptions.jvmTarget = "${versions.jdk}"
+}
+
+project.afterEvaluate {
+    tasks.withType(JavaCompile) {
+        compileKotlin {
+            // noinspection GrUnresolvedAccess
+            kotlinOptions.jvmTarget = "${versions.jdk}"
+        }
+
+        compileTestKotlin {
+            // noinspection GrUnresolvedAccess
+            kotlinOptions.jvmTarget = "${versions.jdk}"
+        }
+    }
 }
 
 dependencies {

@@ -28,4 +28,14 @@ apply plugin: 'kotlin-kapt'
 kapt {
     sourceCompatibility = versions.jdk
     targetCompatibility = versions.jdk
+
+    compileKotlin {
+        // noinspection GrUnresolvedAccess
+        kotlinOptions.jvmTarget = "${versions.jdk}"
+    }
+
+    compileTestKotlin {
+        // noinspection GrUnresolvedAccess
+        kotlinOptions.jvmTarget = "${versions.jdk}"
+    }
 }
