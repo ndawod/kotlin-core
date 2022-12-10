@@ -27,8 +27,8 @@ apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = "${versions.jdk}"
-targetCompatibility = "${versions.jdk}"
+sourceCompatibility = versions.jdk
+targetCompatibility = versions.jdk
 
 javadoc {
     // noinspection GroovyAssignabilityCheck
