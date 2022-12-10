@@ -27,9 +27,6 @@ apply plugin: 'java'
 apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
-sourceCompatibility = versions.jdk
-targetCompatibility = versions.jdk
-
 javadoc {
     // noinspection GroovyAssignabilityCheck
     options {
@@ -39,6 +36,9 @@ javadoc {
 }
 
 java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of("${versions.jdk}".toInteger()))
+    }
     withJavadocJar()
     withSourcesJar()
 }

@@ -25,25 +25,9 @@ apply from: "$rootDir/gradle/config.gradle"
 
 apply plugin: 'kotlin'
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = versions.jdk
-        verbose = true
-    }
-}
-
-compileJava {
-    options.compilerArgs.addAll(['--release', "${versions.jdk}"])
-}
-
-project.afterEvaluate {
-    tasks.withType(JavaCompile) {
-        compileKotlin {
-            kotlinOptions {
-                jvmTarget = versions.jdk
-                verbose = true
-            }
-        }
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of("${versions.jdk}".toInteger()))
     }
 }
 
