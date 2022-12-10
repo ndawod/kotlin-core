@@ -32,6 +32,10 @@ compileKotlin {
     }
 }
 
+compileJava {
+    options.compilerArgs.addAll(['--release', "${versions.jdk}"])
+}
+
 project.afterEvaluate {
     tasks.withType(JavaCompile) {
         compileKotlin {
