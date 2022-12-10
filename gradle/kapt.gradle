@@ -26,8 +26,8 @@ apply from: "$rootDir/gradle/config.gradle"
 apply plugin: 'kotlin-kapt'
 
 kapt {
-    sourceCompatibility = versions.jdk
-    targetCompatibility = versions.jdk
+    sourceCompatibility = "${versions.jdk}"
+    targetCompatibility = "${versions.jdk}"
 
     compileKotlin {
         // noinspection GrUnresolvedAccess
