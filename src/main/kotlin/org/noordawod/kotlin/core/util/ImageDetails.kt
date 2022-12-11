@@ -21,11 +21,17 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-apply from: "$rootDir/gradle/config.gradle"
+@file:Suppress("unused")
 
-apply plugin: 'kotlin-kapt'
+package org.noordawod.kotlin.core.util
 
-// Annotation processors discovery from compile classpath is deprecated.
-kapt {
-    includeCompileClasspath = false
-}
+/**
+ * Contains the details of a single image file.
+ *
+ * @param file path to the image file
+ * @param dimension the width and height of the image
+ */
+data class ImageDetails constructor(
+  val file: java.io.File,
+  val dimension: ImageDimension
+)
