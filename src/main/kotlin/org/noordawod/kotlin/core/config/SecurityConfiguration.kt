@@ -26,7 +26,7 @@
 package org.noordawod.kotlin.core.config
 
 import kotlinx.serialization.ExperimentalSerializationApi
-import org.noordawod.kotlin.core.EncryptionAlgorithm
+import org.noordawod.kotlin.core.security.EncryptionAlgorithm
 
 /**
  * Configuration to encrypt and decrypt data with clients.

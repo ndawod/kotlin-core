@@ -23,7 +23,7 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.security
+package org.noordawod.kotlin.core.security
 
 /**
  * Hashes a [String] value using [SipHash] and returns the value as a [ByteArray] on success,

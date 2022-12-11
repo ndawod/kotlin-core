@@ -23,7 +23,7 @@
 
 @file:Suppress("unused", "MemberVisibilityCanBePrivate", "SameParameterValue")
 
-package org.noordawod.kotlin.security
+package org.noordawod.kotlin.core.security
 
 import java.nio.charset.Charset
 

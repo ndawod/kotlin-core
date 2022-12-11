@@ -23,7 +23,7 @@
 
 @file:Suppress("unused")
 
-package org.noordawod.kotlin.core
+package org.noordawod.kotlin.core.security
 
 import com.auth0.jwt.algorithms.Algorithm
 import kotlinx.serialization.ExperimentalSerializationApi

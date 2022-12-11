@@ -31,8 +31,8 @@ import kotlinx.serialization.ExperimentalSerializationApi
 import org.noordawod.kotlin.core.config.SecurityConfiguration
 import org.noordawod.kotlin.core.repository.MessageDigestRepository
 import org.noordawod.kotlin.core.repository.impl.MessageDigestRepositoryImpl
-import org.noordawod.kotlin.security.SipHashFactory
-import org.noordawod.kotlin.security.toSipHashKey
+import org.noordawod.kotlin.core.security.SipHashFactory
+import org.noordawod.kotlin.core.security.toSipHashKey
 
 /**
  * Security-focused singleton instances accessible via dependency injection.
