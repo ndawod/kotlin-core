@@ -80,4 +80,10 @@ object Constants {
    * A list of characters that includes white spaces and the slash ("/") character.
    */
   val WHITE_SPACES_WITH_SLASH_CHARS: CharArray = WHITE_SPACES + charArrayOf('/')
+
+  /**
+   * Matches one or more white-space characters.
+   */
+  val WHITE_SPACES_PATTERN: java.util.regex.Pattern =
+    java.util.regex.Pattern.compile("\\s+")
 }
