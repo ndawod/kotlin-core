@@ -113,3 +113,22 @@ fun Collection<HashValue?>?.publicId(): Collection<PublicId>? {
  */
 fun <T> Collection<T?>?.publicId(transform: ((T) -> HashValue?)): Collection<PublicId>? =
   filterNonEmpty(transform)?.publicId()
+
+/**
+ * Returns a new [Map], indexed by [PublicId], that contains only non-empty keys along
+ * with their respective values on success, null otherwise.
+ */
+fun <T> Map<HashValue, T>?.publicId(): Map<PublicId, T>? {
+  if (null == this) {
+    return null
+  }
+
+  val result = mutableMapWith<PublicId, T>(size)
+
+  for (entry in this) {
+    val key = entry.key.publicId() ?: continue
+    result[key] = entry.value
+  }
+
+  return if (result.isEmpty()) null else result
+}

@@ -29,6 +29,7 @@ import org.noordawod.kotlin.core.repository.EmptyHashValue
 import org.noordawod.kotlin.core.repository.HashValue
 import org.noordawod.kotlin.core.repository.PublicId
 import org.noordawod.kotlin.core.security.base62
+import org.noordawod.kotlin.core.util.ByteArrayMap
 
 /**
  * Returns the corresponding [HashValue] for this [PublicId] on success,
@@ -125,3 +126,22 @@ fun Collection<PublicId?>?.hashValue(): Collection<HashValue>? {
  */
 fun <T> Collection<T?>?.hashValue(transform: ((T) -> PublicId?)): Collection<HashValue>? =
   filterNonEmpty(transform)?.hashValue()
+
+/**
+ * Returns a new [Map], indexed by [HashValue], that contains only non-empty keys along
+ * with their respective values on success, null otherwise.
+ */
+fun <T> Map<PublicId, T>?.hashValue(): ByteArrayMap<T>? {
+  if (null == this) {
+    return null
+  }
+
+  val result = ByteArrayMap<T>()
+
+  for (entry in this) {
+    val key = entry.key.hashValue() ?: continue
+    result[key] = entry.value
+  }
+
+  return if (result.isEmpty()) null else result
+}
