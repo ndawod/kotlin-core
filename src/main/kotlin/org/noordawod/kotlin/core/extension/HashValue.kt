@@ -27,6 +27,7 @@ package org.noordawod.kotlin.core.extension
 
 import org.noordawod.kotlin.core.repository.HashValue
 import org.noordawod.kotlin.core.repository.PublicId
+import org.noordawod.kotlin.core.security.ByteUtils
 import org.noordawod.kotlin.core.security.base62
 
 /**
@@ -48,6 +49,36 @@ fun HashValue?.publicIdOr(fallback: PublicId): PublicId = publicId() ?: fallback
  * an empty PublicId otherwise.
  */
 fun HashValue?.publicIdOrEmpty(): PublicId = publicIdOr("")
+
+/**
+ * Returns the hexadecimal representation of this [HashValue] on success,
+ * null otherwise.
+ *
+ * @param escape whether to escape the result for SQL, f.ex: `x'…'`
+ */
+fun HashValue?.toHex(escape: Boolean = false): String? =
+  if (null == this || isEmpty()) null else ByteUtils.toHex(this, escape = escape)
+
+/**
+ * Returns the hexadecimal representation of this [HashValue] on success,
+ * [fallback] otherwise.
+ *
+ * @param fallback value to return if this [HashValue] is null or empty
+ * @param escape whether to escape the result for SQL, f.ex: `x'…'`
+ */
+fun HashValue?.toHexOr(
+  fallback: String,
+  escape: Boolean = false
+): String = toHex(escape = escape) ?: fallback
+
+/**
+ * Returns the hexadecimal representation of this [HashValue] on success,
+ * an empty string otherwise.
+ *
+ * @param escape whether to escape the result for SQL, f.ex: `x'…'`
+ */
+fun HashValue?.toHexOrEmpty(escape: Boolean = false): String =
+  toHexOr("", escape = escape)
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [HashValue]s.

@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.1.5 (January 16, 2023)
+    Add more extensions for `HashValue`.
+
 3.1.4 (January 13, 2023)
     Add more extensions for `HashValue` and `PublicId`.
 
