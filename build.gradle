@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin.core'
-version = '3.2.1'
+version = '3.2.2'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 buildDir = 'build'
 

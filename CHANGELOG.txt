@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.2.2 (January 27, 2023)
+    Adjust `gradle.properties`.
+
 3.2.1 (January 25, 2023)
     Downgrade to Kotlin 1.7.21.
 
