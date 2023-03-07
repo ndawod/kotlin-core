@@ -25,9 +25,6 @@
 
 package org.noordawod.kotlin.core.util
 
-import org.noordawod.kotlin.core.extension.withExtension
-import org.noordawod.kotlin.core.extension.withoutTrailingSlash
-
 /**
  * Let the app know in which environment they're executing in.
  *
@@ -112,17 +109,6 @@ enum class Environment constructor(
    */
   override fun toString() = identifier
 
-  /**
-   * Returns a relative path to Yaml configuration file associated with this environment.
-   */
-  fun yaml(baseDir: String, file: String, extension: String = "yaml"): String {
-    val separatorChar = java.io.File.separatorChar
-    val normalizedBaseDir = baseDir.withoutTrailingSlash()
-    val normalizedFile = file.withExtension(extension)
-
-    return "$normalizedBaseDir$separatorChar$this$separatorChar$normalizedFile"
-  }
-
   companion object {
     /**
      * Returns a new [Environment] matching the specified [identifier] on success, null otherwise.
@@ -138,38 +124,3 @@ enum class Environment constructor(
     }
   }
 }
-
-/**
- * Returns the base directory for this [Environment] where localization files are stored.
- */
-fun Environment.l10nDirectory() =
-  "l10n${java.io.File.separatorChar}$this"
-
-/**
- * Returns the path to a localization [file] based on this [Environment].
- */
-fun Environment.l10nFile(file: String) =
-  "${l10nDirectory()}${java.io.File.separatorChar}$file"
-
-/**
- * Returns a [Throwable] that describes a wrong environment value.
- *
- * @param message error message to use
- */
-fun invalidEnvironmentThrowable(message: String = "First argument must be one of"): Throwable {
-  val environments = Environment.values()
-  val errorArray = Array(environments.size) { environments[it].identifier }
-
-  return IllegalArgumentException(
-    errorArray.joinToString(separator = ", ", prefix = "$message: ")
-  )
-}
-
-/**
- * Returns a [Throwable] that describes an invalid file path.
- *
- * @param file path to the file or directory
- * @param cause explains why the file is invalid
- */
-fun invalidFileThrowable(file: java.io.File, cause: String): Throwable =
-  IllegalArgumentException("File path is invalid: ${file.canonicalPath} ($cause)")

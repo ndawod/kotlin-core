@@ -36,20 +36,18 @@ import org.noordawod.kotlin.core.repository.LocalizationsRepository
 import org.noordawod.kotlin.core.repository.LocalizationsRepositoryMap
 import org.noordawod.kotlin.core.repository.impl.LocalizationRepositoryImpl
 import org.noordawod.kotlin.core.repository.impl.LocalizationsRepositoryImpl
-import org.noordawod.kotlin.core.util.Environment
 import org.noordawod.kotlin.core.util.Localization
-import org.noordawod.kotlin.core.util.l10nFile
 
 /**
  * Runtime (read-only) configuration accessible via dependency injection for modules that wish
  * to be aware of multiple localizations.
  *
- * @param environment the [Environment] instance to use
+ * @param baseDirectory base directory where localization files reside
  * @param l10n configuration for localized texts
  */
 @Module
 class LocalizationModule constructor(
-  environment: Environment,
+  baseDirectory: java.io.File,
   l10n: LocalizationConfiguration
 ) {
   private val baseLocalization: Localization
@@ -86,7 +84,8 @@ class LocalizationModule constructor(
 
     fun load(translation: TranslationConfiguration): Localization {
       val locale = java.util.Locale.forLanguageTag(translation.locale)
-      val file = environment.l10nFile(translation.file)
+      val file = java.io.File(baseDirectory, translation.file)
+
       return Localization.from(locale, file).apply {
         translations[locale] = this
         locationRepositories[locale] = LocalizationRepositoryImpl(this)
@@ -96,10 +95,8 @@ class LocalizationModule constructor(
     // Read base l10n first.
     baseLocalization = load(l10n.base)
 
-    // Read the rest of configured translations.
-    l10n.translations?.forEach {
-      load(it)
-    }
+    // Read the rest of the configured translations.
+    l10n.translations?.forEach(::load)
 
     otherLocalizations = if (locationRepositories.isEmpty()) null else locationRepositories
 

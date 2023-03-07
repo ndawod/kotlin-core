@@ -83,3 +83,26 @@ fun tryCatch(block: CodeBlock, onError: ThrowableHandler, onComplete: CodeBlock)
     onComplete.invoke()
   }
 }
+
+/**
+ * Returns a [Throwable] that describes a wrong environment value.
+ *
+ * @param message error message to use
+ */
+fun invalidEnvironmentThrowable(message: String = "First argument must be one of"): Throwable {
+  val environments = Environment.values()
+  val errorArray = Array(environments.size) { environments[it].identifier }
+
+  return IllegalArgumentException(
+    errorArray.joinToString(separator = ", ", prefix = "$message: ")
+  )
+}
+
+/**
+ * Returns a [Throwable] that describes an invalid file path.
+ *
+ * @param file path to the file or directory
+ * @param cause explains why the file is invalid
+ */
+fun invalidFileThrowable(file: java.io.File, cause: String): Throwable =
+  IllegalArgumentException("File path is invalid: ${file.canonicalPath} ($cause)")
