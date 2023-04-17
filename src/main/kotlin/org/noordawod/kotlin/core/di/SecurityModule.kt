@@ -42,7 +42,7 @@ import org.noordawod.kotlin.core.security.toSipHashKey
  */
 @ExperimentalSerializationApi
 @Module
-class SecurityModule constructor(
+class SecurityModule(
   private val security: SecurityConfiguration,
   private val issuer: String
 ) {

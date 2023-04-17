@@ -336,7 +336,7 @@ fun String.toSipHashKey(): ByteArray = toByteArray(Charsets.ISO_8859_1).let {
 /**
  * Create a new [SipHash] object with a 16 byte key.
  */
-class SipHashFactory constructor(private val key: ByteArray) {
+class SipHashFactory(private val key: ByteArray) {
   init {
     require(16 == key.size) { "Key must be exactly 16 bytes long." }
   }

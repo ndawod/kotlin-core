@@ -37,7 +37,7 @@ package org.noordawod.kotlin.core.util
  *
  */
 @Suppress("LongParameterList")
-enum class Environment constructor(
+enum class Environment(
   val identifier: String,
   val label: String,
   val isLocal: Boolean,

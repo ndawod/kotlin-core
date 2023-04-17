@@ -34,7 +34,7 @@ import org.noordawod.kotlin.core.extension.trimOrBlank
  *
  * @param environment the runtime environment of the logger
  */
-class MemoryLogger constructor(
+class MemoryLogger(
   environment: String,
   private val buffer: StringBuffer
 ) : BaseSimpleLogger(environment) {

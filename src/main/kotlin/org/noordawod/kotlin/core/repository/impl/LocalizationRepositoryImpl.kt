@@ -28,7 +28,7 @@ import org.noordawod.kotlin.core.extension.trimOrNull
 import org.noordawod.kotlin.core.repository.LocalizationRepository
 import org.noordawod.kotlin.core.util.Localization
 
-internal class LocalizationRepositoryImpl constructor(
+internal class LocalizationRepositoryImpl(
   override val l10n: Localization,
 ) : LocalizationRepository {
   override val locale: java.util.Locale = l10n.locale

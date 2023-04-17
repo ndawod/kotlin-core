@@ -41,7 +41,7 @@ typealias TranslationsConfiguration = Array<TranslationConfiguration>
  * @param file location of associated file
  */
 @kotlinx.serialization.Serializable
-open class TranslationConfiguration constructor(
+open class TranslationConfiguration(
   val locale: String,
   val file: String
 ) {

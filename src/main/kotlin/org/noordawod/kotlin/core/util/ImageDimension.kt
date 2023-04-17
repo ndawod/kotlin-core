@@ -31,7 +31,7 @@ package org.noordawod.kotlin.core.util
  * @param width the image's width in pixels
  * @param height the image's height in pixels
  */
-data class ImageDimension constructor(
+data class ImageDimension(
   val width: Int,
   val height: Int
 ) {

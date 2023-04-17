@@ -31,7 +31,7 @@ package org.noordawod.kotlin.core.util
  * @param file path to the image file
  * @param dimension the width and height of the image
  */
-data class ImageDetails constructor(
+data class ImageDetails(
   val file: java.io.File,
   val dimension: ImageDimension
 )

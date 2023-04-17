@@ -46,7 +46,7 @@ import org.noordawod.kotlin.core.util.Localization
  * @param l10n configuration for localized texts
  */
 @Module
-class LocalizationModule constructor(
+class LocalizationModule(
   baseDirectory: java.io.File,
   l10n: LocalizationConfiguration
 ) {

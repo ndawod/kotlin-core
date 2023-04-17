@@ -38,7 +38,7 @@ import kotlin.math.sqrt
  * @param longitude geographical longitude location
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class GeoPoint constructor(val latitude: Double, val longitude: Double) {
+class GeoPoint(val latitude: Double, val longitude: Double) {
   /**
    * A constructor to instantiate a new [GeoPoint] from String [latitude] and [longitude].
    *

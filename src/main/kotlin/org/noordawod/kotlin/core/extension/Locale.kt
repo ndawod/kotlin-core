@@ -124,7 +124,7 @@ fun Locale.endAlignment(): String = if (isRightToLeft()) "left" else "right"
  * @param newCode the new language code
  */
 @Suppress("MemberVisibilityCanBePrivate")
-internal enum class NewLocaleLanguage constructor(val oldCode: String, val newCode: String) {
+internal enum class NewLocaleLanguage(val oldCode: String, val newCode: String) {
   HEBREW("iw", "he"),
   INDONESIAN("in", "id"),
   YIDDISH("ji", "yi");

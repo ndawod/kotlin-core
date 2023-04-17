@@ -34,7 +34,7 @@ package org.noordawod.kotlin.core.config
  * @param path the path part, such as "/path/to/file.html"
  */
 @kotlinx.serialization.Serializable
-open class UriConfiguration constructor(
+open class UriConfiguration(
   val protocol: String,
   val host: String,
   val port: Int = 0,

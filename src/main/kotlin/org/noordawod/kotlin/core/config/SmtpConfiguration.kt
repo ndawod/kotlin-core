@@ -36,7 +36,7 @@ package org.noordawod.kotlin.core.config
  * @param logging whether to log sending emails or not
  */
 @kotlinx.serialization.Serializable
-open class SmtpConfiguration constructor(
+open class SmtpConfiguration(
   val host: String,
   val port: Int,
   val ssl: Boolean? = false,
@@ -68,7 +68,7 @@ open class SmtpConfiguration constructor(
  * @param pass authentication password
  */
 @kotlinx.serialization.Serializable
-open class SmtpAuthConfiguration constructor(
+open class SmtpAuthConfiguration(
   val user: String,
   val pass: String
 ) {

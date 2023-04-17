@@ -27,7 +27,7 @@ import org.noordawod.kotlin.core.repository.LocalizationRepository
 import org.noordawod.kotlin.core.repository.LocalizationsRepository
 import org.noordawod.kotlin.core.repository.LocalizationsRepositoryMap
 
-internal class LocalizationsRepositoryImpl constructor(
+internal class LocalizationsRepositoryImpl(
   override val locales: Set<java.util.Locale>,
   override val baseLocalization: LocalizationRepository,
   private val otherLocalizations: LocalizationsRepositoryMap?

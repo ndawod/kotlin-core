@@ -40,7 +40,7 @@ import org.noordawod.kotlin.core.security.EncryptionAlgorithm
  */
 @ExperimentalSerializationApi
 @kotlinx.serialization.Serializable
-data class SecurityConfiguration constructor(
+data class SecurityConfiguration(
   val sip: String,
   val salt: String,
   val cipher: String,

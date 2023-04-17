@@ -45,7 +45,7 @@ import kotlinx.serialization.encoding.Encoder
 @ExperimentalSerializationApi
 @Suppress("UnderscoresInNumericLiterals", "MagicNumber", "MemberVisibilityCanBePrivate")
 @Serializable(with = EncryptionAlgorithmSerializer::class)
-enum class EncryptionAlgorithm constructor(val method: String, val bits: Int) {
+enum class EncryptionAlgorithm(val method: String, val bits: Int) {
   /**
    * A moderate-length algorithm suitable for development.
    */

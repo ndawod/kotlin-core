@@ -40,7 +40,7 @@ import org.noordawod.kotlin.core.util.Environment
  * @param executorThreads number of threads to use for [ExecutorRepository]
  */
 @Module
-class RepositoryModule constructor(
+class RepositoryModule(
   private val environment: Environment,
   private val logger: Logger,
   private val executorThreads: Int
