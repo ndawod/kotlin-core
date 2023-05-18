@@ -3,6 +3,12 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.5.1 (May 18, 2023)
+    Revert back to using Kotlin 1.7.21.
+
+3.5.0 (May 16, 2023)
+    Switch to using Kotlin 1.8.21.
+
 3.4.1 (April 17, 2023)
     Bump up dependencies versions.
 
