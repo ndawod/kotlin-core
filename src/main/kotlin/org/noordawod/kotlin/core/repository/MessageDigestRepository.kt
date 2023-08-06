@@ -109,5 +109,5 @@ enum class Sha3Strength(val value: String, val bits: Int) {
    */
   // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
-  SHA3_512(Constants.SHA3_512, 512);
+  SHA3_512(Constants.SHA3_512, 512)
 }
