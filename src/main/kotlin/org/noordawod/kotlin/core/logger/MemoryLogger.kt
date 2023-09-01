@@ -71,7 +71,7 @@ class MemoryLogger(
   @Suppress("MemberVisibilityCanBePrivate")
   fun stackTraceOf(error: Throwable): String =
     java.io.StringWriter(Constants.MEDIUM_BLOCK_SIZE).use {
-      error.printStackTrace(java.io.PrintWriter(java.io.BufferedWriter(it)))
+      error.printStackTrace(java.io.PrintWriter(it))
       it.toString().trimOrBlank()
     }
 

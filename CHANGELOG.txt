@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.5.7 (September 1, 2023)
+    Fix a bug in `MemoryLogger`.
+
 3.5.6 (August 6, 2023)
     Bump up dependencies versions.
 
