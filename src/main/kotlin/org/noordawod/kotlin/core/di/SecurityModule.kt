@@ -27,7 +27,6 @@ package org.noordawod.kotlin.core.di
 
 import dagger.Module
 import dagger.Provides
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.noordawod.kotlin.core.config.SecurityConfiguration
 import org.noordawod.kotlin.core.repository.MessageDigestRepository
 import org.noordawod.kotlin.core.repository.impl.MessageDigestRepositoryImpl
@@ -40,7 +39,6 @@ import org.noordawod.kotlin.core.security.toSipHashKey
  * @param security the current [SecurityConfiguration] to use
  * @param issuer the value used in JWT's "iss" (issuer) property
  */
-@ExperimentalSerializationApi
 @Module
 class SecurityModule(
   private val security: SecurityConfiguration,

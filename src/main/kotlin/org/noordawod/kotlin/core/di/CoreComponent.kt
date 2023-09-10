@@ -26,12 +26,10 @@
 package org.noordawod.kotlin.core.di
 
 import dagger.Component
-import kotlinx.serialization.ExperimentalSerializationApi
 
 /**
  * A Dagger II [Component] with core modules.
  */
-@ExperimentalSerializationApi
 @javax.inject.Singleton
 @Component(
   modules = [

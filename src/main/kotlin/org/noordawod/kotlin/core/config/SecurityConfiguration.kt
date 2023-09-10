@@ -25,7 +25,6 @@
 
 package org.noordawod.kotlin.core.config
 
-import kotlinx.serialization.ExperimentalSerializationApi
 import org.noordawod.kotlin.core.security.EncryptionAlgorithm
 
 /**
@@ -38,7 +37,6 @@ import org.noordawod.kotlin.core.security.EncryptionAlgorithm
  * @param iv the IV portion of a block [cipher]
  * @param jwt the JWT configuration
  */
-@ExperimentalSerializationApi
 @kotlinx.serialization.Serializable
 data class SecurityConfiguration(
   val sip: String,
@@ -61,7 +59,6 @@ data class SecurityConfiguration(
  * @param rearmDuration how many minutes to add to the original expiration date when
  * regenerating the JWT
  */
-@ExperimentalSerializationApi
 @kotlinx.serialization.Serializable
 data class JwtConfiguration(
   val algorithm: EncryptionAlgorithm,
