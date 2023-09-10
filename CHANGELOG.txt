@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.5.10 (September 10, 2023)
+    Bump up dependencies versions.
+
 3.5.9 (September 10, 2023)
     Remove use of `ExperimentalSerializationApi` from code.
 
