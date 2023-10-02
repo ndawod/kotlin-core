@@ -140,14 +140,14 @@ fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale =
  * null otherwise.
  */
 fun Collection<String>?.toLocales(): Collection<java.util.Locale>? =
-  if (null == this || isEmpty()) null else iterator().toLocalesImpl(size)
+  if (isNullOrEmpty()) null else iterator().toLocalesImpl(size)
 
 /**
  * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
  * null otherwise.
  */
 fun List<String>?.toLocales(): List<java.util.Locale>? =
-  if (null == this || isEmpty()) {
+  if (isNullOrEmpty()) {
     null
   } else {
     iterator().toLocalesImpl(size) as List<java.util.Locale>
@@ -158,7 +158,7 @@ fun List<String>?.toLocales(): List<java.util.Locale>? =
  * null otherwise.
  */
 fun Array<String>?.toLocales(): Array<java.util.Locale>? =
-  if (null == this || isEmpty()) null else iterator().toLocalesImpl(size)?.toTypedArray()
+  if (isNullOrEmpty()) null else iterator().toLocalesImpl(size)?.toTypedArray()
 
 /**
  * Returns this String if it's a valid 2-letter country code, null otherwise.

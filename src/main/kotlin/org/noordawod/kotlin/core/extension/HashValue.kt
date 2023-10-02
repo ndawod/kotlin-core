@@ -25,16 +25,29 @@
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import org.noordawod.kotlin.core.repository.HashValue
 import org.noordawod.kotlin.core.repository.PublicId
 import org.noordawod.kotlin.core.security.ByteUtils
 import org.noordawod.kotlin.core.security.base62
 
 /**
+ * Returns true if this [HashValue] is non-null and non-empty, false otherwise.
+ */
+@OptIn(ExperimentalContracts::class)
+fun HashValue?.isValid(): Boolean {
+  contract {
+    returns(true) implies (null != this@isValid)
+  }
+  return null != this && isNotEmpty()
+}
+
+/**
  * Returns the corresponding [PublicId] for this [HashValue] on success,
  * null otherwise.
  */
-fun HashValue?.publicId(): PublicId? = if (null == this || isEmpty()) null else base62()
+fun HashValue?.publicId(): PublicId? = if (isValid()) base62() else null
 
 /**
  * Returns the corresponding [PublicId] for this [HashValue] on success,
@@ -57,7 +70,7 @@ fun HashValue?.publicIdOrEmpty(): PublicId = publicIdOr("")
  * @param escape whether to escape the result for SQL, f.ex: `x'…'`
  */
 fun HashValue?.toHex(escape: Boolean = false): String? =
-  if (null == this || isEmpty()) null else ByteUtils.toHex(this, escape = escape)
+  if (isValid()) ByteUtils.toHex(this, escape = escape) else null
 
 /**
  * Returns the hexadecimal representation of this [HashValue] on success,
@@ -88,9 +101,9 @@ fun Collection<HashValue?>?.filterNonEmpty(): Collection<HashValue>? =
     null
   } else {
     val result = ArrayList<HashValue>(size)
-    forEach { entry ->
-      if (null != entry && entry.isNotEmpty()) {
-        result.add(entry)
+    forEach { hashValue ->
+      if (hashValue.isValid()) {
+        result.add(hashValue)
       }
     }
     if (result.isEmpty()) null else result
@@ -110,7 +123,7 @@ fun <T> Collection<T?>?.filterNonEmpty(transform: ((T) -> HashValue?)): Collecti
     val result = ArrayList<HashValue>(size)
     forEach { entry ->
       val hashValue = if (null == entry) null else transform(entry)
-      if (null != hashValue && hashValue.isNotEmpty()) {
+      if (hashValue.isValid()) {
         result.add(hashValue)
       }
     }

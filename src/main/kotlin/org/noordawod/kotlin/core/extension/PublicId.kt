@@ -38,7 +38,7 @@ import org.noordawod.kotlin.core.util.ByteArrayMap
  * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
  * HashValue is considered invalid, and the function will return null in such cases.
  */
-fun PublicId?.hashValue(): HashValue? = if (null == this || isBlank()) null else base62()
+fun PublicId?.hashValue(): HashValue? = if (isNullOrBlank()) null else base62()
 
 /**
  * Returns the corresponding [HashValue] for this [PublicId] on success,
@@ -61,6 +61,24 @@ fun PublicId?.hashValueOr(fallback: HashValue): HashValue = hashValue() ?: fallb
  * It's worth noting that [EmptyHashValue] is, technically, invalid as it contains no bytes.
  */
 fun PublicId?.hashValueOrEmpty(): HashValue = hashValueOr(EmptyHashValue)
+
+/**
+ * Returns the corresponding [HashValue] for this [PublicId] on success,
+ * throws otherwise.
+ *
+ * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
+ * HashValue is considered invalid.
+ */
+fun PublicId?.hashValueOrThrow(
+  errorProvider: (() -> Throwable) = {
+    IllegalStateException("Unable to calculate hash value.")
+  }
+): HashValue {
+  if (isNullOrBlank()) {
+    throw errorProvider()
+  }
+  return base62()
+}
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s.
@@ -92,7 +110,7 @@ fun <T> Collection<T?>?.filterNonEmpty(transform: ((T) -> PublicId?)): Collectio
     val result = ArrayList<PublicId>(size)
     forEach { entry ->
       val hashValue = if (null == entry) null else transform(entry)
-      if (null != hashValue && hashValue.isNotEmpty()) {
+      if (!hashValue.isNullOrEmpty()) {
         result.add(hashValue)
       }
     }
@@ -109,12 +127,45 @@ fun Collection<PublicId?>?.hashValue(): Collection<HashValue>? {
 
   nonEmptyPublicIds.map { publicId ->
     val hashValue = publicId.hashValue()
-    if (null != hashValue) {
+    if (null != hashValue && hashValue.isNotEmpty()) {
       result.add(hashValue)
     }
   }
 
   return if (result.isEmpty()) null else result
+}
+
+/**
+ * Returns the corresponding collection of [HashValue]s for these [PublicId]s on success,
+ * throws otherwise.
+ *
+ * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
+ * HashValue is considered invalid.
+ */
+fun Collection<PublicId?>?.hashValuesOrThrow(
+  errorProvider: (() -> Throwable) = {
+    IllegalStateException("Unable to calculate hash value.")
+  }
+): Collection<HashValue> {
+  if (null == this) {
+    throw errorProvider()
+  }
+
+  val nonEmptyPublicIds = filterNonEmpty() ?: return emptyList()
+  val result = ArrayList<HashValue>(nonEmptyPublicIds.size)
+
+  nonEmptyPublicIds.map { publicId ->
+    val hashValue = publicId.hashValue()
+    if (null != hashValue && hashValue.isNotEmpty()) {
+      result.add(hashValue)
+    }
+  }
+
+  if (result.isEmpty()) {
+    throw errorProvider()
+  }
+
+  return result
 }
 
 /**

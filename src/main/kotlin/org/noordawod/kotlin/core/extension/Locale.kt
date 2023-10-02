@@ -28,22 +28,22 @@ package org.noordawod.kotlin.core.extension
 import java.util.Locale
 
 /**
- * Returns the String representation of this [Locale][java.util.Locale].
+ * Returns the String representation of this [Locale].
  */
 fun Locale.normalizedLocale(): String = toLanguageTag().lowercase()
 
 /**
- * Returns the String representation of this [Locale][java.util.Locale].
+ * Returns the String representation of this [Locale].
  */
 fun Locale.stringify(): String = toLanguageTag()
 
 /**
- * Returns the lowercase String representation of this [Locale][java.util.Locale].
+ * Returns the lowercase String representation of this [Locale].
  */
 fun Locale.lowercase(): String = stringify().lowercase()
 
 /**
- * Returns the uppercase String representation of this [Locale][java.util.Locale].
+ * Returns the uppercase String representation of this [Locale].
  */
 fun Locale.uppercase(): String = stringify().uppercase()
 
@@ -118,6 +118,15 @@ fun Locale.startAlignment(): String = if (isRightToLeft()) "right" else "left"
 fun Locale.endAlignment(): String = if (isRightToLeft()) "left" else "right"
 
 /**
+ * Attempts to guess the country code based on the language (this String).
+ */
+fun String?.toCountryCode(): String? {
+  val language = trimOrNull()?.lowercase(Locale.ENGLISH) ?: return null
+
+  return LANGUAGES_IN_IMPERIAL_COUNTRIES[language]
+}
+
+/**
  * Maps old language codes to new ones. This follows the ISO standard for 2-letter languages.
  *
  * @param oldCode the old language code
@@ -149,6 +158,32 @@ internal enum class NewLocaleLanguage(val oldCode: String, val newCode: String) 
     }
   }
 }
+
+// The list of languages used in countries that use the imperial measurement system.
+// This is obtained from: https://stackoverflow.com/a/76145806
+private val IMPERIAL_COUNTRIES = listOf(
+  "US",
+  "LR",
+  "MM",
+  "BS",
+  "BZ",
+  "KY",
+  "PW",
+  "GB",
+  "UK",
+)
+
+// The list of languages used in countries that use the imperial measurement system.
+// This is obtained from: https://stackoverflow.com/a/76145806
+private val LANGUAGES_IN_IMPERIAL_COUNTRIES = mapOf(
+  // Burmese, Myanmar (Burma)
+  "my" to "MM",
+  "mya" to "MM",
+  "bur" to "MM",
+
+  // Palauan, Palau
+  "pau" to "PW",
+)
 
 /**
  * List of right-to-left languages.
