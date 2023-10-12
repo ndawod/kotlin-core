@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.5.12 (October 12, 2023)
+    Add a new getter to retrieve the keys of Properties.
+
 3.5.11 (October 2, 2023)
     Add a few more extension functions.
 

@@ -38,6 +38,23 @@ import java.io.InputStreamReader
 open class Properties protected constructor(private val props: java.util.Properties) {
   private var destroyed = false
 
+  /**
+   * Returns an immutable [Set] containing the properties' keys in this instance.
+   */
+  val keys: Set<String>
+    get() {
+      val keys = props.keys
+      val result = org.noordawod.kotlin.core.extension.mutableListWith<String>(keys.size)
+
+      for (key in keys) {
+        result.add("$key".trim())
+      }
+
+      result.sort()
+
+      return result.toSet()
+    }
+
   override fun equals(other: Any?): Boolean = other is Properties && other.props == props
 
   override fun hashCode(): Int = props.hashCode()
