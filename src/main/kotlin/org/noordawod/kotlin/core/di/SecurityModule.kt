@@ -42,7 +42,7 @@ import org.noordawod.kotlin.core.security.toSipHashKey
 @Module
 class SecurityModule(
   private val security: SecurityConfiguration,
-  private val issuer: String
+  private val issuer: String,
 ) {
   /**
    * Returns the singleton [SipHashFactory] instance.

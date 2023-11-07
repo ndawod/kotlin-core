@@ -35,8 +35,8 @@ import dagger.Component
   modules = [
     LocalizationModule::class,
     RepositoryModule::class,
-    SecurityModule::class
-  ]
+    SecurityModule::class,
+  ],
 )
 abstract class CoreComponent : BaseComponent {
   /**

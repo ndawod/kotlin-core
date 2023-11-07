@@ -35,7 +35,7 @@ class ConsoleLogger(environment: String) : BaseSimpleLogger(environment) {
     type: LogType,
     tag: String,
     message: String,
-    error: Throwable?
+    error: Throwable?,
   ) {
     val logMessage = logMessage(type, tag, message)
     if (null != error) {

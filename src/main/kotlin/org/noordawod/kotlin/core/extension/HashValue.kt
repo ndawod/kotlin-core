@@ -81,7 +81,7 @@ fun HashValue?.toHex(escape: Boolean = false): String? =
  */
 fun HashValue?.toHexOr(
   fallback: String,
-  escape: Boolean = false
+  escape: Boolean = false,
 ): String = toHex(escape = escape) ?: fallback
 
 /**

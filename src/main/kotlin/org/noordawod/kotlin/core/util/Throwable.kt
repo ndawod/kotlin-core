@@ -94,7 +94,7 @@ fun invalidEnvironmentThrowable(message: String = "First argument must be one of
   val errorArray = Array(environments.size) { environments[it].identifier }
 
   return IllegalArgumentException(
-    errorArray.joinToString(separator = ", ", prefix = "$message: ")
+    errorArray.joinToString(separator = ", ", prefix = "$message: "),
   )
 }
 

@@ -38,7 +38,7 @@ open class UriConfiguration(
   val protocol: String,
   val host: String,
   val port: Int = 0,
-  val path: String = "/"
+  val path: String = "/",
 ) {
   @Suppress("MagicNumber")
   override fun toString(): String {

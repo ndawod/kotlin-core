@@ -33,7 +33,7 @@ package org.noordawod.kotlin.core.util
  */
 data class ImageDimension(
   val width: Int,
-  val height: Int
+  val height: Int,
 ) {
   init {
     require(0 <= width) { "Image width cannot be negative." }

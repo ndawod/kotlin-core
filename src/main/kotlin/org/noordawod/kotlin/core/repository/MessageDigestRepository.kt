@@ -58,7 +58,10 @@ interface MessageDigestRepository {
    * Before the hash of [value] is calculated, it's converted to a [String] by calling its
    * [toString] method.
    */
-  fun digest(function: java.security.MessageDigest, value: Any): HashValue
+  fun digest(
+    function: java.security.MessageDigest,
+    value: Any,
+  ): HashValue
 
   /**
    * Calculates the hash of [value] using the SHA3 algorithm with the provided [strength].
@@ -66,7 +69,10 @@ interface MessageDigestRepository {
    * Before the hash of [value] is calculated, it's converted to a [String] by calling its
    * [toString] method.
    */
-  fun sha3(strength: Sha3Strength, value: Any): HashValue
+  fun sha3(
+    strength: Sha3Strength,
+    value: Any,
+  ): HashValue
 
   /**
    * Calculates the hash of [string] using the SHA3 algorithm with the
@@ -88,26 +94,38 @@ enum class Sha3Strength(val value: String, val bits: Int) {
    */
   // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
-  SHA3_224(Constants.SHA3_224, 224),
+  SHA3_224(
+    value = Constants.SHA3_224,
+    bits = 224,
+  ),
 
   /**
    * SHA3 algorithm with a strength of 256 bits (produces a 32 byte array).
    */
   // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
-  SHA3_256(Constants.SHA3_256, 256),
+  SHA3_256(
+    value = Constants.SHA3_256,
+    bits = 256,
+  ),
 
   /**
    * SHA3 algorithm with a strength of 384 bits (produces a 48 byte array).
    */
   // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
-  SHA3_384(Constants.SHA3_384, 384),
+  SHA3_384(
+    value = Constants.SHA3_384,
+    bits = 384,
+  ),
 
   /**
    * SHA3 algorithm with a strength of 512 bits (produces a 64 byte array).
    */
   // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
-  SHA3_512(Constants.SHA3_512, 512)
+  SHA3_512(
+    value = Constants.SHA3_512,
+    bits = 512,
+  ),
 }

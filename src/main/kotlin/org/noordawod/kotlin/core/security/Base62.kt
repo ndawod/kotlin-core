@@ -61,7 +61,7 @@ class Base62 {
   fun encodeMessage(message: String, charset: Charset): String = encodeInternal(
     message,
     charset,
-    Charsets.ISO_8859_1
+    Charsets.ISO_8859_1,
   )
 
   /**
@@ -71,7 +71,7 @@ class Base62 {
   fun encodeHex(hex: String): String = encodeInternal(
     hex,
     Charsets.ISO_8859_1,
-    Charsets.ISO_8859_1
+    Charsets.ISO_8859_1,
   )
 
   /**
@@ -100,7 +100,7 @@ class Base62 {
   fun decodeMessage(message: String, charset: Charset): String = decodeInternal(
     message,
     Charsets.ISO_8859_1,
-    charset
+    charset,
   )
 
   /**
@@ -110,7 +110,7 @@ class Base62 {
   fun decodeHex(hex: String): String = decodeInternal(
     hex,
     Charsets.ISO_8859_1,
-    Charsets.ISO_8859_1
+    Charsets.ISO_8859_1,
   )
 
   @Suppress("SameParameterValue")

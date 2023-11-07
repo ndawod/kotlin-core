@@ -140,7 +140,7 @@ fun java.util.Date?.offsetDateTime(): java.time.OffsetDateTime? =
  * Converts this [java.util.Date], or [fallback] if null, into a [java.time.OffsetDateTime].
  */
 fun java.util.Date?.offsetDateTimeOr(
-  fallback: java.util.Date = java.util.Date()
+  fallback: java.util.Date = java.util.Date(),
 ): java.time.OffsetDateTime = (this ?: fallback).toInstant().atOffset(java.time.ZoneOffset.UTC)
 
 /**
@@ -153,7 +153,7 @@ fun java.time.OffsetDateTime?.date(): java.util.Date? =
  * Converts this [java.util.Date], or [fallback] if null, into a [java.time.OffsetDateTime].
  */
 fun java.time.OffsetDateTime?.dateOr(
-  fallback: java.time.OffsetDateTime = java.time.OffsetDateTime.now()
+  fallback: java.time.OffsetDateTime = java.time.OffsetDateTime.now(),
 ): java.util.Date = java.util.Date((this ?: fallback).toInstant().toEpochMilli())
 
 /**

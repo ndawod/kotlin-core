@@ -42,7 +42,7 @@ open class SmtpConfiguration(
   val ssl: Boolean? = false,
   val auth: SmtpAuthConfiguration? = null,
   val emails: SmtpEmails? = null,
-  val logging: Boolean? = false
+  val logging: Boolean? = false,
 ) {
   override fun equals(other: Any?): Boolean = other is SmtpConfiguration &&
     other.host == host &&
@@ -70,7 +70,7 @@ open class SmtpConfiguration(
 @kotlinx.serialization.Serializable
 open class SmtpAuthConfiguration(
   val user: String,
-  val pass: String
+  val pass: String,
 ) {
   override fun equals(other: Any?): Boolean = other is SmtpAuthConfiguration &&
     other.user == user &&
@@ -103,7 +103,7 @@ open class SmtpEmails(
   val investor: String? = null,
   val media: String? = null,
   val privacy: String? = null,
-  val support: String? = null
+  val support: String? = null,
 ) {
   override fun equals(other: Any?): Boolean = other is SmtpEmails &&
     other.sender == sender &&

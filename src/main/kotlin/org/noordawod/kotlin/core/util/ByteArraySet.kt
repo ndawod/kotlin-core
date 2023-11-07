@@ -48,7 +48,7 @@ class ByteArraySet : java.util.TreeSet<ByteArray>(ByteArrayComparator) {
      */
     inline fun <T> from(
       list: Iterable<T>,
-      transform: (T) -> ByteArray
+      transform: (T) -> ByteArray,
     ): ByteArraySet = ByteArraySet().apply {
       list.forEach {
         add(transform(it))

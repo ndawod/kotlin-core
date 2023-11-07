@@ -88,7 +88,10 @@ object ByteUtils {
   /**
    * Generates random characters from the supplied dictionary.
    */
-  fun randomChars(dictionary: ByteArray, length: Int): ByteArray {
+  fun randomChars(
+    dictionary: ByteArray,
+    length: Int,
+  ): ByteArray {
     val bytes = ByteArray(length)
     val random: ThreadLocalRandom = ThreadLocalRandom.current()
     var idx = 0
@@ -102,13 +105,21 @@ object ByteUtils {
   /**
    * Generates a random hexadecimal [ByteArray].
    */
-  fun randomHex(length: Int, asBinary: Boolean): ByteArray =
-    randomChars(HEX_BYTES, (if (asBinary) 2 else 1) * length)
+  fun randomHex(
+    length: Int,
+    asBinary: Boolean,
+  ): ByteArray = randomChars(
+    dictionary = HEX_BYTES,
+    length = (if (asBinary) 2 else 1) * length,
+  )
 
   /**
-   * Generates a random alpha-numeric string.
+   * Generates a random alphanumeric string.
    */
-  fun randomAlpha(length: Int): ByteArray = randomChars(Base62.ALPHABET_BYTES, length)
+  fun randomAlpha(length: Int): ByteArray = randomChars(
+    dictionary = Base62.ALPHABET_BYTES,
+    length = length,
+  )
 
   /**
    * Tests whether a given [ByteArray] contains only hexadecimal characters.
@@ -130,14 +141,23 @@ object ByteUtils {
   /**
    * Encodes the given binary data to hexadecimal string.
    */
-  fun toHex(bytes: ByteArray, escape: Boolean = false): String {
+  fun toHex(
+    bytes: ByteArray,
+    escape: Boolean = false,
+  ): String {
     val hex = DatatypeConverter.printHexBinary(bytes).lowercase(java.util.Locale.ENGLISH)
     return if (escape) "x'$hex'" else hex
   }
 
-  fun toHex(entries: Array<ByteArray>): Array<String> = toHex(entries, false)
+  fun toHex(entries: Array<ByteArray>): Array<String> = toHex(
+    entries = entries,
+    escape = false,
+  )
 
-  fun toHex(entries: Array<ByteArray>, escape: Boolean): Array<String> {
+  fun toHex(
+    entries: Array<ByteArray>,
+    escape: Boolean,
+  ): Array<String> {
     val result = Array(entries.size) { "" }
     var idx = -1
     while (entries.size > ++idx) {
@@ -197,18 +217,22 @@ object ByteUtils {
         length = java.lang.Byte.SIZE shr 3
         value = number.toLong()
       }
+
       is Short -> {
         length = java.lang.Short.SIZE shr 3
         value = number.toLong()
       }
+
       is Int -> {
         length = Integer.SIZE shr 3
         value = number.toLong()
       }
+
       is Long -> {
         length = java.lang.Long.SIZE shr 3
         value = number
       }
+
       else -> return null
     }
     val array = ByteArray(length)
@@ -363,7 +387,8 @@ enum class ByteArrayStrength(val length: Int) {
   /**
    * A [ByteArray] with a capacity of 64 bytes.
    */
-  SECRET(ByteArrayLength.SECRET);
+  SECRET(ByteArrayLength.SECRET),
+  ;
 
   override fun toString(): String = name
 
@@ -371,7 +396,10 @@ enum class ByteArrayStrength(val length: Int) {
     /**
      * Returns a [ByteArrayStrength] for a valid [strength], [fallback] otherwise.
      */
-    fun from(strength: Int, fallback: ByteArrayStrength = NORMAL): ByteArrayStrength {
+    fun from(
+      strength: Int,
+      fallback: ByteArrayStrength = NORMAL,
+    ): ByteArrayStrength {
       for (value in values()) {
         if (value.length == strength) {
           return value

@@ -36,7 +36,7 @@ import org.noordawod.kotlin.core.extension.mutableMapWith
  */
 class MemoryCache<V>(
   override val maxEntries: Int,
-  override val seconds: Int
+  override val seconds: Int,
 ) : Cache<V> {
   /**
    * Creates a new [MemoryCache] instance having a default timeout set to

@@ -72,7 +72,7 @@ fun PublicId?.hashValueOrEmpty(): HashValue = hashValueOr(EmptyHashValue)
 fun PublicId?.hashValueOrThrow(
   errorProvider: (() -> Throwable) = {
     IllegalStateException("Unable to calculate hash value.")
-  }
+  },
 ): HashValue {
   if (isNullOrBlank()) {
     throw errorProvider()
@@ -145,7 +145,7 @@ fun Collection<PublicId?>?.hashValue(): Collection<HashValue>? {
 fun Collection<PublicId?>?.hashValuesOrThrow(
   errorProvider: (() -> Throwable) = {
     IllegalStateException("Unable to calculate hash value.")
-  }
+  },
 ): Collection<HashValue> {
   if (null == this) {
     throw errorProvider()

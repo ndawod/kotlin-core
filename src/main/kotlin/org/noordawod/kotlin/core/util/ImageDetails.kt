@@ -33,5 +33,5 @@ package org.noordawod.kotlin.core.util
  */
 data class ImageDetails(
   val file: java.io.File,
-  val dimension: ImageDimension
+  val dimension: ImageDimension,
 )

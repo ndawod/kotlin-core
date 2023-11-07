@@ -48,7 +48,7 @@ import org.noordawod.kotlin.core.util.Localization
 @Module
 class LocalizationModule(
   baseDirectory: java.io.File,
-  l10n: LocalizationConfiguration
+  l10n: LocalizationConfiguration,
 ) {
   private val baseLocalization: Localization
   private val otherLocalizations: LocalizationsRepositoryMap?
@@ -69,17 +69,17 @@ class LocalizationModule(
   fun localizationsRepository(): LocalizationsRepository = LocalizationsRepositoryImpl(
     locales = locales,
     baseLocalization = LocalizationRepositoryImpl(baseLocalization),
-    otherLocalizations = otherLocalizations
+    otherLocalizations = otherLocalizations,
   )
 
   init {
     val locationRepositories =
       java.util.concurrent.ConcurrentHashMap<java.util.Locale, LocalizationRepository>(
-        Constants.DEFAULT_LIST_CAPACITY
+        Constants.DEFAULT_LIST_CAPACITY,
       )
 
     val translations = mutableMapWith<java.util.Locale, Localization>(
-      Constants.DEFAULT_LIST_CAPACITY
+      Constants.DEFAULT_LIST_CAPACITY,
     )
 
     fun load(translation: TranslationConfiguration): Localization {

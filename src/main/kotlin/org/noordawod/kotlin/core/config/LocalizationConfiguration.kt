@@ -36,7 +36,7 @@ package org.noordawod.kotlin.core.config
 @kotlinx.serialization.Serializable
 data class LocalizationConfiguration(
   val base: TranslationConfiguration,
-  val translations: TranslationsConfiguration?
+  val translations: TranslationsConfiguration?,
 ) {
   // Stops Detekt and the IDE from reporting "ArrayInDataClass" warning.
   override fun equals(other: Any?): Boolean = super.equals(other)

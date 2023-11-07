@@ -41,7 +41,7 @@ import org.noordawod.kotlin.core.repository.Sha3Strength
  * @param salt the salt to apply to a string before calculating its hash
  */
 internal class MessageDigestRepositoryImpl(
-  private val salt: String
+  private val salt: String,
 ) : MessageDigestRepository {
   private val saltLengthPlusOne: Int = salt.length + 1
 

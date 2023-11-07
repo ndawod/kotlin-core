@@ -53,7 +53,7 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
 
   override fun <T> execute(
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ) {
     execute {
       val result = task.call()
@@ -64,17 +64,17 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
   @Synchronized
   override fun execute(
     time: java.util.Date,
-    task: Runnable
+    task: Runnable,
   ): RunningTask = ensureStarted().schedule(
     task,
     time.time - java.util.Date().time.coerceAtLeast(0L),
-    java.util.concurrent.TimeUnit.MILLISECONDS
+    java.util.concurrent.TimeUnit.MILLISECONDS,
   )
 
   override fun <T> execute(
     time: java.util.Date,
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ): RunningTask = execute(time) {
     val result = task.call()
     onResult?.invoke(result)
@@ -82,41 +82,41 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
 
   override fun execute(
     rate: java.time.Duration,
-    task: Runnable
+    task: Runnable,
   ): RunningTask = execute(
     java.util.Date(),
     rate,
-    task
+    task,
   )
 
   @Synchronized
   override fun execute(
     time: java.util.Date,
     rate: java.time.Duration,
-    task: Runnable
+    task: Runnable,
   ): RunningTask = ensureStarted().scheduleAtFixedRate(
     task,
     (time.time - java.util.Date().time).coerceAtLeast(0L),
     rate.toMillis(),
-    java.util.concurrent.TimeUnit.MILLISECONDS
+    java.util.concurrent.TimeUnit.MILLISECONDS,
   )
 
   override fun <T> execute(
     rate: java.time.Duration,
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ): RunningTask = execute(
     java.util.Date(),
     rate,
     task,
-    onResult
+    onResult,
   )
 
   override fun <T> execute(
     time: java.util.Date,
     rate: java.time.Duration,
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ): RunningTask = execute(time, rate) {
     val result = task.call()
     onResult?.invoke(result)

@@ -23,8 +23,6 @@
 
 package org.noordawod.kotlin.core.util
 
-import java.util.Comparator
-
 /**
  * A [Comparator] for [ByteArray] objects.
  */
@@ -42,6 +40,7 @@ val ByteArrayComparator: Comparator<ByteArray> = Comparator<ByteArray> { o1, o2 
       }
       result
     }
+
     null == o1 && null == o2 -> 0
     null == o1 -> -1
     else -> 1

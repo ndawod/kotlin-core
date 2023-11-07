@@ -48,11 +48,11 @@ class ExecutorService private constructor(keepAlive: Duration) {
 
   init {
     immediately = ThreadPoolExecutor(
-      0 /* corePoolSize */,
+      0, /* corePoolSize */
       Int.MAX_VALUE, /* maximumPoolSize */
       keepAlive.seconds, /* keepAliveTime */
       TimeUnit.SECONDS, /* keepAliveUnit */
-      SynchronousQueue() /* workQueue */
+      SynchronousQueue(), /* workQueue */
     )
     delayed = Executors.newSingleThreadScheduledExecutor()
   }

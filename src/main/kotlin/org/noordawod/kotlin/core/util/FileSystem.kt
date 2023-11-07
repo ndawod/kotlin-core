@@ -72,7 +72,7 @@ object FileSystem {
   fun getRandomFileName(
     alphabet: String,
     length: Int,
-    extension: String = ""
+    extension: String = "",
   ): String = StringBuilder(length).let {
     val alphabetLength = alphabet.length
     for (idx in 0..length) {
@@ -98,11 +98,11 @@ object FileSystem {
   fun getEventualFile(
     directory: java.io.File,
     fileName: String,
-    depth: Int
+    depth: Int,
   ): java.io.File = getEventualFile(
     directory.canonicalPath,
     fileName,
-    depth
+    depth,
   )
 
   /**
@@ -118,7 +118,7 @@ object FileSystem {
   fun getEventualFile(
     directory: String,
     fileName: String,
-    depth: Int
+    depth: Int,
   ): java.io.File {
     val normalizedDirectory = directory.trimOrNull()
       ?: error("Directory to host the file is empty.")
@@ -169,7 +169,7 @@ object FileSystem {
   fun execute(
     program: String,
     args: Collection<String>?,
-    includeErrors: Boolean = false
+    includeErrors: Boolean = false,
   ): String {
     val result = java.lang.StringBuilder(DEFAULT_BUFFER_SIZE)
     val programArgs = args ?: listOf()

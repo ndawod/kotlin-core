@@ -134,9 +134,19 @@ fun String?.toCountryCode(): String? {
  */
 @Suppress("MemberVisibilityCanBePrivate")
 internal enum class NewLocaleLanguage(val oldCode: String, val newCode: String) {
-  HEBREW("iw", "he"),
-  INDONESIAN("in", "id"),
-  YIDDISH("ji", "yi");
+  HEBREW(
+    oldCode = "iw",
+    newCode = "he",
+  ),
+  INDONESIAN(
+    oldCode = "in",
+    newCode = "id",
+  ),
+  YIDDISH(
+    oldCode = "ji",
+    newCode = "yi",
+  ),
+  ;
 
   companion object {
     /**

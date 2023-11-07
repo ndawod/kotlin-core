@@ -43,7 +43,7 @@ import org.noordawod.kotlin.core.util.Environment
 class RepositoryModule(
   private val environment: Environment,
   private val logger: Logger,
-  private val executorThreads: Int
+  private val executorThreads: Int,
 ) {
   /**
    * Loaded configuration at runtime for this app.

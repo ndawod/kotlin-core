@@ -95,7 +95,7 @@ interface Logger {
    */
   fun error(
     tag: String,
-    message: String
+    message: String,
   ) {
     error(tag, RuntimeException(message))
   }

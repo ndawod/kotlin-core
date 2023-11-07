@@ -93,7 +93,7 @@ class SipHash internal constructor(private val key: ByteArray) {
   fun asByteArrayOr(
     string: String?,
     ignoreCase: Boolean = true,
-    fallback: ByteArray = byteArrayOf()
+    fallback: ByteArray = byteArrayOf(),
   ): ByteArray =
     if (string.isNullOrEmpty()) {
       fallback

@@ -44,7 +44,7 @@ data class SecurityConfiguration(
   val cipher: String,
   val key: String,
   val iv: String,
-  val jwt: JwtConfiguration
+  val jwt: JwtConfiguration,
 )
 
 /**
@@ -65,7 +65,7 @@ data class JwtConfiguration(
   val secret: String,
   val duration: Int,
   val rearmThreshold: Int,
-  val rearmDuration: Int
+  val rearmDuration: Int,
 ) {
   init {
     require(duration >= rearmThreshold) {

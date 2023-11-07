@@ -36,7 +36,7 @@ import org.noordawod.kotlin.core.extension.trimOrBlank
  */
 class MemoryLogger(
   environment: String,
-  private val buffer: StringBuffer
+  private val buffer: StringBuffer,
 ) : BaseSimpleLogger(environment) {
   /**
    * Creates a new [MemoryLogger] with a default [StringBuffer].
@@ -45,14 +45,14 @@ class MemoryLogger(
    */
   constructor(environment: String) : this(
     environment,
-    StringBuffer(Constants.MEDIUM_BLOCK_SIZE)
+    StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
   )
 
   override fun log(
     type: LogType,
     tag: String,
     message: String,
-    error: Throwable?
+    error: Throwable?,
   ) {
     val logMessage = logMessage(type, tag, message)
     buffer.append(logMessage.trimOr("(empty message)"))

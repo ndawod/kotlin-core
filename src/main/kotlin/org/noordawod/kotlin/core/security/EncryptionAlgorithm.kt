@@ -45,40 +45,59 @@ import kotlinx.serialization.encoding.Encoder
 @Serializable(with = EncryptionAlgorithmSerializer::class)
 enum class EncryptionAlgorithm(
   val method: String,
-  val bits: Int
+  val bits: Int,
 ) {
   /**
    * A moderate-length algorithm suitable for development.
    */
-  HS256("HMAC256", 512),
+  HS256(
+    method = "HMAC256",
+    bits = 512,
+  ),
 
   /**
    * A medium-length algorithm suitable for beta.
    */
-  HS384("HMAC384", 1024),
+  HS384(
+    method = "HMAC384",
+    bits = 1024,
+  ),
 
   /**
    * An adequate-length algorithm suitable for production.
    */
-  HS512("HMAC512", 1024);
+  HS512(
+    method = "HMAC512",
+    bits = 1024,
+  ),
+  ;
 
   /**
    * Returns an [Algorithm] instance with the provided [secret].
    */
-  fun algorithm(secret: String): Algorithm =
-    generateImpl(this, secret, String::class.java)
+  fun algorithm(secret: String): Algorithm = generateImpl(
+    algorithm = this,
+    secret = secret,
+    klass = String::class.java,
+  )
 
   /**
    * Returns an [Algorithm] instance with the provided [secret].
    */
-  fun algorithm(secret: ByteArray): Algorithm =
-    generateImpl(this, secret, ByteArray::class.java)
+  fun algorithm(secret: ByteArray): Algorithm = generateImpl(
+    algorithm = this,
+    secret = secret,
+    klass = ByteArray::class.java,
+  )
 
   private fun <T> generateImpl(
     algorithm: EncryptionAlgorithm,
     secret: T,
-    klass: Class<T>
-  ): Algorithm = Algorithm::class.java.getMethod(algorithm.method, klass).let { method ->
+    klass: Class<T>,
+  ): Algorithm = Algorithm::class.java.getMethod(
+    algorithm.method,
+    klass,
+  ).let { method ->
     method.invoke(null, secret) as Algorithm
   }
 }
@@ -88,7 +107,10 @@ enum class EncryptionAlgorithm(
  */
 class EncryptionAlgorithmSerializer : KSerializer<EncryptionAlgorithm> {
   override val descriptor: SerialDescriptor =
-    PrimitiveSerialDescriptor("EncryptionAlgorithm", PrimitiveKind.STRING)
+    PrimitiveSerialDescriptor(
+      serialName = "EncryptionAlgorithm",
+      kind = PrimitiveKind.STRING,
+    )
 
   override fun serialize(encoder: Encoder, value: EncryptionAlgorithm) {
     encoder.encodeString(value.name.uppercase(java.util.Locale.ENGLISH))

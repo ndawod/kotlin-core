@@ -162,7 +162,7 @@ open class Properties protected constructor(private val props: java.util.Propert
  */
 open class PropertiesException(
   message: String,
-  cause: Throwable? = null
+  cause: Throwable? = null,
 ) : Exception(message, cause)
 
 /**
@@ -173,5 +173,5 @@ open class PropertiesException(
  */
 class PropertiesDestroyedException(
   message: String,
-  cause: Throwable? = null
+  cause: Throwable? = null,
 ) : PropertiesException(message, cause)

@@ -72,7 +72,7 @@ interface ExecutorRepository {
    */
   fun <T> execute(
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   )
 
   /**
@@ -83,7 +83,7 @@ interface ExecutorRepository {
    */
   fun execute(
     time: java.util.Date,
-    task: Runnable
+    task: Runnable,
   ): RunningTask
 
   /**
@@ -97,7 +97,7 @@ interface ExecutorRepository {
   fun <T> execute(
     time: java.util.Date,
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ): RunningTask
 
   /**
@@ -109,7 +109,7 @@ interface ExecutorRepository {
    */
   fun execute(
     rate: java.time.Duration,
-    task: Runnable
+    task: Runnable,
   ): RunningTask
 
   /**
@@ -123,7 +123,7 @@ interface ExecutorRepository {
   fun execute(
     time: java.util.Date,
     rate: java.time.Duration,
-    task: Runnable
+    task: Runnable,
   ): RunningTask
 
   /**
@@ -137,7 +137,7 @@ interface ExecutorRepository {
   fun <T> execute(
     rate: java.time.Duration,
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ): RunningTask
 
   /**
@@ -153,6 +153,6 @@ interface ExecutorRepository {
     time: java.util.Date,
     rate: java.time.Duration,
     task: java.util.concurrent.Callable<T>,
-    onResult: ((T) -> Unit)?
+    onResult: ((T) -> Unit)?,
   ): RunningTask
 }

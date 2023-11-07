@@ -225,7 +225,8 @@ enum class GeoUnit(private val value: String) {
   /**
    * One mile is approximately 1609.344f [meters][METER].
    */
-  MILE("mile");
+  MILE("mile"),
+  ;
 
   override fun toString(): String = value
 
@@ -308,7 +309,7 @@ enum class GeoUnit(private val value: String) {
 data class GeoPointArea(
   val geoPoint: GeoPoint,
   val radius: Float,
-  val unit: GeoUnit
+  val unit: GeoUnit,
 ) {
   /**
    * Calculated value for the minimal latitude of this [GeoPoint].

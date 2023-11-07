@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin.core'
-version = '3.5.12'
+version = '3.6.0'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 buildDir = 'build'
 
@@ -61,6 +61,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath "org.jetbrains.kotlin:kotlin-serialization:${versions.kotlin}"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:${versions.ktlint}"
     }
 }
 
@@ -69,6 +70,7 @@ apply from: "$rootDir/gradle/kotlin.gradle"
 apply from: "$rootDir/gradle/kapt.gradle"
 apply from: "$rootDir/gradle/detekt.gradle"
 apply from: "$rootDir/gradle/dagger.gradle"
+apply from: "$rootDir/gradle/ktlint.gradle"
 
 dependencies {
     implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"

@@ -60,11 +60,11 @@ abstract class BaseSimpleLogger protected constructor(environment: String) : Log
   protected fun logMessage(
     type: LogType,
     tag: String,
-    message: String
+    message: String,
   ): String {
     val dateFormatter = java.text.SimpleDateFormat(
       LOG_DATE_FORMAT,
-      LOG_LOCALE
+      LOG_LOCALE,
     )
     val dateTag = "[${dateFormatter.format(java.util.Date())}]"
     val envTag = "[$environmentTag/$tag]"

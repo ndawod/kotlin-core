@@ -45,7 +45,8 @@ enum class LogType(val value: String) {
    * A log type for breaking errors. Such situations cause the app to stop abruptly and report
    * an error to the client.
    */
-  ERROR("error");
+  ERROR("error"),
+  ;
 
   override fun toString(): String = value
 }

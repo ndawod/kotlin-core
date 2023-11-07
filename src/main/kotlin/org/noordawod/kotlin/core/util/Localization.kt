@@ -65,7 +65,7 @@ open class Localization(val locale: java.util.Locale, val translation: Propertie
     fun from(
       locale: java.util.Locale,
       paths: Iterable<String>?,
-      files: Iterable<java.io.File>?
+      files: Iterable<java.io.File>?,
     ): Localization = Localization(locale, Properties.from(paths, files))
   }
 }

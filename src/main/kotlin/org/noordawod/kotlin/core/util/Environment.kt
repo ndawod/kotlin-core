@@ -43,7 +43,7 @@ enum class Environment(
   val isLocal: Boolean,
   val isDevel: Boolean,
   val isBeta: Boolean,
-  val isProduction: Boolean
+  val isProduction: Boolean,
 ) {
   /**
    * Local-only environment.
@@ -52,12 +52,12 @@ enum class Environment(
    * busy writing new features and fixing bugs.
    */
   LOCAL(
-    "local",
-    "Local-only",
-    true,
-    false,
-    false,
-    false
+    identifier = "local",
+    label = "Local-only",
+    isLocal = true,
+    isDevel = false,
+    isBeta = false,
+    isProduction = false,
   ),
 
   /**
@@ -66,12 +66,12 @@ enum class Environment(
    * Much like the [LOCAL] environment, but the applications can be deployed remotely as well.
    */
   DEVEL(
-    "devel",
-    "Development",
-    false,
-    true,
-    false,
-    false
+    identifier = "devel",
+    label = "Development",
+    isLocal = false,
+    isDevel = true,
+    isBeta = false,
+    isProduction = false,
   ),
 
   /**
@@ -81,12 +81,12 @@ enum class Environment(
    * beta users are able to test it out before the final deployment to [PRODUCTION].
    */
   BETA(
-    "beta",
-    "Beta",
-    false,
-    false,
-    true,
-    false
+    identifier = "beta",
+    label = "Beta",
+    isLocal = false,
+    isDevel = false,
+    isBeta = true,
+    isProduction = false,
   ),
 
   /**
@@ -96,13 +96,14 @@ enum class Environment(
    * consumption by the intended users.
    */
   PRODUCTION(
-    "production",
-    "Production",
-    false,
-    false,
-    false,
-    true
-  );
+    identifier = "production",
+    label = "Production",
+    isLocal = false,
+    isDevel = false,
+    isBeta = false,
+    isProduction = true,
+  ),
+  ;
 
   /**
    * Returns this [Environment]'s identifier.
@@ -111,12 +112,15 @@ enum class Environment(
 
   companion object {
     /**
-     * Returns a new [Environment] matching the specified [identifier] on success, null otherwise.
+     * Returns an [Environment] matching the specified [identifier] on success,
+     * null otherwise.
+     *
+     * @param identifier the environment's value to evaluate
      */
     fun from(identifier: String): Environment? {
-      val identifierLowerCased = identifier.lowercase(java.util.Locale.ENGLISH)
+      val identifierNormalized = identifier.lowercase(java.util.Locale.ENGLISH)
       for (environment in values()) {
-        if (environment.identifier == identifierLowerCased) {
+        if (environment.identifier == identifierNormalized) {
           return environment
         }
       }

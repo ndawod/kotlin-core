@@ -45,7 +45,7 @@ internal class LocalizationRepositoryImpl(
       java.lang.String.format(
         l10n.locale,
         text,
-        *args.map { it.toString() }.toTypedArray()
+        *args.map { it.toString() }.toTypedArray(),
       )
     }
   }

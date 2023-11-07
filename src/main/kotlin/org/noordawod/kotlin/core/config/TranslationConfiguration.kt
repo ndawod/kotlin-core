@@ -43,7 +43,7 @@ typealias TranslationsConfiguration = Array<TranslationConfiguration>
 @kotlinx.serialization.Serializable
 open class TranslationConfiguration(
   val locale: String,
-  val file: String
+  val file: String,
 ) {
   override fun equals(other: Any?): Boolean = other is TranslationConfiguration &&
     other.locale == locale &&

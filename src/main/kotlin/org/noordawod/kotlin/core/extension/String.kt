@@ -28,9 +28,14 @@ package org.noordawod.kotlin.core.extension
 import org.noordawod.kotlin.core.util.ImageDimension
 
 /**
- * A signature of a [Pair] of two [strings][String].
+ * A signature of a [Pair] of two [String]s.
  */
 typealias PairOfStrings = Pair<String, String>
+
+/**
+ * A signature of a [Pair] of an [Int] and a [Long].
+ */
+typealias PairOfIntAndLong = Pair<Int, Long>
 
 /**
  * Strips any trailing slash characters
@@ -90,6 +95,16 @@ fun String.withExtension(extension: String): String {
  */
 fun String?.trimOrNull(): String? {
   val trimmed = this?.trim()
+
+  return if (trimmed.isNullOrEmpty()) null else trimmed
+}
+
+/**
+ * Trims characters from this string matching [predicate]; returns the trimmed
+ * string if non-empty on success, null otherwise.
+ */
+fun String?.trimOrNull(predicate: (Char) -> Boolean): String? {
+  val trimmed = this?.trim(predicate)
 
   return if (trimmed.isNullOrEmpty()) null else trimmed
 }
@@ -196,46 +211,49 @@ fun String.getNewLanguage(): String {
 }
 
 /**
- * Returns parsed parts (account and domain) if this [String] is a valid email, null
- * if the email address is invalid.
+ * Returns parsed parts (account and domain) if this [String] is a valid email,
+ * null otherwise.
  */
 @Suppress("ComplexCondition", "MagicNumber")
 fun String?.parseEmail(): PairOfStrings? {
-  if (!this.isNullOrBlank()) {
-    val email = this.trim()
-    val length = email.length
-    val atPos = email.indexOf('@') + 1
+  val email = this?.trimOrNull() ?: return null
 
-    // Basic check to ensure that the email address has at least 6 characters ("a@b.co") and
-    // that it doesn't contain invalid characters.
-    if (
-      1 < atPos && 5 < length && (
-        -1 == email.indexOf(' ') ||
-          -1 == email.indexOf(10.toChar()) ||
-          -1 == email.indexOf(13.toChar()) ||
-          -1 == email.indexOf(8.toChar()) ||
-          -1 == email.indexOf(0.toChar()) ||
-          -1 == email.indexOf(9.toChar())
-        )
-    ) {
-      // Let's ensure that there is no @ after the first one, and there is at least a
-      // dot within the email's domain.
-      val dotPos = email.indexOf('.', atPos)
+  val length = email.length
+  val atPos = email.indexOf('@') + 1
 
-      // Ensure that there are no dots appearing at the end of the email, and that
-      // the last dot appears at least 2 characters from the end.
-      if (-1 == email.indexOf('@', atPos) && atPos < dotPos && length > 2 + dotPos) {
-        val account = email.substring(0, atPos - 1)
-        val domainName = email.substring(atPos)
-        return account to domainName
-      }
-    }
+  // Check that the email address has at least 6 characters ("a@b.co").
+  if (2 > atPos || 6 > length) {
+    return null
   }
-  return null
+
+  // Check that the email address doesn't contain invalid characters.
+  if (
+    -1 != email.indexOf(' ') ||
+    -1 != email.indexOf(10.toChar()) ||
+    -1 != email.indexOf(13.toChar()) ||
+    -1 != email.indexOf(8.toChar()) ||
+    -1 != email.indexOf(0.toChar()) ||
+    -1 != email.indexOf(9.toChar())
+  ) {
+    return null
+  }
+
+  // Let's ensure that there is no @ after the first one, and there is at least a
+  // dot within the email's domain.
+  val dotPos = email.indexOf('.', atPos)
+  if (-1 != email.indexOf('@', atPos) || atPos >= dotPos || length > 1 + dotPos) {
+    return null
+  }
+
+  val account = email.substring(0, atPos - 1)
+  val domainName = email.substring(atPos)
+
+  return account to domainName
 }
 
 /**
- * Returns an email address for the provided [Pair] of strings on success, null otherwise.
+ * Returns an email address for the provided [PairOfStrings] of strings on success,
+ * null otherwise.
  */
 fun PairOfStrings?.asEmail(): String? {
   val first = this?.first?.trim()
@@ -272,6 +290,61 @@ fun String?.parseUrl(): java.net.URL? = try {
 fun String?.isUrl(): Boolean = null != parseUrl()
 
 /**
+ * Returns parsed parts (international calling code and phone number) if this [String]
+ * is a valid phone number, null otherwise.
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+@Suppress("ComplexCondition", "MagicNumber")
+fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
+  val phone = this?.trimOrNull {
+    it.isWhitespace() || '+' == it
+  } ?: return null
+
+  // A separator must exist.
+  val separatorPos = phone.indexOf(separator)
+  if (2 > separatorPos) {
+    return null
+  }
+
+  // First part is the international calling code.
+  val countryCode = phone.substring(
+    startIndex = 0,
+    endIndex = separatorPos,
+  ).toIntOrNull() ?: return null
+
+  // Second part is the phone number.
+  val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull() ?: return null
+
+  return countryCode to phoneNumber
+}
+
+/**
+ * Returns an international phone number for the provided [PairOfIntAndLong] on success,
+ * null otherwise.
+ *
+ * @param separator the character used to separate the international calling code and number
+ * @param leadingPlus add a leading `+` to returned phone number
+ */
+fun PairOfIntAndLong?.asPhone(
+  separator: Char = '.',
+  leadingPlus: Boolean = false,
+): String? {
+  val first = this?.first
+  val second = this?.second
+  val plusChar = if (leadingPlus) "+" else ""
+
+  return if (null == first || null == second) null else "$plusChar$first$separator$second"
+}
+
+/**
+ * Returns true if this [String] is a valid international phone number, false otherwise.
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+fun String?.isPhone(separator: Char = '.'): Boolean = null != parsePhone(separator)
+
+/**
  * Converts a [String] value to its [Int] representation.
  *
  * @param opacity apply a constant opacity value (0..255) to the color
@@ -295,18 +368,21 @@ fun String?.toColor(opacity: Int? = null): Int? {
       greenValue = Integer.parseInt("${color[1]}${color[1]}", 16)
       blueValue = Integer.parseInt("${color[2]}${color[2]}", 16)
     }
+
     6 -> {
       opacityValue = 0xff
       redValue = Integer.parseInt(color.substring(0, 2), 16)
       greenValue = Integer.parseInt(color.substring(2, 2), 16)
       blueValue = Integer.parseInt(color.substring(4, 2), 16)
     }
+
     8 -> {
       opacityValue = Integer.parseInt(color.substring(0, 2), 16)
       redValue = Integer.parseInt(color.substring(2, 2), 16)
       greenValue = Integer.parseInt(color.substring(4, 2), 16)
       blueValue = Integer.parseInt(color.substring(6, 2), 16)
     }
+
     else -> return null
   }
 
@@ -328,7 +404,7 @@ fun String?.toColor(opacity: Int? = null): Int? {
  */
 fun String?.normalizedHandle(
   dictionary: java.util.regex.Pattern,
-  ignoreCase: Boolean = true
+  ignoreCase: Boolean = true,
 ): String? {
   this ?: return null
 
@@ -388,6 +464,32 @@ fun String?.imageDimension(): ImageDimension? {
   return ImageDimension(width, height)
 }
 
+/**
+ * Normalizes and returns this String a host name.
+ */
+fun String.normalizeHostName(): String? = normalizedHandle(
+  dictionary = HOST_NAME_PATTERN,
+  ignoreCase = true,
+)
+
+/**
+ * Returns true if this String is a valid host name, false otherwise.
+ */
+fun String.isHostName(): Boolean = HOST_NAME_PATTERN.matcher(this).matches()
+
+/**
+ * Normalizes and returns this String a domain name.
+ */
+fun String.normalizeDomainName(): String? = normalizedHandle(
+  dictionary = DOMAIN_NAME_PATTERN,
+  ignoreCase = true,
+)
+
+/**
+ * Returns true if this String is a valid domain name, false otherwise.
+ */
+fun String.isDomainName(): Boolean = DOMAIN_NAME_PATTERN.matcher(this).matches()
+
 private fun String.toLocaleImpl(): java.util.Locale? {
   val parts = replace("-", "_").split('_')
   return try {
@@ -410,10 +512,16 @@ private fun Iterator<String>.toLocalesImpl(size: Int): Collection<java.util.Loca
     result.add(
       java.util.Locale(
         stringParts[0],
-        if (1 < stringParts.size) stringParts[1] else ""
-      )
+        if (1 < stringParts.size) stringParts[1] else "",
+      ),
     )
   }
 
   return if (result.isEmpty()) null else result
 }
+
+private val HOST_NAME_PATTERN: java.util.regex.Pattern =
+  java.util.regex.Pattern.compile("^[a-z0-9-]\$")
+
+private val DOMAIN_NAME_PATTERN: java.util.regex.Pattern =
+  java.util.regex.Pattern.compile("^[a-z0-9.-]\$")

@@ -30,7 +30,7 @@ import org.noordawod.kotlin.core.repository.LocalizationsRepositoryMap
 internal class LocalizationsRepositoryImpl(
   override val locales: Set<java.util.Locale>,
   override val baseLocalization: LocalizationRepository,
-  private val otherLocalizations: LocalizationsRepositoryMap?
+  private val otherLocalizations: LocalizationsRepositoryMap?,
 ) : LocalizationsRepository {
   override fun get(locale: java.util.Locale): LocalizationRepository? =
     otherLocalizations?.get(locale)
