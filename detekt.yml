@@ -389,7 +389,6 @@ naming:
     parameterPattern: '[a-z][A-Za-z0-9]*'
     privateParameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
   EnumNaming:
     active: true
     excludes:
@@ -435,7 +434,6 @@ naming:
       - "**/*.Spek.kt"
     functionPattern: '^([a-z$][a-zA-Z$0-9]*)|(`.*`)$'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
   FunctionParameterNaming:
     active: true
     excludes:
@@ -446,7 +444,6 @@ naming:
       - "**/*.Spek.kt"
     parameterPattern: '[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
   InvalidPackageDeclaration:
     active: true
     rootPackage: ''
@@ -515,7 +512,6 @@ naming:
     variablePattern: '[a-z][A-Za-z0-9]*'
     privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
     excludeClassPattern: '$^'
-    ignoreOverridden: true
 
 performance:
   active: true
@@ -605,12 +601,14 @@ style:
     active: true
     includeLineWrapping: false
   ForbiddenComment:
-    active: true
-    values:
-      - "TODO"
-      - "FIXME"
-      - "STOPSHIP"
-    allowedPatterns: "TODO:"
+    comments:
+      - reason: "Format of TODO comments: TODO(name): Start with a verb, end with a dot."
+        value: "TODO"
+      - reason: "Format of TODO comments: TODO(name): Start with a verb, end with a dot."
+        value: "FIXME"
+      - reason: "Format of TODO comments: TODO(name): Start with a verb, end with a dot."
+        value: "STOPSHIP"
+    allowedPatterns: "TODO\\([a-z0-9_-]+\\): [A-Z]{1}\\w+\\."
   ForbiddenImport:
     active: false
     forbiddenPatterns: ""
@@ -651,8 +649,6 @@ style:
     ignoreNamedArgument: true
     ignoreEnums: false
     ignoreRanges: false
-  MandatoryBracesIfStatements:
-    active: true
   MaxLineLength:
     active: true
     maxLineLength: 100
@@ -678,8 +674,10 @@ style:
     active: true
   OptionalUnit:
     active: false
-  OptionalWhenBraces:
+  BracesOnWhenStatements:
     active: true
+    singleLine: "never"
+    multiLine: "necessary"
   PreferToOverPairSyntax:
     active: true
   ProtectedMemberInFinalClass:
