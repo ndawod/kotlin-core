@@ -601,14 +601,15 @@ style:
     active: true
     includeLineWrapping: false
   ForbiddenComment:
+    active: true
     comments:
-      - reason: "Format of TODO comments: TODO(name): Start with a verb, end with a dot."
-        value: "TODO"
-      - reason: "Format of TODO comments: TODO(name): Start with a verb, end with a dot."
-        value: "FIXME"
-      - reason: "Format of TODO comments: TODO(name): Start with a verb, end with a dot."
-        value: "STOPSHIP"
-    allowedPatterns: "TODO\\([a-z0-9_-]+\\): [A-Z]{1}\\w+\\."
+      - reason: 'Format: TODO(name): Start with a verb, end with a dot.'
+        value: 'TODO'
+      - reason: 'Format: TODO(name): Start with a verb, end with a dot.'
+        value: 'FIXME'
+      - reason: 'Format: TODO(name): Start with a verb, end with a dot.'
+        value: 'STOPSHIP'
+    allowedPatterns: 'TODO\([a-z0-9_-]+\): [A-Z]{1}[^\.]+\.$'
   ForbiddenImport:
     active: false
     forbiddenPatterns: ""
