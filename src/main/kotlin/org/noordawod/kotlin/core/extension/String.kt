@@ -182,7 +182,7 @@ fun Array<String>?.toLocales(): Array<java.util.Locale>? =
  */
 @Suppress("NestedBlockDepth")
 fun String?.ensureCountryCode(uppercase: Boolean = true): String? {
-  val country = this?.trimOrNull()?.uppercase()
+  val country = trimOrNull()?.uppercase()
 
   if (null != country) {
     val isoCountries = java.util.Locale.getISOCountries()
@@ -216,13 +216,18 @@ fun String.getNewLanguage(): String {
  */
 @Suppress("ComplexCondition", "MagicNumber")
 fun String?.parseEmail(): PairOfStrings? {
-  val email = this?.trimOrNull() ?: return null
+  val email = trimOrNull() ?: return null
 
   val length = email.length
-  val atPos = email.indexOf('@') + 1
+  val atPlus1Pos = 1 + email.indexOf('@')
 
   // Check that the email address has at least 6 characters ("a@b.co").
-  if (2 > atPos || 6 > length) {
+  if (2 > atPlus1Pos || 6 > length) {
+    return null
+  }
+
+  // Only one '@' in the email address.
+  if (-1 != email.indexOf('@', atPlus1Pos)) {
     return null
   }
 
@@ -238,15 +243,13 @@ fun String?.parseEmail(): PairOfStrings? {
     return null
   }
 
-  // Let's ensure that there is no @ after the first one, and there is at least a
-  // dot within the email's domain.
-  val dotPos = email.indexOf('.', atPos)
-  if (-1 != email.indexOf('@', atPos) || atPos >= dotPos || length > 1 + dotPos) {
+  // At least one dot must exist after, but not adjacent to, the '@' sign.
+  if (1 > email.indexOf('.', atPlus1Pos)) {
     return null
   }
 
-  val account = email.substring(0, atPos - 1)
-  val domainName = email.substring(atPos)
+  val account = email.substring(0, atPlus1Pos - 1)
+  val domainName = email.substring(atPlus1Pos)
 
   return account to domainName
 }
@@ -297,7 +300,7 @@ fun String?.isUrl(): Boolean = null != parseUrl()
  */
 @Suppress("ComplexCondition", "MagicNumber")
 fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
-  val phone = this?.trimOrNull {
+  val phone = trimOrNull {
     it.isWhitespace() || '+' == it
   } ?: return null
 
@@ -326,15 +329,15 @@ fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
  * @param separator the character used to separate the international calling code and number
  * @param leadingPlus add a leading `+` to returned phone number
  */
-fun PairOfIntAndLong?.asPhone(
-  separator: Char = '.',
+fun PairOfIntAndLong.asPhone(
+  separator: Char? = '.',
   leadingPlus: Boolean = false,
-): String? {
-  val first = this?.first
-  val second = this?.second
+): String {
+  val first = this.first
+  val second = this.second
   val plusChar = if (leadingPlus) "+" else ""
 
-  return if (null == first || null == second) null else "$plusChar$first$separator$second"
+  return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
 }
 
 /**
@@ -342,7 +345,7 @@ fun PairOfIntAndLong?.asPhone(
  *
  * @param separator the character used to separate the international calling code and number
  */
-fun String?.isPhone(separator: Char = '.'): Boolean = null != parsePhone(separator)
+fun String.isPhone(separator: Char = '.'): Boolean = null != parsePhone(separator)
 
 /**
  * Converts a [String] value to its [Int] representation.
@@ -350,7 +353,7 @@ fun String?.isPhone(separator: Char = '.'): Boolean = null != parsePhone(separat
  * @param opacity apply a constant opacity value (0..255) to the color
  */
 fun String?.toColor(opacity: Int? = null): Int? {
-  var color = this?.trimOrNull() ?: return null
+  var color = trimOrNull() ?: return null
 
   if ('#' == color[0]) {
     color = color.substring(1)

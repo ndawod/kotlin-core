@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.6.1 (November 11, 2023)
+    Fix a bug in parseEmail().
+
 3.6.0 (November 8, 2023)
     Add KtLint, reformat code, fix any linting errors, and add a few extension functions.
 
