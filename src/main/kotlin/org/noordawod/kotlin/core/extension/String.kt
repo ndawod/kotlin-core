@@ -234,17 +234,19 @@ fun String?.parseEmail(): PairOfStrings? {
   // Check that the email address doesn't contain invalid characters.
   if (
     -1 != email.indexOf(' ') ||
-    -1 != email.indexOf(10.toChar()) ||
-    -1 != email.indexOf(13.toChar()) ||
-    -1 != email.indexOf(8.toChar()) ||
     -1 != email.indexOf(0.toChar()) ||
-    -1 != email.indexOf(9.toChar())
+    -1 != email.indexOf(8.toChar()) ||
+    -1 != email.indexOf(9.toChar()) ||
+    -1 != email.indexOf(10.toChar()) ||
+    -1 != email.indexOf(13.toChar())
   ) {
     return null
   }
 
-  // At least one dot must exist after, but not adjacent to, the '@' sign.
-  if (1 > email.indexOf('.', atPlus1Pos)) {
+  // At least one dot must exist after, but not adjacent to, the "@" sign, and it must be
+  // 2 characters away from the end.
+  val dotPos = email.lastIndexOf(".")
+  if (1 > dotPos || length < dotPos + 3) {
     return null
   }
 
