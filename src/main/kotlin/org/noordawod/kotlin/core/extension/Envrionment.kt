@@ -56,8 +56,7 @@ fun Environment?.timeoutInMilliseconds(): Long = timeoutInSeconds() * MILLIS_IN_
 /**
  * Returns the base directory for this [Environment] where ".well-known" files are stored.
  */
-fun Environment.wellKnownDirectory() =
-  "well-known${java.io.File.separatorChar}$this"
+fun Environment.wellKnownDirectory() = "well-known${java.io.File.separatorChar}$this"
 
 /**
  * Returns the path to a ".well-known" [file] based on this [Environment].

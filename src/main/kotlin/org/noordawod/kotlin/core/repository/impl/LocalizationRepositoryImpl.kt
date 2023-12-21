@@ -35,7 +35,10 @@ internal class LocalizationRepositoryImpl(
 
   override fun translate(key: String): String = translate(key, listOf())
 
-  override fun translate(key: String, args: Iterable<Any>): String {
+  override fun translate(
+    key: String,
+    args: Iterable<Any>,
+  ): String {
     val text = l10n.translation.get<Any>(key)?.toString().trimOrNull()
 
     return if (null == text) {
@@ -50,24 +53,38 @@ internal class LocalizationRepositoryImpl(
     }
   }
 
-  override fun pluralize(key: String, count: Int): String {
+  override fun pluralize(
+    key: String,
+    count: Int,
+  ): String {
     val pluralRules = PluralRules.forLocale(l10n.locale)
     val rule = pluralRules.select(count.toDouble()).lowercase(java.util.Locale.ENGLISH)
     return translate(keyRuleValue(key, rule))
   }
 
-  override fun pluralize(key: String, count: Int, args: Iterable<Any>): String {
+  override fun pluralize(
+    key: String,
+    count: Int,
+    args: Iterable<Any>,
+  ): String {
     val pluralRules = PluralRules.forLocale(l10n.locale)
     val rule = pluralRules.select(count.toDouble()).lowercase(java.util.Locale.ENGLISH)
     return translate(keyRuleValue(key, rule), args)
   }
 
-  override fun quantify(key: String, quantity: Int): String {
+  override fun quantify(
+    key: String,
+    quantity: Int,
+  ): String {
     val rule = quantifyRule(quantity)
     return translate(keyRuleValue(key, rule))
   }
 
-  override fun quantify(key: String, quantity: Int, args: Iterable<Any>): String {
+  override fun quantify(
+    key: String,
+    quantity: Int,
+    args: Iterable<Any>,
+  ): String {
     val rule = quantifyRule(quantity)
     return translate(keyRuleValue(key, rule), args)
   }
@@ -79,5 +96,8 @@ internal class LocalizationRepositoryImpl(
     else -> PluralRules.KEYWORD_OTHER
   }
 
-  private fun keyRuleValue(key: String, rule: String): String = "$key.$rule"
+  private fun keyRuleValue(
+    key: String,
+    rule: String,
+  ): String = "$key.$rule"
 }

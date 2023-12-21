@@ -35,7 +35,9 @@ import java.io.InputStreamReader
  *
  * @param props initial properties to load from memory
  */
-open class Properties protected constructor(private val props: java.util.Properties) {
+open class Properties protected constructor(
+  private val props: java.util.Properties,
+) {
   private var destroyed = false
 
   /**
@@ -71,7 +73,10 @@ open class Properties protected constructor(private val props: java.util.Propert
   /**
    * Merges more properties loaded from [files] into this instance.
    */
-  open fun merge(paths: Iterable<String>? = null, files: Iterable<File>? = null) {
+  open fun merge(
+    paths: Iterable<String>? = null,
+    files: Iterable<File>? = null,
+  ) {
     checkNotDestroyed()
 
     fun mergeFrom(fis: FileInputStream) {
@@ -109,7 +114,10 @@ open class Properties protected constructor(private val props: java.util.Propert
    * do so as well.
    */
   @Throws(PropertiesDestroyedException::class)
-  protected open operator fun <T> set(key: String, value: T) {
+  protected open operator fun <T> set(
+    key: String,
+    value: T,
+  ) {
     checkNotDestroyed()
     props[key] = value
   }
@@ -146,7 +154,10 @@ open class Properties protected constructor(private val props: java.util.Propert
      * Entries appearing in later files override those in earlier positions.
      */
     @Throws(IOException::class)
-    fun from(paths: Iterable<String>?, files: Iterable<File>?): Properties {
+    fun from(
+      paths: Iterable<String>?,
+      files: Iterable<File>?,
+    ): Properties {
       val props = Properties(java.util.Properties())
       props.merge(paths, files)
       return props

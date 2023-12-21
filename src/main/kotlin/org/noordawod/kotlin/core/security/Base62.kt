@@ -48,7 +48,7 @@ class Base62 {
    */
   fun encodeString(bytes: ByteArray): String = String(
     bytes = encode(bytes),
-    charset = Charsets.ISO_8859_1
+    charset = Charsets.ISO_8859_1,
   )
 
   /**
@@ -57,7 +57,7 @@ class Base62 {
    */
   fun encodeMessage(message: String): String = encodeMessage(
     message = message,
-    charset = Charsets.UTF_8
+    charset = Charsets.UTF_8,
   )
 
   /**
@@ -101,7 +101,7 @@ class Base62 {
    */
   fun decodeMessage(message: String): String = decodeMessage(
     message = message,
-    charset = Charsets.UTF_8
+    charset = Charsets.UTF_8,
   )
 
   /**

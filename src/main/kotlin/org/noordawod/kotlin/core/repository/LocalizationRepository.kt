@@ -59,7 +59,10 @@ interface LocalizationRepository {
    * @param key the localization key to localize
    * @param args list of arguments to substitute in the localized text
    */
-  fun translate(key: String, args: Iterable<Any>): String
+  fun translate(
+    key: String,
+    args: Iterable<Any>,
+  ): String
 
   /**
    * Localizes a plural text identified by its [key].
@@ -67,7 +70,10 @@ interface LocalizationRepository {
    * @param key the localization key to localize
    * @param count the count of items to pluralize
    */
-  fun pluralize(key: String, count: Int): String
+  fun pluralize(
+    key: String,
+    count: Int,
+  ): String
 
   /**
    * Localizes a plural text identified by its [key] with the specified arguments to replace
@@ -77,7 +83,11 @@ interface LocalizationRepository {
    * @param args list of arguments to substitute in the localized text
    * @param count the count of items to pluralize
    */
-  fun pluralize(key: String, count: Int, args: Iterable<Any>): String
+  fun pluralize(
+    key: String,
+    count: Int,
+    args: Iterable<Any>,
+  ): String
 
   /**
    * Localizes a quantity text identified by its [key] using only rules for zero, one, two
@@ -86,7 +96,10 @@ interface LocalizationRepository {
    * @param key the localization key to localize
    * @param quantity the quantity value
    */
-  fun quantify(key: String, quantity: Int): String
+  fun quantify(
+    key: String,
+    quantity: Int,
+  ): String
 
   /**
    * Localizes a quantity text identified by its [key] using only rules for zero, one, two
@@ -97,5 +110,9 @@ interface LocalizationRepository {
    * @param args list of arguments to substitute in the localized text
    * @param quantity the quantity value
    */
-  fun quantify(key: String, quantity: Int, args: Iterable<Any>): String
+  fun quantify(
+    key: String,
+    quantity: Int,
+    args: Iterable<Any>,
+  ): String
 }

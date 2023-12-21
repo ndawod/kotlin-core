@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@file:Suppress("unused")
+
 package org.noordawod.kotlin.core.logger
 
 import org.noordawod.kotlin.core.repository.PublicId
@@ -31,7 +33,10 @@ import org.noordawod.kotlin.core.repository.PublicId
  * @param tag log tag to use
  * @param publicId problematic hash value
  */
-fun Logger.hashValueWarning(tag: String, publicId: PublicId) {
+fun Logger.hashValueWarning(
+  tag: String,
+  publicId: PublicId,
+) {
   warning(tag, "Unable to calculate hash value: '$publicId'")
 }
 
@@ -41,7 +46,10 @@ fun Logger.hashValueWarning(tag: String, publicId: PublicId) {
  * @param tag log tag to use
  * @param model model that cannot be converted
  */
-fun Logger.modelWarning(tag: String, model: Any) {
+fun Logger.modelWarning(
+  tag: String,
+  model: Any,
+) {
   warning(tag, "Cannot convert model to entity: $model")
 }
 
@@ -51,6 +59,9 @@ fun Logger.modelWarning(tag: String, model: Any) {
  * @param tag log tag to use
  * @param entity entity that cannot be converted
  */
-fun Logger.entityWarning(tag: String, entity: Any) {
+fun Logger.entityWarning(
+  tag: String,
+  entity: Any,
+) {
   warning(tag, "Cannot convert entity to model: $entity")
 }

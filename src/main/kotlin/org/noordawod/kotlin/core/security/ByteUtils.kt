@@ -42,7 +42,7 @@ object ByteUtils {
    * A secure random number generator.
    */
   internal val RANDOM: java.util.Random = java.security.SecureRandom(
-    System.currentTimeMillis().toString().toByteArray()
+    System.currentTimeMillis().toString().toByteArray(),
   )
 
   /**
@@ -175,7 +175,10 @@ object ByteUtils {
     return result
   }
 
-  fun toHex(entries: Collection<ByteArray>, escape: Boolean = false): Array<String> {
+  fun toHex(
+    entries: Collection<ByteArray>,
+    escape: Boolean = false,
+  ): Array<String> {
     val result = Array(entries.size) { "" }
     var idx = -1
 
@@ -278,12 +281,15 @@ object ByteUtils {
   /**
    * Searches the specified bytes for a character, returns its position if found, -1 otherwise.
    */
-  fun indexOf(bytes: ByteArray, c: Byte): Int {
+  fun indexOf(
+    bytes: ByteArray,
+    byte: Byte,
+  ): Int {
     val length = bytes.size
     var pos = -1
 
     while (length > ++pos) {
-      if (c == bytes[pos]) {
+      if (byte == bytes[pos]) {
         return pos
       }
     }
@@ -294,9 +300,12 @@ object ByteUtils {
   /**
    * Searches the specified bytes for a character, returns its position if found, -1 otherwise.
    */
-  fun indexOf(bytes: ByteArray, aChar: Char): Int {
+  fun indexOf(
+    bytes: ByteArray,
+    char: Char,
+  ): Int {
     val length = bytes.size
-    val aByte = aChar.code.toByte()
+    val aByte = char.code.toByte()
     var pos = -1
 
     while (length > ++pos) {
@@ -364,7 +373,9 @@ object ByteArrayLength {
  *
  * @param length strength of this instance
  */
-enum class ByteArrayStrength(val length: Int) {
+enum class ByteArrayStrength(
+  val length: Int,
+) {
   /**
    * Length of a [ByteArray] that can accommodate a hash value using [SipHash].
    */

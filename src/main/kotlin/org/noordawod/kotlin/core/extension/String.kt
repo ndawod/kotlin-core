@@ -147,8 +147,7 @@ fun String?.toLocaleOrNull(): java.util.Locale? =
  * Converts this String into a [Locale][java.util.Locale] if valid, [fallback] otherwise.
  */
 @Suppress("MagicNumber")
-fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale =
-  toLocaleOrNull() ?: fallback
+fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale = toLocaleOrNull() ?: fallback
 
 /**
  * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
@@ -161,12 +160,11 @@ fun Collection<String>?.toLocales(): Collection<java.util.Locale>? =
  * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
  * null otherwise.
  */
-fun List<String>?.toLocales(): List<java.util.Locale>? =
-  if (isNullOrEmpty()) {
-    null
-  } else {
-    iterator().toLocalesImpl(size) as List<java.util.Locale>
-  }
+fun List<String>?.toLocales(): List<java.util.Locale>? = if (isNullOrEmpty()) {
+  null
+} else {
+  iterator().toLocalesImpl(size) as List<java.util.Locale>
+}
 
 /**
  * Returns an array of [Locale][java.util.Locale]s matching these strings on success,

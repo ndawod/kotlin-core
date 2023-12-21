@@ -84,9 +84,7 @@ fun Int?.toDate(): java.util.Date? = if (null == this) {
 /**
  * Converts an optional [Int] into a [java.util.Date] on success, current time otherwise.
  */
-fun Int?.toDateOr(
-  fallback: java.util.Date = java.util.Date(),
-): java.util.Date = if (null == this) {
+fun Int?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date = if (null == this) {
   fallback
 } else {
   java.util.Date(this * MILLIS_IN_1_SECOND)
@@ -104,13 +102,12 @@ fun Long?.toDate(): java.util.Date? = if (null == this) {
 /**
  * Converts an optional [Long] into a [java.util.Date] on success, current time otherwise.
  */
-fun Long?.toDateOr(
-  fallback: java.util.Date = java.util.Date(),
-): java.util.Date = if (null == this) {
-  fallback
-} else {
-  java.util.Date(this)
-}
+fun Long?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date =
+  if (null == this) {
+    fallback
+  } else {
+    java.util.Date(this)
+  }
 
 /**
  * Returns a [java.util.Date] if this Date is non-null and [java.util.Date.getTime] is
@@ -132,9 +129,8 @@ fun java.util.Date?.millisecondsSinceEpoch(): Long? = this?.time
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
  * the milliseconds that passed since UNIX epoch on success.
  */
-fun java.util.Date?.millisecondsSinceEpochOr(
-  fallback: java.util.Date = java.util.Date(),
-): Long = (this ?: fallback).time
+fun java.util.Date?.millisecondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Long =
+  (this ?: fallback).time
 
 /**
  * Converts this optional [java.util.Date] into a [Long] representing the seconds that
@@ -150,9 +146,8 @@ fun java.util.Date?.secondsSinceEpoch(): Int? {
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
  * the seconds that passed since UNIX epoch on success.
  */
-fun java.util.Date?.secondsSinceEpochOr(
-  fallback: java.util.Date = java.util.Date(),
-): Int = (millisecondsSinceEpochOr(fallback) / MILLIS_IN_1_SECOND).toInt()
+fun java.util.Date?.secondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Int =
+  (millisecondsSinceEpochOr(fallback) / MILLIS_IN_1_SECOND).toInt()
 
 /**
  * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.

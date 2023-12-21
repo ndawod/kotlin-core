@@ -94,11 +94,13 @@ enum class EncryptionAlgorithm(
     algorithm: EncryptionAlgorithm,
     secret: T,
     klass: Class<T>,
-  ): Algorithm = Algorithm::class.java.getMethod(
-    algorithm.method,
-    klass,
-  ).let { method ->
-    method.invoke(null, secret) as Algorithm
+  ): Algorithm {
+    val method = Algorithm::class.java.getMethod(
+      algorithm.method,
+      klass,
+    )
+
+    return method.invoke(null, secret) as Algorithm
   }
 }
 
@@ -112,10 +114,13 @@ class EncryptionAlgorithmSerializer : KSerializer<EncryptionAlgorithm> {
       kind = PrimitiveKind.STRING,
     )
 
-  override fun serialize(encoder: Encoder, value: EncryptionAlgorithm) {
+  override fun serialize(
+    encoder: Encoder,
+    value: EncryptionAlgorithm,
+  ) {
     encoder.encodeString(value.name.uppercase(java.util.Locale.ENGLISH))
   }
 
-  override fun deserialize(decoder: Decoder): EncryptionAlgorithm =
-    EncryptionAlgorithm.valueOf(decoder.decodeString().uppercase(java.util.Locale.ENGLISH))
+  override fun deserialize(decoder: Decoder): EncryptionAlgorithm = EncryptionAlgorithm
+    .valueOf(decoder.decodeString().uppercase(java.util.Locale.ENGLISH))
 }

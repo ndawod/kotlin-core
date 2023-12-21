@@ -35,7 +35,10 @@ import org.noordawod.kotlin.core.extension.sameLanguageAs
  * @param locale the [java.util.Locale] associated with this [Localization] instance
  * @param translation the localized translations associated with [locale]
  */
-open class Localization(val locale: java.util.Locale, val translation: Properties) {
+open class Localization(
+  val locale: java.util.Locale,
+  val translation: Properties,
+) {
   override fun equals(other: Any?): Boolean = other is Localization &&
     other.locale == locale &&
     other.translation == translation
@@ -50,7 +53,7 @@ open class Localization(val locale: java.util.Locale, val translation: Propertie
     fun from(
       locale: java.util.Locale,
       file: String,
-    ) = Localization(
+    ): Localization = Localization(
       locale = locale,
       translation = Properties.from(file),
     )
@@ -62,7 +65,7 @@ open class Localization(val locale: java.util.Locale, val translation: Propertie
     fun from(
       locale: java.util.Locale,
       file: java.io.File,
-    ) = Localization(
+    ): Localization = Localization(
       locale = locale,
       translation = Properties.from(file),
     )
@@ -110,7 +113,10 @@ fun TranslationsMap.localizationFor(language: String): Localization? {
  * Returns a [Localization] for the specified [language] and [country] on success,
  * null otherwise.
  */
-fun TranslationsMap.localizationFor(language: String, country: String): Localization? {
+fun TranslationsMap.localizationFor(
+  language: String,
+  country: String,
+): Localization? {
   val locale: java.util.Locale? = keys.firstOrNull {
     it.sameLanguageAs(language) && it.sameCountryAs(country)
   }

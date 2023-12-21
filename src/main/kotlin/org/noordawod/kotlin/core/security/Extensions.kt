@@ -29,8 +29,10 @@ package org.noordawod.kotlin.core.security
  * Hashes a [String] value using [SipHash] and returns the value as a [ByteArray] on success,
  * an empty [ByteArray] otherwise.
  */
-fun String?.byteArray(siphash: SipHash, trim: Boolean = true): ByteArray =
-  siphash.asByteArrayOr(if (trim) this?.trim() else this)
+fun String?.byteArray(
+  siphash: SipHash,
+  trim: Boolean = true,
+): ByteArray = siphash.asByteArrayOr(if (trim) this?.trim() else this)
 
 /**
  * Returns a [ByteArray] representation of this [Base62]-encoded [String] value.
@@ -41,8 +43,9 @@ fun String.base62(): ByteArray = ByteUtils.fromBase62(this)
  * Returns a [ByteArray] representation of this [Base62]-encoded [String] value on
  * success, null otherwise.
  */
-fun String?.base62(@Suppress("UNUSED_PARAMETER") jvm: ByteArray = byteArrayOf()): ByteArray? =
-  if (null == this) null else ByteUtils.fromBase62(this)
+fun String?.base62(
+  @Suppress("UNUSED_PARAMETER") jvm: ByteArray = byteArrayOf(),
+): ByteArray? = if (null == this) null else ByteUtils.fromBase62(this)
 
 /**
  * Hashes a [ByteArray] using [SipHash] and returns the value as a hexadecimal [String].
@@ -53,15 +56,21 @@ fun ByteArray.hashId(siphash: SipHash): String = siphash.asHex(this)
  * Hashes an optional [ByteArray] using [SipHash] and returns the value as a
  * hexadecimal [String] on success, null otherwise.
  */
-fun ByteArray?.hashIdOrNull(siphash: SipHash): String? =
-  if (null == this) null else siphash.asHex(this)
+fun ByteArray?.hashIdOrNull(siphash: SipHash): String? = if (null == this) {
+  null
+} else {
+  siphash.asHex(this)
+}
 
 /**
  * Hashes an optional [ByteArray] using [SipHash] and returns the value as a
  * hexadecimal [String] on success, an empty [String] otherwise.
  */
-fun ByteArray?.hashIdOrEmpty(siphash: SipHash): String =
-  if (null == this) "" else siphash.asHex(this)
+fun ByteArray?.hashIdOrEmpty(siphash: SipHash): String = if (null == this) {
+  ""
+} else {
+  siphash.asHex(this)
+}
 
 /**
  * Returns a [Base62] representation of this [ByteArray] value.
@@ -72,5 +81,6 @@ fun ByteArray.base62(): String = ByteUtils.toBase62(this)
  * Returns an optional [Base62] representation of this [ByteArray] value on success,
  * null otherwise.
  */
-fun ByteArray?.base62(@Suppress("UNUSED_PARAMETER") jvm: String = ""): String? =
-  if (null == this) null else ByteUtils.toBase62(this)
+fun ByteArray?.base62(
+  @Suppress("UNUSED_PARAMETER") jvm: String = "",
+): String? = if (null == this) null else ByteUtils.toBase62(this)

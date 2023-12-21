@@ -38,7 +38,10 @@ import kotlin.math.sqrt
  * @param longitude geographical longitude location
  */
 @Suppress("MemberVisibilityCanBePrivate")
-class GeoPoint(val latitude: Double, val longitude: Double) {
+class GeoPoint(
+  val latitude: Double,
+  val longitude: Double,
+) {
   /**
    * A constructor to instantiate a new [GeoPoint] from String [latitude] and [longitude].
    *
@@ -105,18 +108,23 @@ class GeoPoint(val latitude: Double, val longitude: Double) {
    * digits after the floating point. Otherwise, it will only contain up to 7 digits after the
    * floating point.
    */
-  fun toString(separator: Char, highAccuracy: Boolean = false): String {
+  fun toString(
+    separator: Char,
+    highAccuracy: Boolean = false,
+  ): String {
     val format = if (highAccuracy) "%.17f" else "%.7f"
     val latitudeValue = String.format(java.util.Locale.ENGLISH, format, latitude)
     val longitudeValue = String.format(java.util.Locale.ENGLISH, format, longitude)
+
     return "$latitudeValue$separator$longitudeValue"
   }
 
-  override fun hashCode(): Int =
-    java.lang.Double.hashCode(latitude) + java.lang.Double.hashCode(longitude)
+  override fun hashCode(): Int = java.lang.Double.hashCode(latitude) +
+    java.lang.Double.hashCode(longitude)
 
-  override fun equals(other: Any?): Boolean =
-    other is GeoPoint && latitude == other.latitude && longitude == other.longitude
+  override fun equals(other: Any?): Boolean = other is GeoPoint &&
+    latitude == other.latitude &&
+    longitude == other.longitude
 
   companion object {
     /**
@@ -189,8 +197,10 @@ class GeoPoint(val latitude: Double, val longitude: Double) {
     /**
      * Returns true if the provided [longitude] and [longitude] are both valid, false otherwise.
      */
-    fun isValid(latitude: Double, longitude: Double): Boolean =
-      isValidLatitude(latitude) && isValidLongitude(longitude)
+    fun isValid(
+      latitude: Double,
+      longitude: Double,
+    ): Boolean = isValidLatitude(latitude) && isValidLongitude(longitude)
 
     /**
      * Returns a textual representation of [value] as formatted as floating-point number.
@@ -203,15 +213,23 @@ class GeoPoint(val latitude: Double, val longitude: Double) {
      * @param highAccuracy whether to produce a very high accurate representation, or not
      */
     @JvmOverloads
-    fun toString(value: Double, highAccuracy: Boolean = false): String =
-      String.format(java.util.Locale.ENGLISH, if (highAccuracy) "%.17f" else "%.7f", value)
+    fun toString(
+      value: Double,
+      highAccuracy: Boolean = false,
+    ): String = String.format(
+      java.util.Locale.ENGLISH,
+      if (highAccuracy) "%.17f" else "%.7f",
+      value,
+    )
   }
 }
 
 /**
  * Type of unit when referring to a [GeoPoint].
  */
-enum class GeoUnit(private val value: String) {
+enum class GeoUnit(
+  private val value: String,
+) {
   /**
    * The meter unit.
    */
@@ -284,8 +302,11 @@ enum class GeoUnit(private val value: String) {
      *
      * @param value value to decode
      */
-    fun decode(value: String?): GeoUnit? = value?.let { nonNullValue ->
-      val lowerCaseValue = nonNullValue.lowercase(java.util.Locale.ENGLISH)
+    fun decode(value: String?): GeoUnit? = if (null == value) {
+      null
+    } else {
+      val lowerCaseValue = value.lowercase(java.util.Locale.ENGLISH)
+
       values().firstOrNull { it.value == lowerCaseValue }
     }
   }

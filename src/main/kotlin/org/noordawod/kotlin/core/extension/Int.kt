@@ -32,17 +32,22 @@ package org.noordawod.kotlin.core.extension
  * @param dash whether to add a '#' character in the beginning, defaults to false
  */
 @Suppress("MagicNumber")
-fun Int?.toColor(opacity: Int? = null, dash: Boolean = false): String? = this?.let { color ->
+fun Int?.toColor(
+  opacity: Int? = null,
+  dash: Boolean = false,
+): String? = if (null == this) {
+  null
+} else {
   val buffer = StringBuffer(9)
   if (dash) {
     buffer.append('#')
   }
 
   @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: color shr 24 and 0xff
-  val redValue = color shr 16 and 0xff
-  val greenValue = color shr 8 and 0xff
-  val blueValue = color and 0xff
+  val opacityValue = opacity ?: this shr 24 and 0xff
+  val redValue = this shr 16 and 0xff
+  val greenValue = this shr 8 and 0xff
+  val blueValue = this and 0xff
 
   // Only add opacity if it's not 255 (0xff).
   if (opacityValue in 0..254) {

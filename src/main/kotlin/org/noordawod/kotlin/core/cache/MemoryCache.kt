@@ -77,14 +77,19 @@ class MemoryCache<V>(
 
   override operator fun get(key: CacheId): V? = cache.getIfPresent(key)
 
-  override operator fun set(key: CacheId, value: V): V {
+  override operator fun set(
+    key: CacheId,
+    value: V,
+  ): V {
     cache.put(key, value)
+
     return value
   }
 
   override fun remove(key: CacheId): V? {
     val value = get(key)
     cache.invalidate(key)
+
     return value
   }
 

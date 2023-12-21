@@ -61,7 +61,10 @@ internal class MessageDigestRepositoryImpl(
    *
    * [String][value].length % [salt].length
    */
-  override fun digest(function: java.security.MessageDigest, value: Any): HashValue {
+  override fun digest(
+    function: java.security.MessageDigest,
+    value: Any,
+  ): HashValue {
     // Convert to a string always.
     val string = value.toString()
     val length = string.length
@@ -73,7 +76,7 @@ internal class MessageDigestRepositoryImpl(
 
     // To allow true randomness and uniqueness of the input value and configured salt,
     // we shall cut the salt in half based on the value's length.
-    // Afterwards, we'll calculate the hash of `first salt half` + `value` + `second salt half`.
+    // Afterward, we'll calculate the hash of `first salt half` + `value` + `second salt half`.
     val moduloPos = length % saltLengthPlusOne
     val saltHalf1 = salt.substring(0, moduloPos)
     val saltHalf2 = salt.substring(moduloPos)
@@ -88,13 +91,18 @@ internal class MessageDigestRepositoryImpl(
    * Before the hash of [value] is calculated, it's converted to a [String] by calling its
    * [toString] method.
    */
-  override fun sha3(strength: Sha3Strength, value: Any): HashValue = when (strength) {
-    Sha3Strength.SHA3_224 -> SHA3_224()
-    Sha3Strength.SHA3_256 -> SHA3_256()
-    Sha3Strength.SHA3_384 -> SHA3_384()
-    Sha3Strength.SHA3_512 -> SHA3_512()
-  }.let {
-    digest(it, value)
+  override fun sha3(
+    strength: Sha3Strength,
+    value: Any,
+  ): HashValue {
+    val messageDigest = when (strength) {
+      Sha3Strength.SHA3_224 -> SHA3_224()
+      Sha3Strength.SHA3_256 -> SHA3_256()
+      Sha3Strength.SHA3_384 -> SHA3_384()
+      Sha3Strength.SHA3_512 -> SHA3_512()
+    }
+
+    return digest(messageDigest, value)
   }
 
   /**

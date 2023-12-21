@@ -31,9 +31,7 @@ package org.noordawod.kotlin.core.util
  *
  * @param capacity initial size of the buffer
  */
-class CloseableByteArrayOutputStream
-@Throws(IllegalArgumentException::class)
-constructor(
+class CloseableByteArrayOutputStream(
   @Suppress("MemberVisibilityCanBePrivate")
   val capacity: Int = 32,
 ) : java.io.ByteArrayOutputStream(capacity) {

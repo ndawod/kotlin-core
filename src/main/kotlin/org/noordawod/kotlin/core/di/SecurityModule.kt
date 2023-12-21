@@ -49,8 +49,7 @@ class SecurityModule(
    */
   @javax.inject.Singleton
   @Provides
-  fun sipHashFactory(): SipHashFactory =
-    SipHashFactory(security.sip.toSipHashKey())
+  fun sipHashFactory(): SipHashFactory = SipHashFactory(security.sip.toSipHashKey())
 
   /**
    * The [MessageDigestRepository] singleton.

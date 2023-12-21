@@ -28,7 +28,9 @@ package org.noordawod.kotlin.core.logger
  *
  * @param environment the runtime environment of the logger
  */
-abstract class BaseSimpleLogger protected constructor(environment: String) : Logger {
+abstract class BaseSimpleLogger protected constructor(
+  environment: String,
+) : Logger {
   private val environmentTag: String = environment.uppercase(java.util.Locale.ENGLISH)
 
   override fun info(

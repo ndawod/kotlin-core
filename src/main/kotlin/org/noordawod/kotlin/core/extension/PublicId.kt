@@ -83,18 +83,17 @@ fun PublicId?.hashValueOrThrow(
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s.
  */
-fun Collection<PublicId?>?.filterNonEmpty(): Collection<PublicId>? =
-  if (null == this) {
-    null
-  } else {
-    val result = ArrayList<PublicId>(size)
-    forEach { entry ->
-      if (!entry.isNullOrEmpty()) {
-        result.add(entry)
-      }
+fun Collection<PublicId?>?.filterNonEmpty(): Collection<PublicId>? = if (null == this) {
+  null
+} else {
+  val result = ArrayList<PublicId>(size)
+  forEach { entry ->
+    if (!entry.isNullOrEmpty()) {
+      result.add(entry)
     }
-    if (result.isEmpty()) null else result
   }
+  if (result.isEmpty()) null else result
+}
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s that

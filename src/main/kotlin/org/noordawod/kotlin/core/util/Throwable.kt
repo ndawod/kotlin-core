@@ -63,7 +63,10 @@ fun tryCatch(block: CodeBlock) {
  * @param block the block to run
  * @param onError callback to handle errors
  */
-fun tryCatch(block: CodeBlock, onError: ThrowableHandler) {
+fun tryCatch(
+  block: CodeBlock,
+  onError: ThrowableHandler,
+) {
   tryCatch(block, onError) { }
 }
 
@@ -74,10 +77,17 @@ fun tryCatch(block: CodeBlock, onError: ThrowableHandler) {
  * @param onError callback to handle errors
  * @param onComplete callback when [block] completes
  */
-fun tryCatch(block: CodeBlock, onError: ThrowableHandler, onComplete: CodeBlock) {
+fun tryCatch(
+  block: CodeBlock,
+  onError: ThrowableHandler,
+  onComplete: CodeBlock,
+) {
   try {
     block.invoke()
-  } catch (@Suppress("TooGenericExceptionCaught") error: Throwable) {
+  } catch (
+    @Suppress("TooGenericExceptionCaught")
+    error: Throwable,
+  ) {
     onError.invoke(error)
   } finally {
     onComplete.invoke()
@@ -104,5 +114,7 @@ fun invalidEnvironmentThrowable(message: String = "First argument must be one of
  * @param file path to the file or directory
  * @param cause explains why the file is invalid
  */
-fun invalidFileThrowable(file: java.io.File, cause: String): Throwable =
-  IllegalArgumentException("File path is invalid: ${file.canonicalPath} ($cause)")
+fun invalidFileThrowable(
+  file: java.io.File,
+  cause: String,
+): Throwable = IllegalArgumentException("File path is invalid: ${file.canonicalPath} ($cause)")

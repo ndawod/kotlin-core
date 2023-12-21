@@ -30,7 +30,9 @@ package org.noordawod.kotlin.core.logger
  *
  * @param environment the runtime environment of the logger
  */
-class ConsoleLogger(environment: String) : BaseSimpleLogger(environment) {
+class ConsoleLogger(
+  environment: String,
+) : BaseSimpleLogger(environment) {
   override fun log(
     type: LogType,
     tag: String,

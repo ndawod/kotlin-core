@@ -36,21 +36,19 @@ private const val DEFAULT_KEEP_ALIVE = 30L
 /**
  * Alternative, simpler service to execute code on separate threads.
  */
-class ExecutorService private constructor(keepAlive: Duration) {
+class ExecutorService private constructor(
+  keepAlive: Duration,
+) {
   private val immediately: java.util.concurrent.ExecutorService = ThreadPoolExecutor(
-    /* corePoolSize */
+    // corePoolSize
     0,
-
-    /* maximumPoolSize */
+    // maximumPoolSize
     Int.MAX_VALUE,
-
-    /* keepAliveTime */
+    // keepAliveTime
     keepAlive.seconds,
-
-    /* keepAliveUnit */
+    // keepAliveUnit
     TimeUnit.SECONDS,
-
-    /* workQueue */
+    // workQueue
     SynchronousQueue(),
   )
   private val delayed = Executors.newSingleThreadScheduledExecutor()
@@ -72,7 +70,10 @@ class ExecutorService private constructor(keepAlive: Duration) {
   /**
    * Executes a task on a thread after the specified [delay] has passed.
    */
-  fun execute(task: () -> Unit, delay: Duration) {
+  fun execute(
+    task: () -> Unit,
+    delay: Duration,
+  ) {
     ensureNotDestroyed()
     execute(Runnable(task), delay)
   }

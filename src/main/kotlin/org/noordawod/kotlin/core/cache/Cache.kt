@@ -85,7 +85,10 @@ interface Cache<V> {
    * @param key the value's unique key
    * @param value the value to cache
    */
-  operator fun set(key: CacheId, value: V): V
+  operator fun set(
+    key: CacheId,
+    value: V,
+  ): V
 
   /**
    * Removes a cached value identified by its unique [key], returns the removed value on
@@ -139,7 +142,10 @@ interface Cache<V> {
  * @param key the value's unique key
  * @param block a function that creates a new value
  */
-fun <V> Cache<V>.getOrSet(key: CacheId, block: (CacheId) -> V?): V? {
+fun <V> Cache<V>.getOrSet(
+  key: CacheId,
+  block: (CacheId) -> V?,
+): V? {
   var data = get(key)
   if (null == data) {
     val value = block(key)
@@ -147,6 +153,7 @@ fun <V> Cache<V>.getOrSet(key: CacheId, block: (CacheId) -> V?): V? {
       data = set(key, value)
     }
   }
+
   return data
 }
 
@@ -160,7 +167,11 @@ fun <V> Cache<V>.getOrSet(key: CacheId, block: (CacheId) -> V?): V? {
  * @param key the value's unique key
  * @param block a function that returns a new value
  */
-fun <V> Cache<V>.update(key: CacheId, block: (V) -> V): V? {
+fun <V> Cache<V>.update(
+  key: CacheId,
+  block: (V) -> V,
+): V? {
   val data = get(key)
+
   return if (null == data) null else set(key, block(data))
 }

@@ -69,8 +69,14 @@ fun HashValue?.publicIdOrEmpty(): PublicId = publicIdOr("")
  *
  * @param escape whether to escape the result for SQL, f.ex: `x'…'`
  */
-fun HashValue?.toHex(escape: Boolean = false): String? =
-  if (isValid()) ByteUtils.toHex(this, escape = escape) else null
+fun HashValue?.toHex(escape: Boolean = false): String? = if (isValid()) {
+  ByteUtils.toHex(
+    bytes = this,
+    escape = escape,
+  )
+} else {
+  null
+}
 
 /**
  * Returns the hexadecimal representation of this [HashValue] on success,
@@ -82,7 +88,7 @@ fun HashValue?.toHex(escape: Boolean = false): String? =
 fun HashValue?.toHexOr(
   fallback: String,
   escape: Boolean = false,
-): String = toHex(escape = escape) ?: fallback
+): String = toHex(escape) ?: fallback
 
 /**
  * Returns the hexadecimal representation of this [HashValue] on success,
@@ -90,24 +96,25 @@ fun HashValue?.toHexOr(
  *
  * @param escape whether to escape the result for SQL, f.ex: `x'…'`
  */
-fun HashValue?.toHexOrEmpty(escape: Boolean = false): String =
-  toHexOr("", escape = escape)
+fun HashValue?.toHexOrEmpty(escape: Boolean = false): String = toHexOr(
+  fallback = "",
+  escape = escape,
+)
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [HashValue]s.
  */
-fun Collection<HashValue?>?.filterNonEmpty(): Collection<HashValue>? =
-  if (null == this) {
-    null
-  } else {
-    val result = ArrayList<HashValue>(size)
-    forEach { hashValue ->
-      if (hashValue.isValid()) {
-        result.add(hashValue)
-      }
+fun Collection<HashValue?>?.filterNonEmpty(): Collection<HashValue>? = if (null == this) {
+  null
+} else {
+  val result = ArrayList<HashValue>(size)
+  forEach { hashValue ->
+    if (hashValue.isValid()) {
+      result.add(hashValue)
     }
-    if (result.isEmpty()) null else result
   }
+  if (result.isEmpty()) null else result
+}
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [HashValue]s that

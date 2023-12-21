@@ -95,7 +95,6 @@ enum class Sha3Strength(
   /**
    * SHA3 algorithm with a strength of 224 bits (produces a 28 byte array).
    */
-  // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
   SHA3_224(
     value = Constants.SHA3_224,
@@ -105,7 +104,6 @@ enum class Sha3Strength(
   /**
    * SHA3 algorithm with a strength of 256 bits (produces a 32 byte array).
    */
-  // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
   SHA3_256(
     value = Constants.SHA3_256,
@@ -115,7 +113,6 @@ enum class Sha3Strength(
   /**
    * SHA3 algorithm with a strength of 384 bits (produces a 48 byte array).
    */
-  // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
   SHA3_384(
     value = Constants.SHA3_384,
@@ -125,7 +122,6 @@ enum class Sha3Strength(
   /**
    * SHA3 algorithm with a strength of 512 bits (produces a 64 byte array).
    */
-  // These values represent known number of bits per algorithm.
   @Suppress("MagicNumber")
   SHA3_512(
     value = Constants.SHA3_512,

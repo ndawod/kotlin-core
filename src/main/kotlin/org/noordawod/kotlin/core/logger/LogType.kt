@@ -28,7 +28,9 @@ package org.noordawod.kotlin.core.logger
  *
  * @param value a human-friendly short description of the enum entry
  */
-enum class LogType(val value: String) {
+enum class LogType(
+  val value: String,
+) {
   /**
    * A log type suitable for information related to debugging. Most messages will use this
    * type.
