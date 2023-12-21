@@ -84,9 +84,9 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
     rate: java.time.Duration,
     task: Runnable,
   ): RunningTask = execute(
-    java.util.Date(),
-    rate,
-    task,
+    time = java.util.Date(),
+    rate = rate,
+    task = task,
   )
 
   @Synchronized
@@ -106,10 +106,10 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
     task: java.util.concurrent.Callable<T>,
     onResult: ((T) -> Unit)?,
   ): RunningTask = execute(
-    java.util.Date(),
-    rate,
-    task,
-    onResult,
+    time = java.util.Date(),
+    rate = rate,
+    task = task,
+    onResult = onResult,
   )
 
   override fun <T> execute(
@@ -117,7 +117,10 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
     rate: java.time.Duration,
     task: java.util.concurrent.Callable<T>,
     onResult: ((T) -> Unit)?,
-  ): RunningTask = execute(time, rate) {
+  ): RunningTask = execute(
+    time = time,
+    rate = rate,
+  ) {
     val result = task.call()
     onResult?.invoke(result)
   }

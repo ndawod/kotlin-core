@@ -38,8 +38,14 @@ object FileSystem {
    * @param source the file to copy
    * @param target destination file
    */
-  fun copy(source: java.io.File, target: java.io.File) {
-    source.copyTo(target, overwrite = true)
+  fun copy(
+    source: java.io.File,
+    target: java.io.File,
+  ) {
+    source.copyTo(
+      target = target,
+      overwrite = true,
+    )
   }
 
   /**
@@ -48,8 +54,14 @@ object FileSystem {
    * @param source the file to copy
    * @param target destination file
    */
-  fun copy(source: String, target: String) {
-    copy(java.io.File(source), java.io.File(target))
+  fun copy(
+    source: String,
+    target: String,
+  ) {
+    copy(
+      source = java.io.File(source),
+      target = java.io.File(target),
+    )
   }
 
   /**
@@ -58,8 +70,10 @@ object FileSystem {
    *
    * @param extension the file extension to use, defaults to ""
    */
-  fun createTempFile(extension: String = ""): java.io.File =
-    java.nio.file.Files.createTempFile("", extension).toFile()
+  fun createTempFile(extension: String = ""): java.io.File = java.nio.file.Files.createTempFile(
+    "",
+    extension,
+  ).toFile()
 
   /**
    * Generates a random file name from the provided [alphabet] with the specified [length].
@@ -73,16 +87,20 @@ object FileSystem {
     alphabet: String,
     length: Int,
     extension: String = "",
-  ): String = StringBuilder(length).let {
+  ): String {
+    val buffer = StringBuilder(length)
     val alphabetLength = alphabet.length
+
     for (idx in 0..length) {
       val nextPos = secureRandom.nextInt(alphabetLength)
-      it.append(alphabet[nextPos])
+      buffer.append(alphabet[nextPos])
     }
+
     if (extension.isNotEmpty()) {
-      it.append(extension)
+      buffer.append(extension)
     }
-    it.toString()
+
+    return buffer.toString()
   }
 
   /**
@@ -100,9 +118,9 @@ object FileSystem {
     fileName: String,
     depth: Int,
   ): java.io.File = getEventualFile(
-    directory.canonicalPath,
-    fileName,
-    depth,
+    directory = directory.canonicalPath,
+    fileName = fileName,
+    depth = depth,
   )
 
   /**
@@ -123,25 +141,24 @@ object FileSystem {
     val normalizedDirectory = directory.trimOrNull()
       ?: error("Directory to host the file is empty.")
 
-    return StringBuilder(normalizedDirectory.length + 2 * depth + fileName.length + 1)
-      .let {
-        if (depth > fileName.length) {
-          error("java.io.File name's length is less than the requested depth.")
-        }
+    if (depth > fileName.length) {
+      error("java.io.File name's length is less than the requested depth.")
+    }
 
-        val absoluteDirectory = java.io.File(normalizedDirectory).canonicalPath
-        it.append(absoluteDirectory.trimEnd(java.io.File.separatorChar))
+    val buffer = StringBuilder(normalizedDirectory.length + 2 * depth + fileName.length + 1)
 
-        for (idx in 0..depth) {
-          it.append(java.io.File.separatorChar)
-          it.append(fileName[idx])
-        }
+    val absoluteDirectory = java.io.File(normalizedDirectory).canonicalPath
+    buffer.append(absoluteDirectory.trimEnd(java.io.File.separatorChar))
 
-        it.append(java.io.File.separatorChar)
-        it.append(fileName)
+    for (idx in 0..depth) {
+      buffer.append(java.io.File.separatorChar)
+      buffer.append(fileName[idx])
+    }
 
-        java.io.File(it.toString())
-      }
+    buffer.append(java.io.File.separatorChar)
+    buffer.append(fileName)
+
+    return java.io.File(buffer.toString())
   }
 
   /**
@@ -154,6 +171,7 @@ object FileSystem {
     if (!directory.exists()) {
       directory.mkdirs()
     }
+
     return directory.isDirectory
   }
 
@@ -171,7 +189,7 @@ object FileSystem {
     args: Collection<String>?,
     includeErrors: Boolean = false,
   ): String {
-    val result = java.lang.StringBuilder(DEFAULT_BUFFER_SIZE)
+    val buffer = java.lang.StringBuilder(DEFAULT_BUFFER_SIZE)
     val programArgs = args ?: listOf()
 
     // The final execution arguments list includes the program itself.
@@ -188,15 +206,15 @@ object FileSystem {
         val lineSeparator = System.lineSeparator()
         do {
           val readLine = reader.readLine() ?: break
-          result.append(readLine)
-          result.append(lineSeparator)
+          buffer.append(readLine)
+          buffer.append(lineSeparator)
         } while (true)
         process.waitFor()
       }
-    } catch (e: InterruptedException) {
-      throw java.io.IOException(e)
+    } catch (error: InterruptedException) {
+      throw java.io.IOException(error)
     }
 
-    return result.toString().trim { it <= ' ' }
+    return buffer.toString().trim { it <= ' ' }
   }
 }

@@ -25,9 +25,6 @@
 
 package org.noordawod.kotlin.core.security
 
-import java.io.IOException
-import java.io.InputStream
-
 /**
  * An implementation of SipHashes algorithm for hashing short, arbitrary data. Adapted from
  * original code written by Forward Computing and Control Pty. Ltd. (www.forward.com.au).
@@ -50,9 +47,11 @@ class SipHash internal constructor(private val key: ByteArray) {
    */
   fun compute(bytes: ByteArray): Long {
     reset()
+
     for (aByte in bytes) {
       updateHash(aByte)
     }
+
     return finish() // result in v0
   }
 
@@ -61,14 +60,17 @@ class SipHash internal constructor(private val key: ByteArray) {
    *
    * Note: this method is NOT thread safe.
    */
-  @Throws(IOException::class)
-  fun compute(stream: InputStream): Long {
+  @Throws(java.io.IOException::class)
+  fun compute(stream: java.io.InputStream): Long {
     reset()
+
     var aByte = stream.read()
+
     while (-1 != aByte) {
       updateHash(aByte.toByte())
       aByte = stream.read()
     }
+
     return finish() // result in v0
   }
 
@@ -77,13 +79,15 @@ class SipHash internal constructor(private val key: ByteArray) {
    *
    * Note: this method is NOT thread safe.
    */
-  fun asByteArray(string: String?, ignoreCase: Boolean = true): ByteArray? =
-    if (string.isNullOrBlank()) {
-      null
-    } else {
-      val normalized = if (ignoreCase) string.lowercase() else string
-      asByteArray(normalized.toByteArray())
-    }
+  fun asByteArray(
+    string: String?,
+    ignoreCase: Boolean = true,
+  ): ByteArray? = if (string.isNullOrBlank()) {
+    null
+  } else {
+    val normalized = if (ignoreCase) string.lowercase() else string
+    asByteArray(normalized.toByteArray())
+  }
 
   /**
    * Calculates the SipHash of [string] and returns the result as a [ByteArray].
@@ -94,98 +98,103 @@ class SipHash internal constructor(private val key: ByteArray) {
     string: String?,
     ignoreCase: Boolean = true,
     fallback: ByteArray = byteArrayOf(),
-  ): ByteArray =
-    if (string.isNullOrEmpty()) {
-      fallback
-    } else {
-      val normalized = if (ignoreCase) string.lowercase() else string
-      asByteArrayOr(normalized.toByteArray())
-    }
+  ): ByteArray = if (string.isNullOrEmpty()) {
+    fallback
+  } else {
+    val normalized = if (ignoreCase) string.lowercase() else string
+    asByteArrayOr(normalized.toByteArray())
+  }
 
   /**
    * Calculates the SipHash of [bytes] and returns the result as a [ByteArray].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asByteArray(bytes: ByteArray?): ByteArray? =
-    if (true == bytes?.isNotEmpty()) SipHashFactory.longToBytes(compute(bytes)) else null
+  fun asByteArray(bytes: ByteArray?): ByteArray? = if (true == bytes?.isNotEmpty()) {
+    SipHashFactory.longToBytes(compute(bytes))
+  } else {
+    null
+  }
 
   /**
    * Hashes the specified [bytes] and returns the result as a [ByteArray].
    */
-  fun asByteArrayOr(bytes: ByteArray?, fallback: ByteArray = byteArrayOf()): ByteArray =
-    if (true == bytes?.isNotEmpty()) SipHashFactory.longToBytes(compute(bytes)) else fallback
+  fun asByteArrayOr(
+    bytes: ByteArray?,
+    fallback: ByteArray = byteArrayOf(),
+  ): ByteArray = if (true == bytes?.isNotEmpty()) {
+    SipHashFactory.longToBytes(compute(bytes))
+  } else {
+    fallback
+  }
 
   /**
    * Calculates the SipHash of [number] and returns the result as a [ByteArray].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asByteArray(number: Long): ByteArray =
-    asByteArrayOr(SipHashFactory.longToBytes(number))
+  fun asByteArray(number: Long): ByteArray = asByteArrayOr(SipHashFactory.longToBytes(number))
 
   /**
    * Calculates the SipHash of [] and returns the result as a [ByteArray].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asByteArray(number: Number): ByteArray =
-    asByteArray(number.toLong())
+  fun asByteArray(number: Number): ByteArray = asByteArray(number.toLong())
 
   /**
    * Calculates the SipHash of [] and returns the result as a [ByteArray].
    *
    * Note: this method is NOT thread safe.
    */
-  @Throws(IOException::class)
-  fun asByteArray(stream: InputStream): ByteArray =
-    SipHashFactory.longToBytes(compute(stream))
+  @Throws(java.io.IOException::class)
+  fun asByteArray(stream: java.io.InputStream): ByteArray = SipHashFactory.longToBytes(
+    compute(stream)
+  )
 
   /**
    * Calculates the SipHash of [bytes] and returns the result as a hexadecimal [String].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asHex(bytes: ByteArray): String =
-    SipHashFactory.toHex(asByteArrayOr(bytes))
+  fun asHex(bytes: ByteArray): String = SipHashFactory.toHex(asByteArrayOr(bytes))
 
   /**
    * Calculates the SipHash of [string] and returns the result as a hexadecimal [String].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asHex(string: String?, ignoreCase: Boolean = true): String? =
-    if (string.isNullOrEmpty()) {
-      null
-    } else {
-      val normalized = if (ignoreCase) string.lowercase() else string
-      SipHashFactory.toHex(asByteArrayOr(normalized.toByteArray()))
-    }
+  fun asHex(
+    string: String?,
+    ignoreCase: Boolean = true,
+  ): String? = if (string.isNullOrEmpty()) {
+    null
+  } else {
+    val normalized = if (ignoreCase) string.lowercase() else string
+    SipHashFactory.toHex(asByteArrayOr(normalized.toByteArray()))
+  }
 
   /**
    * Calculates the SipHash of [number] and returns the result as a hexadecimal [String].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asHex(number: Long): String =
-    SipHashFactory.toHex(asByteArray(number))
+  fun asHex(number: Long): String = SipHashFactory.toHex(asByteArray(number))
 
   /**
    * Calculates the SipHash of [number] and returns the result as a hexadecimal [String].
    *
    * Note: this method is NOT thread safe.
    */
-  fun asHex(number: Number): String =
-    SipHashFactory.toHex(asByteArray(number))
+  fun asHex(number: Number): String = SipHashFactory.toHex(asByteArray(number))
 
   /**
    * Calculates the SipHash of [stream] and returns the result as a hexadecimal [String].
    *
    * Note: this method is NOT thread safe.
    */
-  @Throws(IOException::class)
-  fun asHex(stream: InputStream): String =
-    SipHashFactory.toHex(asByteArray(stream))
+  @Throws(java.io.IOException::class)
+  fun asHex(stream: java.io.InputStream): String = SipHashFactory.toHex(asByteArray(stream))
 
   /**
    * The current state of hash, v0,v1,v2,v3, as hex digits in BigEndian format.
@@ -193,17 +202,38 @@ class SipHash internal constructor(private val key: ByteArray) {
   override fun toString(): String {
     var result = ""
     var bytes: ByteArray = convertToBytes(value0)
-    var hexStr: String = SipHashFactory.toHex(bytes, 0, bytes.size)
+    var hexStr: String = SipHashFactory.toHex(
+      bytes = bytes,
+      offset = 0,
+      length = bytes.size,
+    )
+
     result += "v0=$hexStr "
     bytes = convertToBytes(value1)
-    hexStr = SipHashFactory.toHex(bytes, 0, bytes.size)
+    hexStr = SipHashFactory.toHex(
+      bytes = bytes,
+      offset = 0,
+      length = bytes.size,
+    )
+
     result += "v1=$hexStr "
     bytes = convertToBytes(value2)
-    hexStr = SipHashFactory.toHex(bytes, 0, bytes.size)
+    hexStr = SipHashFactory.toHex(
+      bytes = bytes,
+      offset = 0,
+      length = bytes.size,
+    )
+
     result += "v2=$hexStr "
     bytes = convertToBytes(value3)
-    hexStr = SipHashFactory.toHex(bytes, 0, bytes.size)
+    hexStr = SipHashFactory.toHex(
+      bytes = bytes,
+      offset = 0,
+      length = bytes.size,
+    )
+
     result += "v3=$hexStr "
+
     return result
   }
 
@@ -228,10 +258,11 @@ class SipHash internal constructor(private val key: ByteArray) {
    * corresponding long (read from the bytes as LittleEndian format) is added to
    * the hash.
    */
-  private fun updateHash(b: Byte) {
+  private fun updateHash(byte: Byte) {
     byteCounter++ // mod 256 since this counter is only 1 byte
-    accumulator = accumulator or (b.toLong() and 0xFF shl accumulatorCount * 8)
+    accumulator = accumulator or (byte.toLong() and 0xFF shl accumulatorCount * 8)
     accumulatorCount++
+
     if (accumulatorCount >= ByteUtils.LONG_BYTES) {
       // hash it now
       value3 = value3 xor accumulator
@@ -256,14 +287,12 @@ class SipHash internal constructor(private val key: ByteArray) {
   private fun finish(): Long {
     val oldByteCounter = byteCounter
 
-    // Pad out the last long with zeros, leave one space for the message
-    // length % 256
+    // Pad out the last long with zeros, leave one space for the message length % 256
     while (accumulatorCount < ByteUtils.LONG_BYTES - 1) { // leave one byte for length
       updateHash(0.toByte())
     }
 
-    // add the message length
-    // this will force the last long to be added to the hash
+    // add the message length this will force the last long to be added to the hash
     updateHash(oldByteCounter)
 
     // finish off the hash
@@ -273,10 +302,10 @@ class SipHash internal constructor(private val key: ByteArray) {
     sipHashRound()
     sipHashRound()
 
-    // calculate the final result
-    // over writes v0
+    // calculate the final result overwrites v0
     val result = value0 xor value1 xor value2 xor value3
     reset()
+
     return result
   }
 
@@ -305,18 +334,22 @@ class SipHash internal constructor(private val key: ByteArray) {
      * Rotate long left by shift bits. bits rotated off to the left are put back
      * on the right.
      */
-    private fun rotateLeft(l: Long, shift: Int): Long =
-      l shl shift or l ushr 64 - shift
+    private fun rotateLeft(
+      number: Long,
+      shift: Int,
+    ): Long = number shl shift or number ushr 64 - shift
 
     /**
      * Convert a long to bytes in BigEndian format (Java is a BigEndian platform).
      */
     private fun convertToBytes(value: Long): ByteArray {
-      val aByte = ByteArray(8)
+      val bytes = ByteArray(8)
+
       for (loop in 0..7) {
-        aByte[7 - loop] = (value ushr 8 * loop and 0xFF).toByte()
+        bytes[7 - loop] = (value ushr 8 * loop and 0xFF).toByte()
       }
-      return aByte
+
+      return bytes
     }
   }
 }
@@ -325,12 +358,15 @@ class SipHash internal constructor(private val key: ByteArray) {
  * Helper extension function to convert a [String] to a [ByteArray] suitable for use as a
  * [SipHash] key.
  */
-fun String.toSipHashKey(): ByteArray = toByteArray(Charsets.ISO_8859_1).let {
-  require(16 == it.size) {
+fun String.toSipHashKey(): ByteArray {
+  val result = toByteArray(Charsets.ISO_8859_1)
+
+  require(16 == result.size) {
     "String must be encoded in ${Charsets.ISO_8859_1.name()} " +
-      "and exactly 16 characters long."
+      "and have 16 characters exactly."
   }
-  it
+
+  return result
 }
 
 /**
@@ -352,14 +388,20 @@ class SipHashFactory(private val key: ByteArray) {
     /**
      * Converts [ByteArray] in LittleEndian format to a long.
      */
-    fun bytesToLong(bytes: ByteArray, offset: Int): Long {
+    fun bytesToLong(
+      bytes: ByteArray,
+      offset: Int,
+    ): Long {
       require(bytes.size - offset >= 8) {
         "Less then 8 bytes starting from offset: $offset"
       }
+
       var result: Long = 0
+
       for (loop in 0..7) {
         result = result or (bytes[loop + offset].toLong() and 0xFF shl 8 * loop)
       }
+
       return result
     }
 
@@ -368,28 +410,37 @@ class SipHashFactory(private val key: ByteArray) {
      */
     fun longToBytes(value: Long): ByteArray {
       val bytes = ByteArray(8)
+
       for (loop in 0..7) {
         bytes[loop] = (value ushr 8 * loop and 0xFF).toByte()
       }
+
       return bytes
     }
 
     /**
      * Convert a [ByteArray] to Hex Digits.
      */
-    fun toHex(bytes: ByteArray, offset: Int = 0, length: Int = bytes.size): String {
+    fun toHex(
+      bytes: ByteArray,
+      offset: Int = 0,
+      length: Int = bytes.size,
+    ): String {
       require(bytes.size - offset >= length) {
         "Less then $length bytes starting from offset: $offset"
       }
+
       val buffer = CharArray(length * 2)
       var loop = 0
       var bufferPos = 0
       var anInt: Int
+
       while (loop < length) {
         anInt = bytes[offset + loop++].toInt()
         buffer[bufferPos++] = ByteUtils.HEX_CHARS[anInt ushr 4 and 0x0F]
         buffer[bufferPos++] = ByteUtils.HEX_CHARS[anInt and 0x0F]
       }
+
       return String(buffer)
     }
   }

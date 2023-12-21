@@ -49,10 +49,14 @@ class ByteArraySet : java.util.TreeSet<ByteArray>(ByteArrayComparator) {
     inline fun <T> from(
       list: Iterable<T>,
       transform: (T) -> ByteArray,
-    ): ByteArraySet = ByteArraySet().apply {
+    ): ByteArraySet {
+      val result = ByteArraySet()
+
       list.forEach {
-        add(transform(it))
+        result.add(transform(it))
       }
+
+      return result
     }
   }
 }

@@ -47,15 +47,25 @@ open class Localization(val locale: java.util.Locale, val translation: Propertie
      * Loads [Localization] from the specified [file].
      */
     @Throws(java.io.IOException::class)
-    fun from(locale: java.util.Locale, file: String) =
-      Localization(locale, Properties.from(file))
+    fun from(
+      locale: java.util.Locale,
+      file: String,
+    ) = Localization(
+      locale = locale,
+      translation = Properties.from(file),
+    )
 
     /**
      * Loads [Localization] from the specified [file].
      */
     @Throws(java.io.IOException::class)
-    fun from(locale: java.util.Locale, file: java.io.File) =
-      Localization(locale, Properties.from(file))
+    fun from(
+      locale: java.util.Locale,
+      file: java.io.File,
+    ) = Localization(
+      locale = locale,
+      translation = Properties.from(file),
+    )
 
     /**
      * Loads [Localization] from the list of [files] / [paths] by merging all together.
@@ -66,7 +76,10 @@ open class Localization(val locale: java.util.Locale, val translation: Propertie
       locale: java.util.Locale,
       paths: Iterable<String>?,
       files: Iterable<java.io.File>?,
-    ): Localization = Localization(locale, Properties.from(paths, files))
+    ): Localization = Localization(
+      locale = locale,
+      translation = Properties.from(paths, files),
+    )
   }
 }
 
@@ -89,6 +102,7 @@ fun TranslationsMap.localizationFor(language: String): Localization? {
   val locale: java.util.Locale? = keys.firstOrNull {
     it.sameLanguageAs(language)
   }
+
   return if (null != locale) get(locale) else null
 }
 
@@ -100,5 +114,6 @@ fun TranslationsMap.localizationFor(language: String, country: String): Localiza
   val locale: java.util.Locale? = keys.firstOrNull {
     it.sameLanguageAs(language) && it.sameCountryAs(country)
   }
+
   return if (null != locale) get(locale) else null
 }

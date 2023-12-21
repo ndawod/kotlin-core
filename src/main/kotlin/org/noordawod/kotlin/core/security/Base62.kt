@@ -46,22 +46,31 @@ class Base62 {
    * Returns a Base62-encoded [String] that represents the provided [bytes] on success,
    * null otherwise.
    */
-  fun encodeString(bytes: ByteArray): String = String(encode(bytes), Charsets.ISO_8859_1)
+  fun encodeString(bytes: ByteArray): String = String(
+    bytes = encode(bytes),
+    charset = Charsets.ISO_8859_1
+  )
 
   /**
    * Returns a Base62-encoded [String] that represents the provided UTF-8-encoded
    * [message] on success, null otherwise.
    */
-  fun encodeMessage(message: String): String = encodeMessage(message, Charsets.UTF_8)
+  fun encodeMessage(message: String): String = encodeMessage(
+    message = message,
+    charset = Charsets.UTF_8
+  )
 
   /**
    * Returns a Base62-encoded [String] that represents the provided [charset]-encoded
    * [message] on success, null otherwise.
    */
-  fun encodeMessage(message: String, charset: Charset): String = encodeInternal(
-    message,
-    charset,
-    Charsets.ISO_8859_1,
+  fun encodeMessage(
+    message: String,
+    charset: Charset,
+  ): String = encodeInternal(
+    string = message,
+    source = charset,
+    target = Charsets.ISO_8859_1,
   )
 
   /**
@@ -69,9 +78,9 @@ class Base62 {
    * [Charsets.ISO_8859_1]-encoded [hex] on success, null otherwise.
    */
   fun encodeHex(hex: String): String = encodeInternal(
-    hex,
-    Charsets.ISO_8859_1,
-    Charsets.ISO_8859_1,
+    string = hex,
+    source = Charsets.ISO_8859_1,
+    target = Charsets.ISO_8859_1,
   )
 
   /**
@@ -84,23 +93,28 @@ class Base62 {
    * Decodes the Base62-encoded [string] and returns a [ByteArray] that represents the
    * original decoded bytes on success, null otherwise.
    */
-  fun decodeString(string: String): ByteArray =
-    decode(string.toByteArray(Charsets.ISO_8859_1))
+  fun decodeString(string: String): ByteArray = decode(string.toByteArray(Charsets.ISO_8859_1))
 
   /**
    * Decodes the Base62-encoded [message] and returns a UTF-8-encoded [String] that
    * represents the original decoded bytes on success, null otherwise.
    */
-  fun decodeMessage(message: String): String = decodeMessage(message, Charsets.UTF_8)
+  fun decodeMessage(message: String): String = decodeMessage(
+    message = message,
+    charset = Charsets.UTF_8
+  )
 
   /**
    * Decodes the Base62-encoded [message] and returns a [charset]-encoded [String] that
    * represents the original decoded bytes on success, null otherwise.
    */
-  fun decodeMessage(message: String, charset: Charset): String = decodeInternal(
-    message,
-    Charsets.ISO_8859_1,
-    charset,
+  fun decodeMessage(
+    message: String,
+    charset: Charset,
+  ): String = decodeInternal(
+    string = message,
+    source = Charsets.ISO_8859_1,
+    target = charset,
   )
 
   /**
@@ -108,18 +122,30 @@ class Base62 {
    * [String] that represents the original hexadecimal string on success, null otherwise.
    */
   fun decodeHex(hex: String): String = decodeInternal(
-    hex,
-    Charsets.ISO_8859_1,
-    Charsets.ISO_8859_1,
+    string = hex,
+    source = Charsets.ISO_8859_1,
+    target = Charsets.ISO_8859_1,
   )
 
   @Suppress("SameParameterValue")
-  private fun encodeInternal(string: String, source: Charset, target: Charset): String =
-    String(instance.encode(string.toByteArray(source)), target)
+  private fun encodeInternal(
+    string: String,
+    source: Charset,
+    target: Charset,
+  ): String = String(
+    bytes = instance.encode(string.toByteArray(source)),
+    charset = target,
+  )
 
   @Suppress("SameParameterValue")
-  private fun decodeInternal(string: String, source: Charset, target: Charset): String =
-    String(decode(string.toByteArray(source)), target)
+  private fun decodeInternal(
+    string: String,
+    source: Charset,
+    target: Charset,
+  ): String = String(
+    bytes = decode(string.toByteArray(source)),
+    charset = target,
+  )
 
   companion object {
     /**

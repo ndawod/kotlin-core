@@ -49,7 +49,10 @@ interface Logger {
    * @param tag a tag to identify the origin of the message
    * @param message the message to log
    */
-  fun info(tag: String, message: String)
+  fun info(
+    tag: String,
+    message: String,
+  )
 
   /**
    * Logs a [message] of [type INFO][LogType.INFO] with an [error].
@@ -58,7 +61,11 @@ interface Logger {
    * @param message the message to log
    * @param error an error that accompanies the message
    */
-  fun info(tag: String, message: String, error: Throwable)
+  fun info(
+    tag: String,
+    message: String,
+    error: Throwable,
+  )
 
   /**
    * Logs a [message] of [type WARNING][LogType.WARNING].
@@ -66,7 +73,10 @@ interface Logger {
    * @param tag a tag to identify the origin of the message
    * @param message the message to log
    */
-  fun warning(tag: String, message: String)
+  fun warning(
+    tag: String,
+    message: String,
+  )
 
   /**
    * Logs a [message] of [type WARNING][LogType.WARNING] with an [error].
@@ -75,7 +85,11 @@ interface Logger {
    * @param message the message to log
    * @param error an error that accompanies the message
    */
-  fun warning(tag: String, message: String, error: Throwable)
+  fun warning(
+    tag: String,
+    message: String,
+    error: Throwable,
+  )
 
   /**
    * Logs a message of [type ERROR][LogType.ERROR] with an [error].
@@ -83,7 +97,10 @@ interface Logger {
    * @param tag a tag to identify the origin of the message
    * @param error an error that accompanies the message
    */
-  fun error(tag: String, error: Throwable) {
+  fun error(
+    tag: String,
+    error: Throwable,
+  ) {
     error(tag, error.message ?: "Unknown error", error)
   }
 
@@ -107,5 +124,9 @@ interface Logger {
    * @param message the message to log
    * @param error optional error that accompanies the message
    */
-  fun error(tag: String, message: String, error: Throwable)
+  fun error(
+    tag: String,
+    message: String,
+    error: Throwable,
+  )
 }

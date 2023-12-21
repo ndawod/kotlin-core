@@ -88,7 +88,10 @@ interface MessageDigestRepository {
  * @param bits how many bits the final hash consumes
  */
 @Suppress("MemberVisibilityCanBePrivate")
-enum class Sha3Strength(val value: String, val bits: Int) {
+enum class Sha3Strength(
+  val value: String,
+  val bits: Int,
+) {
   /**
    * SHA3 algorithm with a strength of 224 bits (produces a 28 byte array).
    */

@@ -31,24 +31,67 @@ package org.noordawod.kotlin.core.logger
 abstract class BaseSimpleLogger protected constructor(environment: String) : Logger {
   private val environmentTag: String = environment.uppercase(java.util.Locale.ENGLISH)
 
-  override fun info(tag: String, message: String) {
-    log(LogType.INFO, tag, message, null)
+  override fun info(
+    tag: String,
+    message: String,
+  ) {
+    log(
+      type = LogType.INFO,
+      tag = tag,
+      message = message,
+      error = null,
+    )
   }
 
-  override fun info(tag: String, message: String, error: Throwable) {
-    log(LogType.INFO, tag, message, error)
+  override fun info(
+    tag: String,
+    message: String,
+    error: Throwable,
+  ) {
+    log(
+      type = LogType.INFO,
+      tag = tag,
+      message = message,
+      error = error,
+    )
   }
 
-  override fun warning(tag: String, message: String) {
-    log(LogType.WARNING, tag, message, null)
+  override fun warning(
+    tag: String,
+    message: String,
+  ) {
+    log(
+      type = LogType.WARNING,
+      tag = tag,
+      message = message,
+      error = null,
+    )
   }
 
-  override fun warning(tag: String, message: String, error: Throwable) {
-    log(LogType.WARNING, tag, message, error)
+  override fun warning(
+    tag: String,
+    message: String,
+    error: Throwable,
+  ) {
+    log(
+      type = LogType.WARNING,
+      tag = tag,
+      message = message,
+      error = error,
+    )
   }
 
-  override fun error(tag: String, message: String, error: Throwable) {
-    log(LogType.ERROR, tag, message, error)
+  override fun error(
+    tag: String,
+    message: String,
+    error: Throwable,
+  ) {
+    log(
+      type = LogType.ERROR,
+      tag = tag,
+      message = message,
+      error = error,
+    )
   }
 
   /**
@@ -69,6 +112,7 @@ abstract class BaseSimpleLogger protected constructor(environment: String) : Log
     val dateTag = "[${dateFormatter.format(java.util.Date())}]"
     val envTag = "[$environmentTag/$tag]"
     val typeTag = "${type.toString().uppercase(LOG_LOCALE)}:"
+
     return arrayOf(dateTag, envTag, typeTag, message).joinToString(separator = " ")
   }
 

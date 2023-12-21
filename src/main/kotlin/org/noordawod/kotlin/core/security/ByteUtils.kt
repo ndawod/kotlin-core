@@ -41,8 +41,9 @@ object ByteUtils {
   /**
    * A secure random number generator.
    */
-  internal val RANDOM: java.util.Random =
-    java.security.SecureRandom(System.currentTimeMillis().toString().toByteArray())
+  internal val RANDOM: java.util.Random = java.security.SecureRandom(
+    System.currentTimeMillis().toString().toByteArray()
+  )
 
   /**
    * How many bytes in one [Long].
@@ -52,7 +53,7 @@ object ByteUtils {
   /**
    * Contains a list of upper-case alphanumeric characters, as a [String].
    */
-  const val HEX_STRING = "0123456789ABCDEF"
+  const val HEX_STRING: String = "0123456789ABCDEF"
 
   /**
    * Contains a list of upper-case alphanumeric characters, as a [CharArray].
@@ -62,7 +63,7 @@ object ByteUtils {
   /**
    * Contains a list of upper-case alphanumeric characters, as a [ByteArray].
    */
-  val HEX_BYTES = HEX_STRING.toByteArray()
+  val HEX_BYTES: ByteArray = HEX_STRING.toByteArray()
 
   /**
    * A case-insensitive [Pattern] that can match against hexadecimal input.
@@ -72,8 +73,11 @@ object ByteUtils {
   /**
    * Generates random bytes and returns them as a [ByteArray].
    */
-  fun randomBytes(length: Int): ByteArray = ByteArray(length).apply {
-    RANDOM.nextBytes(this)
+  fun randomBytes(length: Int): ByteArray {
+    val result = ByteArray(length)
+    RANDOM.nextBytes(result)
+
+    return result
   }
 
   /**
@@ -99,6 +103,7 @@ object ByteUtils {
       bytes[idx] = dictionary[random.nextInt(0, dictionary.size)]
       idx++
     }
+
     return bytes
   }
 
@@ -130,6 +135,7 @@ object ByteUtils {
         return false
       }
     }
+
     return true
   }
 
@@ -146,6 +152,7 @@ object ByteUtils {
     escape: Boolean = false,
   ): String {
     val hex = DatatypeConverter.printHexBinary(bytes).lowercase(java.util.Locale.ENGLISH)
+
     return if (escape) "x'$hex'" else hex
   }
 
@@ -160,18 +167,22 @@ object ByteUtils {
   ): Array<String> {
     val result = Array(entries.size) { "" }
     var idx = -1
+
     while (entries.size > ++idx) {
       result[idx] = toHex(entries[idx], escape)
     }
+
     return result
   }
 
   fun toHex(entries: Collection<ByteArray>, escape: Boolean = false): Array<String> {
     val result = Array(entries.size) { "" }
     var idx = -1
+
     for (entry in entries) {
       result[++idx] = toHex(entry, escape)
     }
+
     return result
   }
 
@@ -212,6 +223,7 @@ object ByteUtils {
   fun toByteArray(number: Number): ByteArray? {
     val length: Int
     val value: Long
+
     when (number) {
       is Byte -> {
         length = java.lang.Byte.SIZE shr 3
@@ -235,10 +247,13 @@ object ByteUtils {
 
       else -> return null
     }
+
     val array = ByteArray(length)
+
     for (pos in 0 until length) {
       array[pos] = (value shr (length - pos - 1 shl 3)).toByte()
     }
+
     return array
   }
 
@@ -251,10 +266,12 @@ object ByteUtils {
     if (length > 8) {
       return 0L
     }
+
     var value = 0L
     for (pos in 0 until length) {
       value = value or (0xFFL and bytes[pos].toLong() shl 8 * (length - pos - 1))
     }
+
     return value
   }
 
@@ -264,11 +281,13 @@ object ByteUtils {
   fun indexOf(bytes: ByteArray, c: Byte): Int {
     val length = bytes.size
     var pos = -1
+
     while (length > ++pos) {
       if (c == bytes[pos]) {
         return pos
       }
     }
+
     return -1
   }
 
@@ -279,11 +298,13 @@ object ByteUtils {
     val length = bytes.size
     val aByte = aChar.code.toByte()
     var pos = -1
+
     while (length > ++pos) {
       if (aByte == bytes[pos]) {
         return pos
       }
     }
+
     return -1
   }
 }
@@ -405,6 +426,7 @@ enum class ByteArrayStrength(val length: Int) {
           return value
         }
       }
+
       return fallback
     }
   }

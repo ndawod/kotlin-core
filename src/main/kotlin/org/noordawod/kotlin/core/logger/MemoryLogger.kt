@@ -44,8 +44,8 @@ class MemoryLogger(
    * @param environment the runtime environment of the logger
    */
   constructor(environment: String) : this(
-    environment,
-    StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
+    environment = environment,
+    buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
   )
 
   override fun log(
@@ -54,9 +54,15 @@ class MemoryLogger(
     message: String,
     error: Throwable?,
   ) {
-    val logMessage = logMessage(type, tag, message)
+    val logMessage = logMessage(
+      type = type,
+      tag = tag,
+      message = message,
+    )
+
     buffer.append(logMessage.trimOr("(empty message)"))
     buffer.append('\n')
+
     if (null != error) {
       buffer.append(stackTraceOf(error))
       buffer.append('\n')

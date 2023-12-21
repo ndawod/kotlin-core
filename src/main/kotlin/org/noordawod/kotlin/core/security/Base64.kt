@@ -25,35 +25,56 @@
 
 package org.noordawod.kotlin.core.security
 
-import java.nio.charset.Charset
-
 /**
  * Helper functions to work with contents encoded in Base64, that needs decoding from Base64.
  */
 object Base64 {
   fun encode(bytes: ByteArray): ByteArray = java.util.Base64.getEncoder().encode(bytes)
 
-  fun encodeBinary(bytes: ByteArray): String =
-    String(encode(bytes), Charsets.ISO_8859_1)
+  fun encodeBinary(bytes: ByteArray): String = String(
+    bytes = encode(bytes),
+    charset = Charsets.ISO_8859_1,
+  )
 
-  fun encodeMessage(message: String, charset: Charset = Charsets.UTF_8): String =
-    encodeInternal(message, charset, Charsets.ISO_8859_1)
+  fun encodeMessage(
+    message: String,
+    charset: java.nio.charset.Charset = Charsets.UTF_8,
+  ): String = encodeInternal(
+    string = message,
+    source = charset,
+    target = Charsets.ISO_8859_1,
+  )
 
-  fun decode(bytes: ByteArray): ByteArray =
-    java.util.Base64.getDecoder().decode(bytes)
+  fun decode(bytes: ByteArray): ByteArray = java.util.Base64.getDecoder().decode(bytes)
 
-  fun decodeBinary(string: String): ByteArray =
-    decode(string.toByteArray(Charsets.ISO_8859_1))
+  fun decodeBinary(string: String): ByteArray = decode(string.toByteArray(Charsets.ISO_8859_1))
 
-  fun decodeMessage(string: String): String =
-    decodeMessage(string, Charsets.UTF_8)
+  fun decodeMessage(string: String): String = decodeMessage(string, Charsets.UTF_8)
 
-  fun decodeMessage(message: String, charset: Charset): String =
-    decodeInternal(message, Charsets.ISO_8859_1, charset)
+  fun decodeMessage(
+    message: String,
+    charset: java.nio.charset.Charset,
+  ): String = decodeInternal(
+    string = message,
+    source = Charsets.ISO_8859_1,
+    target = charset,
+  )
 
-  private fun encodeInternal(string: String, source: Charset, target: Charset): String =
-    String(encode(string.toByteArray(source)), target)
+  private fun encodeInternal(
+    string: String,
+    source: java.nio.charset.Charset,
+    target: java.nio.charset.Charset,
+  ): String = String(
+    bytes = encode(string.toByteArray(source)),
+    charset = target,
+  )
 
-  private fun decodeInternal(string: String, source: Charset, target: Charset): String =
-    String(decode(string.toByteArray(source)), target)
+  private fun decodeInternal(
+    string: String,
+    source: java.nio.charset.Charset,
+    target: java.nio.charset.Charset,
+  ): String = String(
+    bytes = decode(string.toByteArray(source)),
+    charset = target,
+  )
 }
