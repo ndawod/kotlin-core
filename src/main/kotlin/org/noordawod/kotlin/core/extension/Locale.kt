@@ -52,8 +52,8 @@ fun java.util.Locale.uppercase(): String = stringify().uppercase()
 fun java.util.Locale.getNewLanguage(): String = language.getNewLanguage()
 
 /**
- * Returns the value of [java.util.Locale.toString] where the old language codes are converted to their
- * new variations.
+ * Returns the value of [java.util.Locale.toString] where the old language codes
+ * are converted to their new variations.
  */
 fun java.util.Locale.toNewString(): String {
   val localeString = toString()
