@@ -25,10 +25,10 @@ ext.encoding = 'UTF-8'
 ext.versions = [
     jdk: JavaVersion.VERSION_11,
     plugin_versions_outdated: '0.51.0',
-    plugin_detekt: '1.23.5',
+    plugin_detekt: '1.23.6',
     plugin_ktlint: '12.1.0',
     ktlint: '0.51.0-FINAL',
-    dagger: '2.51',
+    dagger: '2.51.1',
     kotlin: '1.8.21', // https://kotlinlang.org/docs/releases.html#release-details
     kotlin_coroutines: '1.7.3',
     kotlin_serialization: '1.6.3',
@@ -37,5 +37,6 @@ ext.versions = [
     auth0_jwt: '4.4.0',
     aelstad_keccakj: '1.1.0',
     icu4j: '74.2',
-    guava: '33.0.0-jre'
+    guava: '33.1.0-jre',
+    dotenv: '6.4.1'
 ]

@@ -21,18 +21,18 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "MemberVisibilityCanBePrivate")
+@file:Suppress("unused", "MagicNumber", "MemberVisibilityCanBePrivate")
 
 package org.noordawod.kotlin.core
 
 import org.noordawod.kotlin.core.extension.MILLIS_IN_1_SECOND
 
 /**
- * Common constants and values that can be used throughout the module and beyond.
+ * Common constants and values that can be reused in multiple scenarios.
  */
 object Constants {
   /**
-   * Default connection timeout for external services.
+   * Default timeout when connecting to network services.
    */
   const val DEFAULT_CONNECTION_TIMEOUT: Long = 10 * MILLIS_IN_1_SECOND
 
@@ -57,19 +57,19 @@ object Constants {
   const val DEFAULT_LINE_WIDTH: Int = 80
 
   /**
-   * The [java.util.Locale] that all backend services consider as fallback (default).
+   * The [java.util.Locale] considered as default or fallback.
    */
   val DEFAULT_LOCALE: java.util.Locale = java.util.Locale.US
 
   /**
    * The default language code (`en`).
    */
-  val DEFAULT_LANGUAGE_CODE: String = DEFAULT_LOCALE.language
+  val DEFAULT_LANGUAGE_CODE: String = DEFAULT_LOCALE.language.lowercase(java.util.Locale.ENGLISH)
 
   /**
    * The default country code (`US`).
    */
-  val DEFAULT_COUNTRY_CODE: String = DEFAULT_LOCALE.country
+  val DEFAULT_COUNTRY_CODE: String = DEFAULT_LOCALE.country.uppercase(java.util.Locale.ENGLISH)
 
   /**
    * A list of characters that includes white spaces.

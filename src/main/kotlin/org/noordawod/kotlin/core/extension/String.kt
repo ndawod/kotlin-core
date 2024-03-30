@@ -25,6 +25,7 @@
 
 package org.noordawod.kotlin.core.extension
 
+import org.noordawod.kotlin.core.Constants
 import org.noordawod.kotlin.core.util.ImageDimension
 
 /**
@@ -38,6 +39,32 @@ typealias PairOfStrings = Pair<String, String>
 typealias PairOfIntAndLong = Pair<Int, Long>
 
 /**
+ * Strips search modifiers (`+`, `-`, `<`, `>`, `"`) from this string, and returns it.
+ */
+fun String.withoutSearchModifiers(): String {
+  var string = trim()
+
+  if (
+    string.startsWith('+') ||
+    string.startsWith('-') ||
+    string.startsWith('<') ||
+    string.startsWith('>')
+  ) {
+    string = string.substring(1)
+  }
+
+  val length = string.length
+  if (
+    '"' == string[0] && '"' == string[length - 1] ||
+    '\'' == string[0] && '\'' == string[length - 1]
+  ) {
+    string = string.substring(1, length - 1)
+  }
+
+  return string.trim()
+}
+
+/**
  * Strips any trailing slash characters
  * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
@@ -46,6 +73,7 @@ fun String.withoutTrailingSlash(): String {
   while (0 < endIndex && java.io.File.separatorChar == this[endIndex - 1]) {
     endIndex--
   }
+
   return substring(0, endIndex)
 }
 
@@ -59,6 +87,7 @@ fun String.withoutLeadingSlash(): String {
   while (length > startIndex && java.io.File.separatorChar == this[startIndex]) {
     startIndex++
   }
+
   return substring(startIndex)
 }
 
@@ -74,6 +103,7 @@ fun String.withoutSlashes() = withoutLeadingSlash().withoutTrailingSlash()
 fun String.withTrailing(string: String): String {
   val length = this.length
   val stringLength = string.length
+
   return if (length < stringLength || string != substring(length - stringLength)) {
     "$this$string"
   } else {
@@ -86,7 +116,36 @@ fun String.withTrailing(string: String): String {
  */
 fun String.withExtension(extension: String): String {
   val extensionWithDot = if ('.' == extension[0]) extension else ".$extension"
+
   return withTrailing(extensionWithDot)
+}
+
+/**
+ * Returns the camelCase representation of this String.
+ *
+ * @param delimiters a list of delimiter characters, if any, between words
+ */
+fun String.camelCase(delimiters: String = ""): String {
+  val length = this.length
+  var shouldConvertNextCharToLower = true
+  var idx = -1
+
+  val builder = StringBuilder(length)
+
+  while (length > ++idx) {
+    val currentChar = this[idx]
+
+    if (-1 < delimiters.indexOf("$currentChar")) {
+      shouldConvertNextCharToLower = false
+    } else if (shouldConvertNextCharToLower) {
+      builder.append(Character.toLowerCase(currentChar))
+    } else {
+      builder.append(Character.toUpperCase(currentChar))
+      shouldConvertNextCharToLower = true
+    }
+  }
+
+  return builder.toString()
 }
 
 /**
@@ -133,6 +192,7 @@ fun String?.trimOrBlank(): String = trimOr("")
  */
 fun String?.toBooleanOr(fallback: Boolean = false): Boolean {
   val value = this?.lowercase(java.util.Locale.ENGLISH)
+
   return if (null == value) fallback else "1" == value || "true" == value
 }
 
@@ -175,18 +235,15 @@ fun Array<String>?.toLocales(): Array<java.util.Locale>? =
 
 /**
  * Returns this String if it's a valid 2-letter country code, null otherwise.
- *
- * @param uppercase whether to return an upper- or lower-case country code
  */
 @Suppress("NestedBlockDepth")
-fun String?.ensureCountryCode(uppercase: Boolean = true): String? {
-  val country = trimOrNull()?.uppercase()
+fun String?.ensureCountryCode(): String? {
+  val country = trimOrNull()?.uppercase(java.util.Locale.ENGLISH)
 
   if (null != country) {
-    val isoCountries = java.util.Locale.getISOCountries()
-    for (isoCountry in isoCountries) {
-      if (isoCountry == country) {
-        return if (uppercase) country else country.lowercase()
+    for (isoCountry in ISO_COUNTRIES) {
+      if (isoCountry.equals(country, ignoreCase = true)) {
+        return country
       }
     }
   }
@@ -195,16 +252,25 @@ fun String?.ensureCountryCode(uppercase: Boolean = true): String? {
 }
 
 /**
+ * Returns true if this [String] is the [default language][Constants.DEFAULT_LANGUAGE_CODE],
+ * false otherwise.
+ */
+fun String.isDefaultLanguage(): Boolean =
+  lowercase(java.util.Locale.ENGLISH) == Constants.DEFAULT_LANGUAGE_CODE
+
+/**
  * Given that this is a 2-character language code, returns the new language variation for an
  * old language code.
  */
 fun String.getNewLanguage(): String {
   val language = lowercase(java.util.Locale.ENGLISH)
+
   for (locale in NewLocaleLanguage.values()) {
     if (language == locale.oldCode) {
       return locale.newCode
     }
   }
+
   return language
 }
 
@@ -495,6 +561,7 @@ fun String.isDomainName(): Boolean = DOMAIN_NAME_PATTERN.matcher(this).matches()
 
 private fun String.toLocaleImpl(): java.util.Locale? {
   val parts = replace("-", "_").split('_')
+
   return try {
     if (1 < parts.size) java.util.Locale(parts[0], parts[1]) else java.util.Locale(parts[0])
   } catch (ignored: Throwable) {
@@ -528,3 +595,6 @@ private val HOST_NAME_PATTERN: java.util.regex.Pattern =
 
 private val DOMAIN_NAME_PATTERN: java.util.regex.Pattern =
   java.util.regex.Pattern.compile("^[a-z0-9.-]\$")
+
+private val ISO_COUNTRIES: Array<String> =
+  java.util.Locale.getISOCountries()

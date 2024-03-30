@@ -22,7 +22,7 @@
  */
 
 group = 'org.noordawod.kotlin.core'
-version = '3.6.5'
+version = '3.6.6'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 buildDir = 'build'
 
@@ -73,10 +73,11 @@ apply from: "$rootDir/gradle/dagger.gradle"
 apply from: "$rootDir/gradle/ktlint.gradle"
 
 dependencies {
-    implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
-    implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
     implementation "com.github.aelstad:keccakj:${versions.aelstad_keccakj}"
     implementation "com.ibm.icu:icu4j:${versions.icu4j}"
     implementation "com.google.guava:guava:${versions.guava}"
     implementation "com.auth0:java-jwt:${versions.auth0_jwt}"
+    implementation "io.github.cdimascio:dotenv-kotlin:${versions.dotenv}"
+    implementation "io.seruco.encoding:base62:${versions.seruco_base62}"
+    implementation "net.moznion:uribuilder-tiny:${versions.uribuilder_tiny}"
 }
