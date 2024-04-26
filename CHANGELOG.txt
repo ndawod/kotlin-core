@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+3.6.7 (April 26, 2024)
+    Bump up dependencies versions.
+
 3.6.6 (March 30, 2024)
     Add support for .env files.
 
