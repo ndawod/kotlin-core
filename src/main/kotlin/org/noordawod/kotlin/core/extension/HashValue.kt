@@ -38,7 +38,7 @@ import org.noordawod.kotlin.core.security.base62
 @OptIn(ExperimentalContracts::class)
 fun HashValue?.isValid(): Boolean {
   contract {
-    returns(true) implies (null != this@isValid)
+    returns(true) implies (this@isValid != null)
   }
   return null != this && isNotEmpty()
 }
