@@ -42,7 +42,10 @@ import kotlin.reflect.full.memberProperties
  * @param dotenv the .env file after being loaded into memory
  * @param prefix the prefix market for values, defaults to "ENV_"
  */
-fun <T : Any> T.declassify(dotenv: Dotenv, prefix: String = "ENV_"): T {
+fun <T : Any> T.declassify(
+  dotenv: Dotenv,
+  prefix: String = "ENV_",
+): T {
   for (property in this::class.memberProperties) {
     if (property.visibility !in arrayOf(KVisibility.PUBLIC, KVisibility.INTERNAL)) {
       continue
@@ -71,7 +74,7 @@ fun <T : Any> T.declassify(dotenv: Dotenv, prefix: String = "ENV_"): T {
     }
 
     val secretValue = dotenv.get(value)
-      ?: throw IllegalStateException("Unable to find secret value for property: $value")
+      ?: error("Unable to find secret value for property: $value")
 
     // We must use Java reflection to be able to modify "val" properties.
     val propertyJavaProps = this::class.java.getDeclaredField(name)

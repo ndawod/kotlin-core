@@ -432,7 +432,7 @@ enum class ByteArrayStrength(
       strength: Int,
       fallback: ByteArrayStrength = NORMAL,
     ): ByteArrayStrength {
-      for (value in values()) {
+      for (value in entries) {
         if (value.length == strength) {
           return value
         }

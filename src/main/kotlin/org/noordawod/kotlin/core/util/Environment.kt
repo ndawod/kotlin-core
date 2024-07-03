@@ -119,7 +119,7 @@ enum class Environment(
      */
     fun from(identifier: String): Environment? {
       val identifierNormalized = identifier.lowercase(java.util.Locale.ENGLISH)
-      for (environment in values()) {
+      for (environment in entries) {
         if (environment.identifier == identifierNormalized) {
           return environment
         }

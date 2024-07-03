@@ -100,7 +100,7 @@ fun tryCatch(
  * @param message error message to use
  */
 fun invalidEnvironmentThrowable(message: String = "First argument must be one of"): Throwable {
-  val environments = Environment.values()
+  val environments = Environment.entries
   val errorArray = Array(environments.size) { environments[it].identifier }
 
   return IllegalArgumentException(

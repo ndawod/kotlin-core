@@ -26,7 +26,7 @@
 package org.noordawod.kotlin.core.util
 
 /**
- * Wraps of [ByteArray] value so it can be compared using a [Comparable].
+ * Wraps of [ByteArray] value, so it can be compared using a [Comparable].
  *
  * @param bytes the bytes to wrap
  */

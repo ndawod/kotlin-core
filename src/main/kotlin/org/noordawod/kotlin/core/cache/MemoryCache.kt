@@ -81,6 +81,7 @@ class MemoryCache<V>(
     key: CacheId,
     value: V,
   ): V {
+    @Suppress("NULLABILITY_MISMATCH_BASED_ON_JAVA_ANNOTATIONS")
     cache.put(key, value)
 
     return value

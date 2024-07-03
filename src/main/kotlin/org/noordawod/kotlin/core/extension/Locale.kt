@@ -58,7 +58,7 @@ fun java.util.Locale.getNewLanguage(): String = language.getNewLanguage()
 fun java.util.Locale.toNewString(): String {
   val localeString = toString()
   val lowerCaseLocaleString = localeString.lowercase(java.util.Locale.ENGLISH)
-  for (locale in NewLocaleLanguage.values()) {
+  for (locale in NewLocaleLanguage.entries) {
     if (lowerCaseLocaleString == locale.oldCode) {
       return locale.newCode
     }
@@ -167,7 +167,7 @@ internal enum class NewLocaleLanguage(
     fun decode(code: Any?): NewLocaleLanguage? {
       if (null != code) {
         val normalizedCode = "$code".lowercase(java.util.Locale.ENGLISH)
-        for (locale in values()) {
+        for (locale in entries) {
           if (locale.oldCode == normalizedCode || locale.newCode == normalizedCode) {
             return locale
           }

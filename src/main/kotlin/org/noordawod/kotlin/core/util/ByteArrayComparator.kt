@@ -26,7 +26,7 @@ package org.noordawod.kotlin.core.util
 /**
  * A [Comparator] for [ByteArray] objects.
  */
-val ByteArrayComparator: Comparator<ByteArray> = Comparator<ByteArray> { o1, o2 ->
+val ByteArrayComparator: Comparator<ByteArray> = Comparator { o1, o2 ->
   when {
     null != o1 && null != o2 && o1.size != o2.size -> o1.size - o2.size
     null != o1 && null != o2 -> {

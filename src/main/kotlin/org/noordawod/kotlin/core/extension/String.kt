@@ -41,6 +41,7 @@ typealias PairOfIntAndLong = Pair<Int, Long>
 /**
  * Strips search modifiers (`+`, `-`, `<`, `>`, `"`) from this string, and returns it.
  */
+@Suppress("ComplexCondition")
 fun String.withoutSearchModifiers(): String {
   var string = trim()
 
@@ -265,7 +266,7 @@ fun String.isDefaultLanguage(): Boolean =
 fun String.getNewLanguage(): String {
   val language = lowercase(java.util.Locale.ENGLISH)
 
-  for (locale in NewLocaleLanguage.values()) {
+  for (locale in NewLocaleLanguage.entries) {
     if (language == locale.oldCode) {
       return locale.newCode
     }

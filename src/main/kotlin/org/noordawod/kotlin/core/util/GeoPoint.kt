@@ -307,7 +307,7 @@ enum class GeoUnit(
     } else {
       val lowerCaseValue = value.lowercase(java.util.Locale.ENGLISH)
 
-      values().firstOrNull { it.value == lowerCaseValue }
+      entries.firstOrNull { it.value == lowerCaseValue }
     }
   }
 }
