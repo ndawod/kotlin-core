@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.2.0 (July 6, 2024)
+    Refactor the `HashValue`- and `PublicId`-related functions.
+
 4.1.0 (July 3, 2024)
     Upgrade to Kotlin version 2.0.0 with K2 compiler.
 

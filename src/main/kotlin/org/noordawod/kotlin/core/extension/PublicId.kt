@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "ReplaceIsEmptyWithIfEmpty", "DuplicatedCode")
 
 package org.noordawod.kotlin.core.extension
 
@@ -32,166 +32,196 @@ import org.noordawod.kotlin.core.security.base62
 import org.noordawod.kotlin.core.util.ByteArrayMap
 
 /**
- * Returns the corresponding [HashValue] for this [PublicId] on success,
- * null otherwise.
- *
- * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
- * HashValue is considered invalid, and the function will return null in such cases.
+ * Returns the corresponding [HashValue] when this [PublicId] is [valid][isValid],
+ * [EmptyHashValue] otherwise.
  */
-fun PublicId?.hashValue(): HashValue? = if (isNullOrBlank()) null else base62()
+fun PublicId?.hashValue(): HashValue = hashValueOr(EmptyHashValue)
 
 /**
- * Returns the corresponding [HashValue] for this [PublicId] on success,
+ * Returns the corresponding [HashValue] when this [PublicId] is [valid][isValid],
  * [fallback] otherwise.
- *
- * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
- * HashValue is considered invalid, and the function will return null in such cases.
  *
  * @param fallback value to return if this [PublicId] is null or empty
  */
-fun PublicId?.hashValueOr(fallback: HashValue): HashValue = hashValue() ?: fallback
+fun PublicId?.hashValueOr(fallback: HashValue): HashValue {
+  val normalized = this?.trim()
+
+  return if (normalized.isNullOrEmpty()) fallback else normalized.base62()
+}
 
 /**
- * Returns the corresponding [HashValue] for this [PublicId] on success,
- * [EmptyHashValue] otherwise.
- *
- * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
- * HashValue is considered invalid, and the function will return null in such cases.
- *
- * It's worth noting that [EmptyHashValue] is, technically, invalid as it contains no bytes.
+ * Returns the corresponding [HashValue] when this [PublicId] is [valid][isValid],
+ * null otherwise.
  */
-fun PublicId?.hashValueOrEmpty(): HashValue = hashValueOr(EmptyHashValue)
+fun PublicId?.hashValueOrNull(): HashValue? {
+  val normalized = this?.trim()
 
-/**
- * Returns the corresponding [HashValue] for this [PublicId] on success,
- * throws otherwise.
- *
- * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
- * HashValue is considered invalid.
- */
-fun PublicId?.hashValueOrThrow(
-  errorProvider: (() -> Throwable) = {
-    IllegalStateException("Unable to calculate hash value.")
-  },
-): HashValue {
-  if (isNullOrBlank()) {
-    throw errorProvider()
-  }
-  return base62()
+  return if (normalized.isNullOrEmpty()) null else normalized.base62()
 }
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s.
  */
-fun Collection<PublicId?>?.filterNonEmpty(): Collection<PublicId>? = if (null == this) {
-  null
-} else {
-  val result = ArrayList<PublicId>(size)
-  forEach { entry ->
-    if (!entry.isNullOrEmpty()) {
+fun Collection<PublicId?>?.filterNonEmpty(): Collection<PublicId> {
+  val result = ArrayList<PublicId>(this?.size ?: 0)
+
+  if (!isNullOrEmpty()) {
+    for (entry in this) {
+      if (entry.isNullOrEmpty()) {
+        continue
+      }
+
       result.add(entry)
     }
-  }
-  if (result.isEmpty()) null else result
-}
-
-/**
- * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s that
- * are obtained through transforming them via [transform].
- *
- * @param T the type of values contained within this Collection
- * @param transform a function that transforms a [T] value to [PublicId]
- */
-fun <T> Collection<T?>?.filterNonEmpty(transform: ((T) -> PublicId?)): Collection<PublicId>? =
-  if (null == this) {
-    null
-  } else {
-    val result = ArrayList<PublicId>(size)
-    forEach { entry ->
-      val hashValue = if (null == entry) null else transform(entry)
-      if (!hashValue.isNullOrEmpty()) {
-        result.add(hashValue)
-      }
-    }
-    if (result.isEmpty()) null else result
-  }
-
-/**
- * Returns a new [Collection] that contains only non-empty [HashValue]s corresponding with
- * this [PublicId] [Collection], null otherwise.
- */
-fun Collection<PublicId?>?.hashValue(): Collection<HashValue>? {
-  val nonEmptyPublicIds = filterNonEmpty() ?: return null
-  val result = ArrayList<HashValue>(nonEmptyPublicIds.size)
-
-  nonEmptyPublicIds.map { publicId ->
-    val hashValue = publicId.hashValue()
-    if (null != hashValue && hashValue.isNotEmpty()) {
-      result.add(hashValue)
-    }
-  }
-
-  return if (result.isEmpty()) null else result
-}
-
-/**
- * Returns the corresponding collection of [HashValue]s for these [PublicId]s on success,
- * throws otherwise.
- *
- * A valid HashValue is one that is non-null and that contains at least one byte. So a 0-byte
- * HashValue is considered invalid.
- */
-fun Collection<PublicId?>?.hashValuesOrThrow(
-  errorProvider: (() -> Throwable) = {
-    IllegalStateException("Unable to calculate hash value.")
-  },
-): Collection<HashValue> {
-  if (null == this) {
-    throw errorProvider()
-  }
-
-  val nonEmptyPublicIds = filterNonEmpty() ?: return emptyList()
-  val result = ArrayList<HashValue>(nonEmptyPublicIds.size)
-
-  nonEmptyPublicIds.map { publicId ->
-    val hashValue = publicId.hashValue()
-    if (null != hashValue && hashValue.isNotEmpty()) {
-      result.add(hashValue)
-    }
-  }
-
-  if (result.isEmpty()) {
-    throw errorProvider()
   }
 
   return result
 }
 
 /**
- * Returns a new [Collection] that contains only non-empty [HashValue]s corresponding with
- * this [Collection], null otherwise.
+ * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s
+ * on success, null if the result empty.
+ */
+fun Collection<PublicId?>?.filterNonEmptyOrNull(): Collection<PublicId>? {
+  val result = filterNonEmpty()
+
+  return if (result.isEmpty()) null else result
+}
+
+/**
+ * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s that
+ * were obtained through [transform] callback.
+ *
+ * @param T the type of values contained within this Collection
+ * @param transform a function that optionally transforms a [T] value to [PublicId]
+ */
+fun <T> Collection<T?>?.filterNonEmpty(transform: (T) -> PublicId?): Collection<PublicId> {
+  val result = ArrayList<PublicId>(this?.size ?: 0)
+
+  if (!isNullOrEmpty()) {
+    for (entry in this) {
+      if (null == entry) {
+        continue
+      }
+
+      val transformedValue = transform(entry)
+
+      if (!transformedValue.isNullOrEmpty()) {
+        result.add(transformedValue)
+      }
+    }
+  }
+
+  return result
+}
+
+/**
+ * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s that
+ * were obtained through [transform] callback, null if the result empty.
+ *
+ * @param T the type of values contained within this Collection
+ * @param transform a function that optionally transforms a [T] value to [PublicId]
+ */
+fun <T> Collection<T?>?.filterNonEmptyOrNull(transform: (T) -> PublicId?): Collection<PublicId>? {
+  val result = filterNonEmpty(transform)
+
+  return if (result.isEmpty()) null else result
+}
+
+/**
+ * Returns a new [Collection] that contains only [valid][isValid] [HashValue]s.
+ */
+fun Collection<PublicId?>?.hashValues(): Collection<HashValue> {
+  val result = ArrayList<HashValue>(this?.size ?: 0)
+
+  if (!isNullOrEmpty()) {
+    for (entry in this) {
+      val hashValue = entry.hashValueOrNull() ?: continue
+
+      result.add(hashValue)
+    }
+  }
+
+  return result
+}
+
+/**
+ * Returns a new non-empty [Collection] that contains only [valid][isValid] [HashValue]s,
+ * null if the new collection is empty.
+ */
+fun Collection<PublicId?>?.hashValuesOrNull(): Collection<HashValue>? {
+  val result = hashValues()
+
+  return if (result.isEmpty()) null else result
+}
+
+/**
+ * Returns a new [Collection] that contains only [valid][isValid] [HashValue]s.
  *
  * @param T the type of values contained within this Collection
  * @param transform a function that transforms a [T] value to [PublicId]
  */
-fun <T> Collection<T?>?.hashValue(transform: ((T) -> PublicId?)): Collection<HashValue>? =
-  filterNonEmpty(transform)?.hashValue()
+fun <T> Collection<T?>?.hashValues(transform: (T) -> PublicId?): Collection<HashValue> {
+  val result = ArrayList<HashValue>(this?.size ?: 0)
+
+  if (!isNullOrEmpty()) {
+    for (entry in this) {
+      if (null == entry) {
+        continue
+      }
+
+      val transformedValue = transform(entry) ?: continue
+
+      val hashValue = transformedValue.hashValueOrNull() ?: continue
+
+      result.add(hashValue)
+    }
+  }
+
+  return result
+}
+
+/**
+ * Returns a new [Collection] that contains only [valid][isValid] [HashValue]s,
+ * null otherwise.
+ *
+ * @param T the type of values contained within this Collection
+ * @param transform a function that transforms a [T] value to [PublicId]
+ */
+fun <T> Collection<T?>?.hashValuesOrNull(transform: (T) -> PublicId?): Collection<HashValue>? {
+  val result = hashValues(transform)
+
+  return if (result.isEmpty()) null else result
+}
+
+/**
+ * Returns a new [Map], indexed by [HashValue], that contains only non-empty keys along
+ * with their respective values.
+ *
+ * @param T the type of values contained within this Map
+ */
+fun <T> Map<PublicId, T>?.hashValues(): ByteArrayMap<T> {
+  val result = ByteArrayMap<T>()
+
+  if (!isNullOrEmpty()) {
+    for (entry in this) {
+      val key = entry.key.hashValueOrNull() ?: continue
+
+      result[key] = entry.value
+    }
+  }
+
+  return result
+}
 
 /**
  * Returns a new [Map], indexed by [HashValue], that contains only non-empty keys along
  * with their respective values on success, null otherwise.
+ *
+ * @param T the type of values contained within this Map
  */
-fun <T> Map<PublicId, T>?.hashValue(): ByteArrayMap<T>? {
-  if (null == this) {
-    return null
-  }
-
-  val result = ByteArrayMap<T>()
-
-  for (entry in this) {
-    val key = entry.key.hashValue() ?: continue
-    result[key] = entry.value
-  }
+fun <T> Map<PublicId, T>?.hashValuesOrNull(): ByteArrayMap<T>? {
+  val result = hashValues()
 
   return if (result.isEmpty()) null else result
 }
