@@ -25,38 +25,48 @@
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 /**
  * Converts an [Int] value to its [String] representation.
  *
  * @param opacity apply a constant opacity value (0..255) to the color
  * @param dash whether to add a '#' character in the beginning, defaults to false
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("MagicNumber")
 fun Int?.toColor(
   opacity: Int? = null,
   dash: Boolean = false,
-): String? = if (null == this) {
-  null
-} else {
-  val buffer = StringBuffer(9)
-  if (dash) {
-    buffer.append('#')
+): String? {
+  contract {
+    returnsNotNull() implies (this@toColor != null)
   }
 
-  @Suppress("UnclearPrecedenceOfBinaryExpression")
-  val opacityValue = opacity ?: this shr 24 and 0xff
-  val redValue = this shr 16 and 0xff
-  val greenValue = this shr 8 and 0xff
-  val blueValue = this and 0xff
+  return if (null == this) {
+    null
+  } else {
+    val buffer = StringBuffer(9)
+    if (dash) {
+      buffer.append('#')
+    }
 
-  // Only add opacity if it's not 255 (0xff).
-  if (opacityValue in 0..254) {
-    buffer.append(Integer.toHexString(opacityValue))
+    @Suppress("UnclearPrecedenceOfBinaryExpression")
+    val opacityValue = opacity ?: this shr 24 and 0xff
+    val redValue = this shr 16 and 0xff
+    val greenValue = this shr 8 and 0xff
+    val blueValue = this and 0xff
+
+    // Only add opacity if it's not 255 (0xff).
+    if (opacityValue in 0..254) {
+      buffer.append(Integer.toHexString(opacityValue))
+    }
+
+    buffer.append(Integer.toHexString(redValue))
+    buffer.append(Integer.toHexString(greenValue))
+    buffer.append(Integer.toHexString(blueValue))
+
+    buffer.toString().uppercase(java.util.Locale.ENGLISH)
   }
-
-  buffer.append(Integer.toHexString(redValue))
-  buffer.append(Integer.toHexString(greenValue))
-  buffer.append(Integer.toHexString(blueValue))
-
-  buffer.toString().uppercase(java.util.Locale.ENGLISH)
 }

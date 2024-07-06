@@ -25,6 +25,8 @@
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import org.noordawod.kotlin.core.Constants
 import org.noordawod.kotlin.core.util.ImageDimension
 
@@ -153,7 +155,12 @@ fun String.camelCase(delimiters: String = ""): String {
  * Trims white spaces from this string; returns the trimmed string if non-empty on
  * success, null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.trimOrNull(): String? {
+  contract {
+    returnsNotNull() implies (this@trimOrNull != null)
+  }
+
   val trimmed = this?.trim()
 
   return if (trimmed.isNullOrEmpty()) null else trimmed
@@ -163,7 +170,12 @@ fun String?.trimOrNull(): String? {
  * Trims characters from this string matching [predicate]; returns the trimmed
  * string if non-empty on success, null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.trimOrNull(predicate: (Char) -> Boolean): String? {
+  contract {
+    returnsNotNull() implies (this@trimOrNull != null)
+  }
+
   val trimmed = this?.trim(predicate)
 
   return if (trimmed.isNullOrEmpty()) null else trimmed
@@ -173,7 +185,12 @@ fun String?.trimOrNull(predicate: (Char) -> Boolean): String? {
  * Trims white spaces from this string; returns the trimmed string if non-empty on
  * success, [fallback] otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.trimOr(fallback: String): String {
+  contract {
+    returnsNotNull() implies (this@trimOr != null)
+  }
+
   val trimmed = trimOrNull()
 
   return if (trimmed.isNullOrEmpty()) fallback else trimmed
@@ -183,7 +200,14 @@ fun String?.trimOr(fallback: String): String {
  * Trims white spaces from this string and returns it on success, otherwise returns the
  * empty string.
  */
-fun String?.trimOrBlank(): String = trimOr("")
+@OptIn(ExperimentalContracts::class)
+fun String?.trimOrBlank(): String {
+  contract {
+    returnsNotNull() implies (this@trimOrBlank != null)
+  }
+
+  return trimOr("")
+}
 
 /**
  * Returns [fallback] if this String is null, otherwise whether this String is equal to
@@ -191,7 +215,12 @@ fun String?.trimOrBlank(): String = trimOr("")
  *
  * @param fallback default value when this String is null
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.toBooleanOr(fallback: Boolean = false): Boolean {
+  contract {
+    returns(true) implies (this@toBooleanOr != null)
+  }
+
   val value = this?.lowercase(java.util.Locale.ENGLISH)
 
   return if (null == value) fallback else "1" == value || "true" == value
@@ -200,45 +229,82 @@ fun String?.toBooleanOr(fallback: Boolean = false): Boolean {
 /**
  * Converts this String into a [Locale][java.util.Locale] if valid, null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("MagicNumber")
-fun String?.toLocaleOrNull(): java.util.Locale? =
-  if (null != this && (2 == length || 5 == length)) toLocaleImpl() else null
+fun String?.toLocaleOrNull(): java.util.Locale? {
+  contract {
+    returnsNotNull() implies (this@toLocaleOrNull != null)
+  }
+
+  return if (null != this && (2 == length || 5 == length)) toLocaleImpl() else null
+}
 
 /**
  * Converts this String into a [Locale][java.util.Locale] if valid, [fallback] otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("MagicNumber")
-fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale = toLocaleOrNull() ?: fallback
+fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale {
+  contract {
+    returnsNotNull() implies (this@toLocaleOr != null)
+  }
+
+  return toLocaleOrNull() ?: fallback
+}
 
 /**
  * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
  * null otherwise.
  */
-fun Collection<String>?.toLocales(): Collection<java.util.Locale>? =
-  if (isNullOrEmpty()) null else iterator().toLocalesImpl(size)
+@OptIn(ExperimentalContracts::class)
+fun Collection<String>?.toLocales(): Collection<java.util.Locale>? {
+  contract {
+    returnsNotNull() implies (this@toLocales != null)
+  }
+
+  return if (isNullOrEmpty()) null else iterator().toLocalesImpl(size)
+}
 
 /**
  * Returns a collection of [Locale][java.util.Locale]s matching these strings on success,
  * null otherwise.
  */
-fun List<String>?.toLocales(): List<java.util.Locale>? = if (isNullOrEmpty()) {
-  null
-} else {
-  iterator().toLocalesImpl(size) as List<java.util.Locale>
+@OptIn(ExperimentalContracts::class)
+fun List<String>?.toLocales(): List<java.util.Locale>? {
+  contract {
+    returnsNotNull() implies (this@toLocales != null)
+  }
+
+  return if (isNullOrEmpty()) {
+    null
+  } else {
+    iterator().toLocalesImpl(size) as List<java.util.Locale>
+  }
 }
 
 /**
  * Returns an array of [Locale][java.util.Locale]s matching these strings on success,
  * null otherwise.
  */
-fun Array<String>?.toLocales(): Array<java.util.Locale>? =
-  if (isNullOrEmpty()) null else iterator().toLocalesImpl(size)?.toTypedArray()
+@OptIn(ExperimentalContracts::class)
+fun Array<String>?.toLocales(): Array<java.util.Locale>? {
+  contract {
+    returnsNotNull() implies (this@toLocales != null)
+  }
+
+  return if (isNullOrEmpty()) null else iterator().toLocalesImpl(size)?.toTypedArray()
+}
 
 /**
  * Returns this String if it's a valid 2-letter country code, null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("NestedBlockDepth")
 fun String?.ensureCountryCode(): String? {
+  contract {
+    returnsNotNull() implies (this@ensureCountryCode != null)
+  }
+
   val country = trimOrNull()?.uppercase(java.util.Locale.ENGLISH)
 
   if (null != country) {
@@ -257,7 +323,7 @@ fun String?.ensureCountryCode(): String? {
  * false otherwise.
  */
 fun String.isDefaultLanguage(): Boolean =
-  lowercase(java.util.Locale.ENGLISH) == Constants.DEFAULT_LANGUAGE_CODE
+  Constants.DEFAULT_LANGUAGE_CODE == lowercase(java.util.Locale.ENGLISH)
 
 /**
  * Given that this is a 2-character language code, returns the new language variation for an
@@ -279,8 +345,13 @@ fun String.getNewLanguage(): String {
  * Returns parsed parts (account and domain) if this [String] is a valid email,
  * null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("ComplexCondition", "MagicNumber")
 fun String?.parseEmail(): PairOfStrings? {
+  contract {
+    returnsNotNull() implies (this@parseEmail != null)
+  }
+
   val email = trimOrNull() ?: return null
 
   val length = email.length
@@ -325,7 +396,12 @@ fun String?.parseEmail(): PairOfStrings? {
  * Returns an email address for the provided [PairOfStrings] of strings on success,
  * null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun PairOfStrings?.asEmail(): String? {
+  contract {
+    returnsNotNull() implies (this@asEmail != null)
+  }
+
   val first = this?.first?.trim()
   val second = this?.second?.trim()
 
@@ -335,7 +411,14 @@ fun PairOfStrings?.asEmail(): String? {
 /**
  * Returns true if this [String] has a valid email address structure, false otherwise.
  */
-fun String?.isEmail(): Boolean = null != parseEmail()
+@OptIn(ExperimentalContracts::class)
+fun String?.isEmail(): Boolean {
+  contract {
+    returns(true) implies (this@isEmail != null)
+  }
+
+  return null != parseEmail()
+}
 
 /**
  * Returns true if this [String] has a valid email address and equals the provided
@@ -348,16 +431,30 @@ fun String.isSameEmail(email: String): Boolean =
 /**
  * Returns a [URL][java.net.URL] if this [String] is a valid URL, null otherwise.
  */
-fun String?.parseUrl(): java.net.URL? = try {
-  java.net.URL(this)
-} catch (ignored: java.net.MalformedURLException) {
-  null
+@OptIn(ExperimentalContracts::class)
+fun String?.parseUrl(): java.net.URL? {
+  contract {
+    returnsNotNull() implies (this@parseUrl != null)
+  }
+
+  return try {
+    java.net.URL(this)
+  } catch (ignored: java.net.MalformedURLException) {
+    null
+  }
 }
 
 /**
  * Returns true if this [String] is a valid URL, false otherwise.
  */
-fun String?.isUrl(): Boolean = null != parseUrl()
+@OptIn(ExperimentalContracts::class)
+fun String?.isUrl(): Boolean {
+  contract {
+    returns(true) implies (this@isUrl != null)
+  }
+
+  return null != parseUrl()
+}
 
 /**
  * Returns parsed parts (international calling code and phone number) if this [String]
@@ -365,8 +462,13 @@ fun String?.isUrl(): Boolean = null != parseUrl()
  *
  * @param separator the character used to separate the international calling code and number
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("ComplexCondition", "MagicNumber")
 fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
+  contract {
+    returnsNotNull() implies (this@parsePhone != null)
+  }
+
   val phone = trimOrNull {
     it.isWhitespace() || '+' == it
   } ?: return null
@@ -396,12 +498,17 @@ fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
  * @param separator the character used to separate the international calling code and number
  * @param leadingPlus add a leading `+` to returned phone number
  */
-fun PairOfIntAndLong.asPhone(
+@OptIn(ExperimentalContracts::class)
+fun PairOfIntAndLong?.asPhone(
   separator: Char? = '.',
   leadingPlus: Boolean = false,
 ): String {
-  val first = this.first
-  val second = this.second
+  contract {
+    returnsNotNull() implies (this@asPhone != null)
+  }
+
+  val first = this?.first
+  val second = this?.second
   val plusChar = if (leadingPlus) "+" else ""
 
   return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
@@ -412,14 +519,26 @@ fun PairOfIntAndLong.asPhone(
  *
  * @param separator the character used to separate the international calling code and number
  */
-fun String.isPhone(separator: Char = '.'): Boolean = null != parsePhone(separator)
+@OptIn(ExperimentalContracts::class)
+fun String?.isPhone(separator: Char = '.'): Boolean {
+  contract {
+    returns(true) implies (this@isPhone != null)
+  }
+
+  return null != parsePhone(separator)
+}
 
 /**
  * Converts a [String] value to its [Int] representation.
  *
  * @param opacity apply a constant opacity value (0..255) to the color
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.toColor(opacity: Int? = null): Int? {
+  contract {
+    returnsNotNull() implies (this@toColor != null)
+  }
+
   var color = trimOrNull() ?: return null
 
   if ('#' == color[0]) {
@@ -472,11 +591,18 @@ fun String?.toColor(opacity: Int? = null): Int? {
  * @param dictionary allowed list of characters expressed as a regexp pattern
  * @param ignoreCase whether to ignore the string's case, defaults to lower casing it
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.normalizedHandle(
   dictionary: java.util.regex.Pattern,
   ignoreCase: Boolean = true,
 ): String? {
-  this ?: return null
+  contract {
+    returnsNotNull() implies (this@normalizedHandle != null)
+  }
+
+  if (null == this) {
+    return null
+  }
 
   var normalizedHandle = if (ignoreCase) trim().lowercase() else trim()
 
@@ -497,7 +623,12 @@ fun String?.normalizedHandle(
  * Normalized this string to act as a lowercase key; returns the normalized key on
  * success, null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.normalizedKey(): String? {
+  contract {
+    returnsNotNull() implies (this@normalizedKey != null)
+  }
+
   val normalizedKey = trimOrNull()?.lowercase()
 
   return if (isNullOrEmpty()) null else normalizedKey
@@ -506,7 +637,12 @@ fun String?.normalizedKey(): String? {
 /**
  * Returns an [ImageDimension] matching this string on success, null otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.imageDimension(): ImageDimension? {
+  contract {
+    returnsNotNull() implies (this@imageDimension != null)
+  }
+
   val normalizedString = this?.trim()
   if (normalizedString.isNullOrEmpty()) {
     return null
@@ -537,28 +673,56 @@ fun String?.imageDimension(): ImageDimension? {
 /**
  * Normalizes and returns this String a host name.
  */
-fun String.normalizeHostName(): String? = normalizedHandle(
-  dictionary = HOST_NAME_PATTERN,
-  ignoreCase = true,
-)
+@OptIn(ExperimentalContracts::class)
+fun String?.normalizeHostName(): String? {
+  contract {
+    returnsNotNull() implies (this@normalizeHostName != null)
+  }
+
+  return normalizedHandle(
+    dictionary = HOST_NAME_PATTERN,
+    ignoreCase = true,
+  )
+}
 
 /**
  * Returns true if this String is a valid host name, false otherwise.
  */
-fun String.isHostName(): Boolean = HOST_NAME_PATTERN.matcher(this).matches()
+@OptIn(ExperimentalContracts::class)
+fun String?.isHostName(): Boolean {
+  contract {
+    returns(true) implies (this@isHostName != null)
+  }
+
+  return null != this && HOST_NAME_PATTERN.matcher(this).matches()
+}
 
 /**
  * Normalizes and returns this String a domain name.
  */
-fun String.normalizeDomainName(): String? = normalizedHandle(
-  dictionary = DOMAIN_NAME_PATTERN,
-  ignoreCase = true,
-)
+@OptIn(ExperimentalContracts::class)
+fun String?.normalizeDomainName(): String? {
+  contract {
+    returnsNotNull() implies (this@normalizeDomainName != null)
+  }
+
+  return normalizedHandle(
+    dictionary = DOMAIN_NAME_PATTERN,
+    ignoreCase = true,
+  )
+}
 
 /**
  * Returns true if this String is a valid domain name, false otherwise.
  */
-fun String.isDomainName(): Boolean = DOMAIN_NAME_PATTERN.matcher(this).matches()
+@OptIn(ExperimentalContracts::class)
+fun String?.isDomainName(): Boolean {
+  contract {
+    returns(true) implies (this@isDomainName != null)
+  }
+
+  return null != this && DOMAIN_NAME_PATTERN.matcher(this).matches()
+}
 
 private fun String.toLocaleImpl(): java.util.Locale? {
   val parts = replace("-", "_").split('_')

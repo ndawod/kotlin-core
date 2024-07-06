@@ -22,9 +22,12 @@
  */
 
 @file:Suppress("unused")
+@file:OptIn(ExperimentalContracts::class)
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import kotlin.math.absoluteValue
 
 /**
@@ -75,68 +78,92 @@ const val MILLIS_IN_1_DAY: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_DAY
 /**
  * Converts an optional [Int] into a [java.util.Date] on success, null otherwise.
  */
-fun Int?.toDate(): java.util.Date? = if (null == this) {
-  null
-} else {
-  java.util.Date(this * MILLIS_IN_1_SECOND)
+fun Int?.toDate(): java.util.Date? {
+  contract {
+    returnsNotNull() implies (this@toDate != null)
+  }
+
+  return if (null == this) null else java.util.Date(this * MILLIS_IN_1_SECOND)
 }
 
 /**
  * Converts an optional [Int] into a [java.util.Date] on success, current time otherwise.
  */
-fun Int?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date = if (null == this) {
-  fallback
-} else {
-  java.util.Date(this * MILLIS_IN_1_SECOND)
+fun Int?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date {
+  contract {
+    returnsNotNull() implies (this@toDateOr != null)
+  }
+
+  return if (null == this) fallback else java.util.Date(this * MILLIS_IN_1_SECOND)
 }
 
 /**
  * Converts an optional [Long] into a [java.util.Date] on success, null otherwise.
  */
-fun Long?.toDate(): java.util.Date? = if (null == this) {
-  null
-} else {
-  java.util.Date(this)
+fun Long?.toDate(): java.util.Date? {
+  contract {
+    returnsNotNull() implies (this@toDate != null)
+  }
+
+  return if (null == this) null else java.util.Date(this)
 }
 
 /**
  * Converts an optional [Long] into a [java.util.Date] on success, current time otherwise.
  */
-fun Long?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date =
-  if (null == this) {
-    fallback
-  } else {
-    java.util.Date(this)
+fun Long?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date {
+  contract {
+    returnsNotNull() implies (this@toDateOr != null)
   }
+
+  return if (null == this) fallback else java.util.Date(this)
+}
 
 /**
  * Returns a [java.util.Date] if this Date is non-null and [java.util.Date.getTime] is
  * positive, null otherwise.
  */
-fun java.util.Date?.normalized(): java.util.Date? = if (null == this || 1L > time) {
-  null
-} else {
-  this
+fun java.util.Date?.normalized(): java.util.Date? {
+  contract {
+    returnsNotNull() implies (this@normalized != null)
+  }
+
+  return if (null == this || 1L > time) null else this
 }
 
 /**
  * Converts this optional [java.util.Date] into a [Long] representing the milliseconds that
  * passed since UNIX epoch on success, null otherwise.
  */
-fun java.util.Date?.millisecondsSinceEpoch(): Long? = this?.time
+fun java.util.Date?.millisecondsSinceEpoch(): Long? {
+  contract {
+    returnsNotNull() implies (this@millisecondsSinceEpoch != null)
+  }
+
+  return this?.time
+}
 
 /**
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
  * the milliseconds that passed since UNIX epoch on success.
  */
-fun java.util.Date?.millisecondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Long =
-  (this ?: fallback).time
+fun java.util.Date?.millisecondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Long {
+  contract {
+    returnsNotNull() implies (this@millisecondsSinceEpochOr != null)
+  }
+
+  return (this ?: fallback).time
+}
 
 /**
  * Converts this optional [java.util.Date] into a [Long] representing the seconds that
  * passed since UNIX epoch on success, null otherwise.
  */
 fun java.util.Date?.secondsSinceEpoch(): Int? {
+  contract {
+    returnsNotNull() implies (this@secondsSinceEpoch != null)
+  }
+
   val millis = millisecondsSinceEpoch()
 
   return if (null == millis) null else (millis / MILLIS_IN_1_SECOND).toInt()
@@ -146,16 +173,23 @@ fun java.util.Date?.secondsSinceEpoch(): Int? {
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
  * the seconds that passed since UNIX epoch on success.
  */
-fun java.util.Date?.secondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Int =
-  (millisecondsSinceEpochOr(fallback) / MILLIS_IN_1_SECOND).toInt()
+fun java.util.Date?.secondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Int {
+  contract {
+    returnsNotNull() implies (this@secondsSinceEpochOr != null)
+  }
+
+  return (millisecondsSinceEpochOr(fallback) / MILLIS_IN_1_SECOND).toInt()
+}
 
 /**
  * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.
  */
-fun java.util.Date?.offsetDateTime(): java.time.OffsetDateTime? = if (null == this) {
-  null
-} else {
-  toInstant().atOffset(java.time.ZoneOffset.UTC)
+fun java.util.Date?.offsetDateTime(): java.time.OffsetDateTime? {
+  contract {
+    returnsNotNull() implies (this@offsetDateTime != null)
+  }
+
+  return if (null == this) null else toInstant().atOffset(java.time.ZoneOffset.UTC)
 }
 
 /**
@@ -163,15 +197,25 @@ fun java.util.Date?.offsetDateTime(): java.time.OffsetDateTime? = if (null == th
  */
 fun java.util.Date?.offsetDateTimeOr(
   fallback: java.util.Date = java.util.Date(),
-): java.time.OffsetDateTime = (this ?: fallback).toInstant().atOffset(java.time.ZoneOffset.UTC)
+): java.time.OffsetDateTime {
+  contract {
+    returnsNotNull() implies (this@offsetDateTimeOr != null)
+  }
+
+  return (this ?: fallback)
+    .toInstant()
+    .atOffset(java.time.ZoneOffset.UTC)
+}
 
 /**
  * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.
  */
-fun java.time.OffsetDateTime?.date(): java.util.Date? = if (null == this) {
-  null
-} else {
-  java.util.Date(toInstant().toEpochMilli())
+fun java.time.OffsetDateTime?.date(): java.util.Date? {
+  contract {
+    returnsNotNull() implies (this@date != null)
+  }
+
+  return if (null == this) null else java.util.Date(toInstant().toEpochMilli())
 }
 
 /**
@@ -179,7 +223,17 @@ fun java.time.OffsetDateTime?.date(): java.util.Date? = if (null == this) {
  */
 fun java.time.OffsetDateTime?.dateOr(
   fallback: java.time.OffsetDateTime = java.time.OffsetDateTime.now(),
-): java.util.Date = java.util.Date((this ?: fallback).toInstant().toEpochMilli())
+): java.util.Date {
+  contract {
+    returnsNotNull() implies (this@dateOr != null)
+  }
+
+  return java.util.Date(
+    (this ?: fallback)
+      .toInstant()
+      .toEpochMilli(),
+  )
+}
 
 /**
  * Adds the amount of [millis] to this [java.util.Date] instance, and returns it.

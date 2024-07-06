@@ -25,6 +25,9 @@
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
+
 /**
  * Returns the String representation of this [Locale][java.util.Locale].
  */
@@ -126,7 +129,12 @@ fun java.util.Locale.endAlignment(): String = if (isRightToLeft()) "left" else "
 /**
  * Attempts to guess the country code based on the language (this String).
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.toCountryCode(): String? {
+  contract {
+    returnsNotNull() implies (this@toCountryCode != null)
+  }
+
   val language = trimOrNull()?.lowercase(java.util.Locale.ENGLISH) ?: return null
 
   return LANGUAGES_IN_IMPERIAL_COUNTRIES[language]

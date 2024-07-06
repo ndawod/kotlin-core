@@ -22,6 +22,7 @@
  */
 
 @file:Suppress("unused", "ReplaceIsEmptyWithIfEmpty", "DuplicatedCode")
+@file:OptIn(ExperimentalContracts::class)
 
 package org.noordawod.kotlin.core.extension
 
@@ -35,11 +36,11 @@ import org.noordawod.kotlin.core.security.base62
 /**
  * Returns true if this [HashValue] is non-null and non-empty, false otherwise.
  */
-@OptIn(ExperimentalContracts::class)
 fun HashValue?.isValid(): Boolean {
   contract {
     returns(true) implies (this@isValid != null)
   }
+
   return null != this && isNotEmpty()
 }
 
@@ -49,13 +50,12 @@ fun HashValue?.isValid(): Boolean {
  *
  * @param escape whether to escape the result for SQL, f.ex: `x'…'`
  */
-fun HashValue?.toHex(escape: Boolean = false): String? = if (isValid()) {
-  ByteUtils.toHex(
-    bytes = this,
-    escape = escape,
-  )
-} else {
-  null
+fun HashValue?.toHex(escape: Boolean = false): String? {
+  contract {
+    returnsNotNull() implies (this@toHex != null)
+  }
+
+  return if (isValid()) ByteUtils.toHex(this, escape) else null
 }
 
 /**
@@ -68,7 +68,13 @@ fun HashValue?.toHex(escape: Boolean = false): String? = if (isValid()) {
 fun HashValue?.toHexOr(
   fallback: String,
   escape: Boolean = false,
-): String = toHex(escape) ?: fallback
+): String {
+  contract {
+    returnsNotNull() implies (this@toHexOr != null)
+  }
+
+  return toHex(escape) ?: fallback
+}
 
 /**
  * Returns the hexadecimal representation of this [HashValue] on success,
@@ -76,16 +82,28 @@ fun HashValue?.toHexOr(
  *
  * @param escape whether to escape the result for SQL, f.ex: `x'…'`
  */
-fun HashValue?.toHexOrEmpty(escape: Boolean = false): String = toHexOr(
-  fallback = "",
-  escape = escape,
-)
+fun HashValue?.toHexOrEmpty(escape: Boolean = false): String {
+  contract {
+    returnsNotNull() implies (this@toHexOrEmpty != null)
+  }
+
+  return toHexOr(
+    fallback = "",
+    escape = escape,
+  )
+}
 
 /**
  * Returns the corresponding [PublicId] for this [HashValue] on success,
  * empty string otherwise.
  */
-fun HashValue?.publicId(): PublicId = publicIdOr("")
+fun HashValue?.publicId(): PublicId {
+  contract {
+    returnsNotNull() implies (this@publicId != null)
+  }
+
+  return publicIdOr("")
+}
 
 /**
  * Returns the corresponding [PublicId] for this [HashValue] on success,
@@ -93,18 +111,34 @@ fun HashValue?.publicId(): PublicId = publicIdOr("")
  *
  * @param fallback value to return if [this][HashValue] is invalid
  */
-fun HashValue?.publicIdOr(fallback: PublicId): PublicId = if (isValid()) base62() else fallback
+fun HashValue?.publicIdOr(fallback: PublicId): PublicId {
+  contract {
+    returnsNotNull() implies (this@publicIdOr != null)
+  }
+
+  return if (isValid()) base62() else fallback
+}
 
 /**
  * Returns the corresponding [PublicId] for this [HashValue] on success,
  * null otherwise.
  */
-fun HashValue?.publicIdOrNull(): PublicId? = if (isValid()) base62() else null
+fun HashValue?.publicIdOrNull(): PublicId? {
+  contract {
+    returnsNotNull() implies (this@publicIdOrNull != null)
+  }
+
+  return if (isValid()) base62() else null
+}
 
 /**
  * Returns a new [Collection] that contains only non-null and non-empty [PublicId]s.
  */
 fun Collection<HashValue?>?.filterNonEmpty(): Collection<HashValue> {
+  contract {
+    returnsNotNull() implies (this@filterNonEmpty != null)
+  }
+
   val result = ArrayList<HashValue>(this?.size ?: 0)
 
   if (!isNullOrEmpty()) {
@@ -125,6 +159,10 @@ fun Collection<HashValue?>?.filterNonEmpty(): Collection<HashValue> {
  * on success, null if the result empty.
  */
 fun Collection<HashValue?>?.filterNonEmptyOrNull(): Collection<HashValue>? {
+  contract {
+    returnsNotNull() implies (this@filterNonEmptyOrNull != null)
+  }
+
   val result = filterNonEmpty()
 
   return if (result.isEmpty()) null else result
@@ -138,6 +176,10 @@ fun Collection<HashValue?>?.filterNonEmptyOrNull(): Collection<HashValue>? {
  * @param transform a function that transforms a [T] value to [HashValue]
  */
 fun <T> Collection<T?>?.filterNonEmpty(transform: (T) -> HashValue?): Collection<HashValue> {
+  contract {
+    returnsNotNull() implies (this@filterNonEmpty != null)
+  }
+
   val result = ArrayList<HashValue>(this?.size ?: 0)
 
   if (!isNullOrEmpty()) {
@@ -165,6 +207,10 @@ fun <T> Collection<T?>?.filterNonEmpty(transform: (T) -> HashValue?): Collection
  * @param transform a function that transforms a [T] value to [HashValue]
  */
 fun <T> Collection<T?>?.filterNonEmptyOrNull(transform: (T) -> HashValue?): Collection<HashValue>? {
+  contract {
+    returnsNotNull() implies (this@filterNonEmptyOrNull != null)
+  }
+
   val result = filterNonEmpty(transform)
 
   return if (result.isEmpty()) null else result
@@ -174,6 +220,10 @@ fun <T> Collection<T?>?.filterNonEmptyOrNull(transform: (T) -> HashValue?): Coll
  * Returns a new [Collection] that contains only non-empty [PublicId]s.
  */
 fun Collection<HashValue?>?.publicIds(): Collection<PublicId> {
+  contract {
+    returnsNotNull() implies (this@publicIds != null)
+  }
+
   val result = ArrayList<PublicId>(this?.size ?: 0)
 
   if (!isNullOrEmpty()) {
@@ -196,6 +246,10 @@ fun Collection<HashValue?>?.publicIds(): Collection<PublicId> {
  * null otherwise.
  */
 fun Collection<HashValue?>?.publicIdsOrNull(): Collection<PublicId>? {
+  contract {
+    returnsNotNull() implies (this@publicIdsOrNull != null)
+  }
+
   val result = publicIds()
 
   return if (result.isEmpty()) null else result
@@ -209,6 +263,10 @@ fun Collection<HashValue?>?.publicIdsOrNull(): Collection<PublicId>? {
  * @param transform a function that transforms a [T] value to [HashValue]
  */
 fun <T> Collection<T?>?.publicIds(transform: (T) -> HashValue?): Collection<PublicId> {
+  contract {
+    returnsNotNull() implies (this@publicIds != null)
+  }
+
   val result = ArrayList<PublicId>(this?.size ?: 0)
 
   if (!isNullOrEmpty()) {
@@ -236,6 +294,10 @@ fun <T> Collection<T?>?.publicIds(transform: (T) -> HashValue?): Collection<Publ
  * @param transform a function that transforms a [T] value to [HashValue]
  */
 fun <T> Collection<T?>?.publicIdsOrNull(transform: (T) -> HashValue?): Collection<PublicId>? {
+  contract {
+    returnsNotNull() implies (this@publicIdsOrNull != null)
+  }
+
   val result = publicIds(transform)
 
   return if (result.isEmpty()) null else result
@@ -248,6 +310,10 @@ fun <T> Collection<T?>?.publicIdsOrNull(transform: (T) -> HashValue?): Collectio
  * @param T the type of values contained within this Map
  */
 fun <T> Map<HashValue, T>?.publicIds(): Map<PublicId, T> {
+  contract {
+    returnsNotNull() implies (this@publicIds != null)
+  }
+
   val result = mutableMapWith<PublicId, T>(this?.size ?: 0)
 
   if (!isNullOrEmpty()) {
@@ -268,6 +334,10 @@ fun <T> Map<HashValue, T>?.publicIds(): Map<PublicId, T> {
  * @param T the type of values contained within this Map
  */
 fun <T> Map<HashValue, T>?.publicIdsOrNull(): Map<PublicId, T>? {
+  contract {
+    returnsNotNull() implies (this@publicIdsOrNull != null)
+  }
+
   val result = publicIds()
 
   return if (result.isEmpty()) null else result
