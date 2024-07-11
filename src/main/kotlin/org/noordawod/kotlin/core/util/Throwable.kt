@@ -118,3 +118,11 @@ fun invalidFileThrowable(
   file: java.io.File,
   cause: String,
 ): Throwable = IllegalArgumentException("File path is invalid: ${file.canonicalPath} ($cause)")
+
+/**
+ * Returns a string representation of this [Throwable].
+ */
+fun Throwable.getStackTraceAsString(): String = java.io.StringWriter().use { writer ->
+  printStackTrace(java.io.PrintWriter(writer))
+  writer.toString().trim()
+}

@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.2.2 (July 11, 2024)
+    Add new FileLogger.
+
 4.2.1 (July 6, 2024)
     Add experimental contracts to a few functions.
 
