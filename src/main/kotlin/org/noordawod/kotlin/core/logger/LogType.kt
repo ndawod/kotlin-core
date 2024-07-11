@@ -64,26 +64,26 @@ enum class LogType(
   ;
 
   override fun toString(): String = value
+
+  /**
+   * Returns true if this [LogType] has a higher [order][LogType.order] than [another][other].
+   *
+   * @param other the other [LogType] value
+   * @param orEqual yields true also if orders are equal
+   */
+  fun higherOrderThan(
+    other: LogType,
+    orEqual: Boolean = true,
+  ): Boolean = order > other.order || orEqual && order == other.order
+
+  /**
+   * Returns true if this [LogType] has a lower [order][LogType.order] than [another][other].
+   *
+   * @param other the other [LogType] value
+   * @param orEqual yields true also if orders are equal
+   */
+  fun lowerOrderThan(
+    other: LogType,
+    orEqual: Boolean = true,
+  ): Boolean = order < other.order || orEqual && order == other.order
 }
-
-/**
- * Returns true if this [LogType] has a higher [order][LogType.order] than [another][other].
- *
- * @param other the other [LogType] value
- * @param orEqual yields true also if orders are equal
- */
-fun LogType.higherOrderThan(
-  other: Any?,
-  orEqual: Boolean = true,
-): Boolean = other is LogType && (value > other.value || orEqual && value == other.value)
-
-/**
- * Returns true if this [LogType] has a lower [order][LogType.order] than [another][other].
- *
- * @param other the other [LogType] value
- * @param orEqual yields true also if orders are equal
- */
-fun LogType.lowerOrderThan(
-  other: Any?,
-  orEqual: Boolean = true,
-): Boolean = other is LogType && (value < other.value || orEqual && value == other.value)

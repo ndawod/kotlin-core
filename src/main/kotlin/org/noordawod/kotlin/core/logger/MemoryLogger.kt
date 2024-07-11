@@ -34,7 +34,7 @@ import org.noordawod.kotlin.core.extension.trimOrBlank
  *
  * @param environment the runtime environment of the logger
  * @param buffer the memory buffer to store log messages in
- * @param minimumLogType minimum message type to log
+ * @param minimumLogType minimum message type to log, defaults to [LogType.INFO]
  */
 class MemoryLogger(
   environment: String,
@@ -55,7 +55,7 @@ class MemoryLogger(
    * Creates a new [MemoryLogger] with a default [StringBuffer].
    *
    * @param environment the runtime environment of the logger
-   * @param minimumLogType minimum message type to log
+   * @param minimumLogType minimum message type to log, defaults to [LogType.INFO]
    */
   constructor(
     environment: String,

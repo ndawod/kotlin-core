@@ -29,7 +29,7 @@ package org.noordawod.kotlin.core.logger
  * A [Logger] that proxies each log message to a list of loggers.
  *
  * @param loggers the list of loggers
- * @param minimumLogType minimum message type to log
+ * @param minimumLogType minimum message type to log, defaults to [LogType.INFO]
  */
 class MultiLogger(
   private val loggers: Iterable<Logger>,

@@ -36,7 +36,7 @@ private val lock = Any()
  * @param environment the runtime environment of the logger
  * @param baseDir the directory path where log files are to be stored
  * @param extension the extension (without a leading dot) to use when creating log files
- * @param minimumLogType minimum message type to log
+ * @param minimumLogType minimum message type to log, defaults to [LogType.INFO]
  */
 class FileLogger
 @Throws(java.io.IOException::class)

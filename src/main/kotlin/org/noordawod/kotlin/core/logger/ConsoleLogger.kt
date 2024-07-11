@@ -29,11 +29,11 @@ package org.noordawod.kotlin.core.logger
  * A [Logger] that simply prints log messages to the console.
  *
  * @param environment the runtime environment of the logger
- * @param minimumLogType minimum message type to log, if provided
+ * @param minimumLogType minimum message type to log, defaults to [LogType.INFO]
  */
 class ConsoleLogger(
   environment: String,
-  private val minimumLogType: LogType? = null,
+  private val minimumLogType: LogType = LogType.INFO,
 ) : BaseSimpleLogger(environment) {
   override fun log(
     type: LogType,

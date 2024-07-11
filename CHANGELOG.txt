@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.3.1 (July 11, 2024)
+    Fix a comparison bug in `Logger`-related classes.
+
 4.3.0 (July 11, 2024)
     Add new `MultiLogger` and introduce minimum order to log.
 
