@@ -100,9 +100,7 @@ interface Logger {
   fun error(
     tag: String,
     error: Throwable,
-  ) {
-    error(tag, error.message ?: "Unknown error", error)
-  }
+  )
 
   /**
    * Logs a [message] of [type ERROR][LogType.ERROR].
@@ -113,9 +111,7 @@ interface Logger {
   fun error(
     tag: String,
     message: String,
-  ) {
-    error(tag, RuntimeException(message))
-  }
+  )
 
   /**
    * Logs a [message] of [type ERROR][LogType.ERROR] with an [error].

@@ -21,34 +21,69 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@file:Suppress("unused")
+
 package org.noordawod.kotlin.core.logger
 
 /**
  * Types of log message we support. To keep it simple, only 3 types are defined.
  *
  * @param value a human-friendly short description of the enum entry
+ * @param order the order of importance of this type
  */
 enum class LogType(
   val value: String,
+  val order: Int,
 ) {
   /**
    * A log type suitable for information related to debugging. Most messages will use this
    * type.
    */
-  INFO("info"),
+  INFO(
+    value = "info",
+    order = 1,
+  ),
 
   /**
    * A log type for warnings, or non-breaking errors. Such situations the app is able to
    * recover from and still produce a meaningful response.
    */
-  WARNING("warning"),
+  WARNING(
+    value = "warning",
+    order = 50,
+  ),
 
   /**
    * A log type for breaking errors. Such situations cause the app to stop abruptly and report
    * an error to the client.
    */
-  ERROR("error"),
+  ERROR(
+    value = "error",
+    order = 90,
+  ),
   ;
 
   override fun toString(): String = value
 }
+
+/**
+ * Returns true if this [LogType] has a higher [order][LogType.order] than [another][other].
+ *
+ * @param other the other [LogType] value
+ * @param orEqual yields true also if orders are equal
+ */
+fun LogType.higherOrderThan(
+  other: Any?,
+  orEqual: Boolean = true,
+): Boolean = other is LogType && (value > other.value || orEqual && value == other.value)
+
+/**
+ * Returns true if this [LogType] has a lower [order][LogType.order] than [another][other].
+ *
+ * @param other the other [LogType] value
+ * @param orEqual yields true also if orders are equal
+ */
+fun LogType.lowerOrderThan(
+  other: Any?,
+  orEqual: Boolean = true,
+): Boolean = other is LogType && (value < other.value || orEqual && value == other.value)

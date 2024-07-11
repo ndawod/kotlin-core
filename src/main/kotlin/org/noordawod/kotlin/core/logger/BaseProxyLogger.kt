@@ -26,36 +26,83 @@
 package org.noordawod.kotlin.core.logger
 
 /**
- * A [Logger] that simply prints log messages to the console.
- *
- * @param environment the runtime environment of the logger
- * @param minimumLogType minimum message type to log, if provided
+ * A [Logger] that proxies most methods to a main [log method][log].
  */
-class ConsoleLogger(
-  environment: String,
-  private val minimumLogType: LogType? = null,
-) : BaseSimpleLogger(environment) {
-  override fun log(
-    type: LogType,
+abstract class BaseProxyLogger protected constructor() : Logger {
+  override fun info(
     tag: String,
     message: String,
-    error: Throwable?,
   ) {
-    if (type.lowerOrderThan(minimumLogType, orEqual = false)) {
-      return
-    }
-
-    val logMessage = logMessage(
-      type = type,
+    log(
+      type = LogType.INFO,
       tag = tag,
       message = message,
+      error = null,
     )
+  }
 
-    if (null != error) {
-      println("$error")
-      error.printStackTrace()
-    }
+  override fun info(
+    tag: String,
+    message: String,
+    error: Throwable,
+  ) {
+    log(
+      type = LogType.INFO,
+      tag = tag,
+      message = message,
+      error = error,
+    )
+  }
 
-    println(logMessage)
+  override fun warning(
+    tag: String,
+    message: String,
+  ) {
+    log(
+      type = LogType.WARNING,
+      tag = tag,
+      message = message,
+      error = null,
+    )
+  }
+
+  override fun warning(
+    tag: String,
+    message: String,
+    error: Throwable,
+  ) {
+    log(
+      type = LogType.WARNING,
+      tag = tag,
+      message = message,
+      error = error,
+    )
+  }
+
+  override fun error(
+    tag: String,
+    error: Throwable,
+  ) {
+    error(tag, error.message ?: "Unknown error", error)
+  }
+
+  override fun error(
+    tag: String,
+    message: String,
+  ) {
+    error(tag, RuntimeException(message))
+  }
+
+  override fun error(
+    tag: String,
+    message: String,
+    error: Throwable,
+  ) {
+    log(
+      type = LogType.ERROR,
+      tag = tag,
+      message = message,
+      error = error,
+    )
   }
 }

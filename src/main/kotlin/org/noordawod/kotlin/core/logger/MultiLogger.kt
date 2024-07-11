@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 Noor Dawod. All rights reserved.
+ * Copyright 2024 Noor Dawod. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,15 +26,22 @@
 package org.noordawod.kotlin.core.logger
 
 /**
- * A [Logger] that simply prints log messages to the console.
+ * A [Logger] that proxies each log message to a list of loggers.
  *
- * @param environment the runtime environment of the logger
- * @param minimumLogType minimum message type to log, if provided
+ * @param loggers the list of loggers
+ * @param minimumLogType minimum message type to log
  */
-class ConsoleLogger(
-  environment: String,
-  private val minimumLogType: LogType? = null,
-) : BaseSimpleLogger(environment) {
+class MultiLogger(
+  private val loggers: Iterable<Logger>,
+  private val minimumLogType: LogType = LogType.INFO,
+) : BaseProxyLogger() {
+  /**
+   * A convenient constructor using a vararg instead of an [Iterable].
+   *
+   * @param loggers the list of loggers
+   */
+  constructor(vararg loggers: Logger) : this(loggers.toList())
+
   override fun log(
     type: LogType,
     tag: String,
@@ -45,17 +52,13 @@ class ConsoleLogger(
       return
     }
 
-    val logMessage = logMessage(
-      type = type,
-      tag = tag,
-      message = message,
-    )
-
-    if (null != error) {
-      println("$error")
-      error.printStackTrace()
+    for (logger in loggers) {
+      logger.log(
+        type = type,
+        tag = tag,
+        message = message,
+        error = error,
+      )
     }
-
-    println(logMessage)
   }
 }

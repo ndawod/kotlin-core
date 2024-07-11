@@ -36,6 +36,7 @@ private val lock = Any()
  * @param environment the runtime environment of the logger
  * @param baseDir the directory path where log files are to be stored
  * @param extension the extension (without a leading dot) to use when creating log files
+ * @param minimumLogType minimum message type to log
  */
 class FileLogger
 @Throws(java.io.IOException::class)
@@ -43,6 +44,7 @@ constructor(
   environment: String,
   baseDir: java.io.File,
   private val extension: String = "log",
+  private val minimumLogType: LogType = LogType.INFO,
 ) : BaseSimpleLogger(environment) {
   private val baseDir: java.io.File = ensureDir(baseDir)
   private val dirNameFormat = java.text.SimpleDateFormat("yyyy-MM-dd")
@@ -54,6 +56,10 @@ constructor(
     message: String,
     error: Throwable?,
   ) {
+    if (type.lowerOrderThan(minimumLogType, orEqual = false)) {
+      return
+    }
+
     val buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE)
 
     val logMessage = logMessage(

@@ -33,10 +33,13 @@ import org.noordawod.kotlin.core.extension.trimOrBlank
  * A [Logger] that stores all log messages in a memory buffer.
  *
  * @param environment the runtime environment of the logger
+ * @param buffer the memory buffer to store log messages in
+ * @param minimumLogType minimum message type to log
  */
 class MemoryLogger(
   environment: String,
   private val buffer: StringBuffer,
+  private val minimumLogType: LogType = LogType.INFO,
 ) : BaseSimpleLogger(environment) {
   /**
    * Creates a new [MemoryLogger] with a default [StringBuffer].
@@ -48,12 +51,31 @@ class MemoryLogger(
     buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
   )
 
+  /**
+   * Creates a new [MemoryLogger] with a default [StringBuffer].
+   *
+   * @param environment the runtime environment of the logger
+   * @param minimumLogType minimum message type to log
+   */
+  constructor(
+    environment: String,
+    minimumLogType: LogType = LogType.INFO,
+  ) : this(
+    environment = environment,
+    buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
+    minimumLogType = minimumLogType,
+  )
+
   override fun log(
     type: LogType,
     tag: String,
     message: String,
     error: Throwable?,
   ) {
+    if (type.lowerOrderThan(minimumLogType, orEqual = false)) {
+      return
+    }
+
     val logMessage = logMessage(
       type = type,
       tag = tag,

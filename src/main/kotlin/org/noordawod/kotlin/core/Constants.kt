@@ -86,4 +86,14 @@ object Constants {
    */
   val WHITE_SPACES_PATTERN: java.util.regex.Pattern =
     java.util.regex.Pattern.compile("\\s+")
+
+  /**
+   * The date/time format used to tag log messages.
+   */
+  const val LOG_DATE_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ssXXX"
+
+  /**
+   * The locale used to output log messages.
+   */
+  val LOG_LOCALE: java.util.Locale = java.util.Locale.ENGLISH
 }

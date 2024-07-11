@@ -23,6 +23,8 @@
 
 package org.noordawod.kotlin.core.logger
 
+import org.noordawod.kotlin.core.Constants
+
 /**
  * A [Logger] that simply prints log messages to the console.
  *
@@ -30,71 +32,8 @@ package org.noordawod.kotlin.core.logger
  */
 abstract class BaseSimpleLogger protected constructor(
   environment: String,
-) : Logger {
+) : BaseProxyLogger() {
   private val environmentTag: String = environment.uppercase(java.util.Locale.ENGLISH)
-
-  override fun info(
-    tag: String,
-    message: String,
-  ) {
-    log(
-      type = LogType.INFO,
-      tag = tag,
-      message = message,
-      error = null,
-    )
-  }
-
-  override fun info(
-    tag: String,
-    message: String,
-    error: Throwable,
-  ) {
-    log(
-      type = LogType.INFO,
-      tag = tag,
-      message = message,
-      error = error,
-    )
-  }
-
-  override fun warning(
-    tag: String,
-    message: String,
-  ) {
-    log(
-      type = LogType.WARNING,
-      tag = tag,
-      message = message,
-      error = null,
-    )
-  }
-
-  override fun warning(
-    tag: String,
-    message: String,
-    error: Throwable,
-  ) {
-    log(
-      type = LogType.WARNING,
-      tag = tag,
-      message = message,
-      error = error,
-    )
-  }
-
-  override fun error(
-    tag: String,
-    message: String,
-    error: Throwable,
-  ) {
-    log(
-      type = LogType.ERROR,
-      tag = tag,
-      message = message,
-      error = error,
-    )
-  }
 
   /**
    * Implementation to log an error [message] to standard output and return it.
@@ -108,18 +47,13 @@ abstract class BaseSimpleLogger protected constructor(
     message: String,
   ): String {
     val dateFormatter = java.text.SimpleDateFormat(
-      LOG_DATE_FORMAT,
-      LOG_LOCALE,
+      Constants.LOG_DATE_FORMAT,
+      Constants.LOG_LOCALE,
     )
     val dateTag = "[${dateFormatter.format(java.util.Date())}]"
     val envTag = "[$environmentTag/$tag]"
-    val typeTag = "${type.toString().uppercase(LOG_LOCALE)}:"
+    val typeTag = "${type.toString().uppercase(Constants.LOG_LOCALE)}:"
 
     return arrayOf(dateTag, envTag, typeTag, message).joinToString(separator = " ")
-  }
-
-  companion object {
-    private const val LOG_DATE_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ssXXX"
-    private val LOG_LOCALE: java.util.Locale = java.util.Locale.ENGLISH
   }
 }
