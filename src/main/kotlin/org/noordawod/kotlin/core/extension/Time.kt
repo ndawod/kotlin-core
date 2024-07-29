@@ -30,6 +30,8 @@ import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import kotlin.math.absoluteValue
 
+private val JAVA_UTIL_DURATION_REGEX: Regex = """([0-9]+)(\.[0-9]+)?([HMS])""".toRegex()
+
 /**
  * How many hours in one day.
  */
@@ -276,6 +278,34 @@ fun java.util.Date.plusMinutes(minutes: Int): java.util.Date = plusMinutes(
 )
 
 /**
+ * Adds the amount of [hours] to this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.plusHours(hours: Long): java.util.Date = plusMillis(
+  hours * MILLIS_IN_1_HOUR,
+)
+
+/**
+ * Adds the amount of [hours] to this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.plusHours(hours: Int): java.util.Date = plusHours(
+  hours.toLong(),
+)
+
+/**
+ * Adds the amount of [days] to this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.plusDays(days: Long): java.util.Date = plusMillis(
+  days * MILLIS_IN_1_DAY,
+)
+
+/**
+ * Adds the amount of [days] to this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.plusDays(days: Int): java.util.Date = plusDays(
+  days.toLong(),
+)
+
+/**
  * Subtracts the amount of [millis] from this [java.util.Date] instance, and returns it.
  */
 fun java.util.Date.minusMillis(millis: Long): java.util.Date = java.util.Date(
@@ -316,3 +346,45 @@ fun java.util.Date.minusMinutes(minutes: Long): java.util.Date = minusMillis(
 fun java.util.Date.minusMinutes(minutes: Int): java.util.Date = minusMinutes(
   minutes.toLong(),
 )
+
+/**
+ * Subtracts the amount of [hours] from this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.minusHours(hours: Long): java.util.Date = minusMillis(
+  hours * MILLIS_IN_1_HOUR,
+)
+
+/**
+ * Subtracts the amount of [hours] from this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.minusHours(hours: Int): java.util.Date = minusHours(
+  hours.toLong(),
+)
+
+/**
+ * Subtracts the amount of [days] from this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.minusDays(days: Long): java.util.Date = minusMillis(
+  days * MILLIS_IN_1_DAY,
+)
+
+/**
+ * Subtracts the amount of [days] from this [java.util.Date] instance, and returns it.
+ */
+fun java.util.Date.minusDays(days: Int): java.util.Date = minusDays(
+  days.toLong(),
+)
+
+/**
+ * Returns a human-readable representation of this [Duration][java.time.Duration].
+ */
+fun java.time.Duration.humanReadable(): String = "$this"
+  .substring(2)
+  .replace(JAVA_UTIL_DURATION_REGEX, "$1$3 ")
+  .lowercase()
+
+/**
+ * Returns a human-readable representation of this [Duration][kotlin.time.Duration].
+ */
+fun kotlin.time.Duration.humanReadable(): String =
+  java.time.Duration.ofMillis(inWholeMilliseconds).humanReadable()
