@@ -429,6 +429,56 @@ fun String.isSameEmail(email: String): Boolean =
   isEmail() && email.isEmail() && trim().equals(email.trim(), ignoreCase = true)
 
 /**
+ * Returns this String as an obfuscated email address.
+ */
+fun String?.obfuscateEmail(obfuscateChar: Char = '*'): String? {
+  val emailParts = parseEmail() ?: return null
+  val account = emailParts.first.obfuscateString(obfuscateChar)
+  val domain = emailParts.second
+  val domainParts = domain.split(".", ignoreCase = true)
+  val obfuscatedDomain = mutableListWith<String>(domainParts.size)
+
+  if (1 < domainParts.size) {
+    var idx = -1
+
+    while (domainParts.size - 1 > ++idx) {
+      val part = domainParts[idx]
+      val obfuscatedPart = part.obfuscateStringOr(
+        obfuscateChar = obfuscateChar,
+        fallback = "*".repeat(part.length.coerceIn(2..4)),
+      )
+
+      obfuscatedDomain.add(obfuscatedPart)
+    }
+
+    obfuscatedDomain.add(domainParts[idx])
+  }
+
+  return "$account@${obfuscatedDomain.joinToString(".")}"
+}
+
+/**
+ * Returns this String as an obfuscated phone number.
+ *
+ * @param obfuscateChar the character used for the obfuscated parts, defaults to '*'
+ * @param separator the character used to separate the phone code and number, defaults to '.'
+ */
+fun String?.obfuscatePhone(
+  obfuscateChar: Char = '*',
+  separator: Char = '.',
+): String? {
+  val decodedPhone = this?.parsePhone(separator) ?: return null
+  val callingCode = decodedPhone.first
+  val phoneNumber = "${decodedPhone.second}"
+  val obfuscatedPhoneNumber = phoneNumber.obfuscateStringOr(
+    obfuscateChar = obfuscateChar,
+    fallback = "$obfuscateChar".repeat(phoneNumber.length.coerceIn(2..6)),
+  )
+
+  return "+$callingCode$separator$obfuscatedPhoneNumber"
+}
+
+/**
  * Returns a [URL][java.net.URL] if this [String] is a valid URL, null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
@@ -460,6 +510,8 @@ fun String?.isUrl(): Boolean {
  * Returns parsed parts (international calling code and phone number) if this [String]
  * is a valid phone number, null otherwise.
  *
+ * Note: The function can treat strings with or without a leading '+' sign.
+ *
  * @param separator the character used to separate the international calling code and number
  */
 @OptIn(ExperimentalContracts::class)
@@ -475,12 +527,14 @@ fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
 
   // A separator must exist.
   val separatorPos = phone.indexOf(separator)
+
+  // The separator position must appear after at least 2 digits (international calling code).
   if (2 > separatorPos) {
     return null
   }
 
   // First part is the international calling code.
-  val countryCode = phone.substring(
+  val callingCode = phone.substring(
     startIndex = 0,
     endIndex = separatorPos,
   ).toIntOrNull() ?: return null
@@ -488,7 +542,7 @@ fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
   // Second part is the phone number.
   val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull() ?: return null
 
-  return countryCode to phoneNumber
+  return callingCode to phoneNumber
 }
 
 /**
@@ -754,6 +808,31 @@ private fun Iterator<String>.toLocalesImpl(size: Int): Collection<java.util.Loca
 
   return if (result.isEmpty()) null else result
 }
+
+private val Int.peekCharactersCount: Int
+  get() = when {
+    4 < this -> 2
+    2 < this -> 1
+    else -> 0
+  }
+
+private fun String?.obfuscateString(obfuscateChar: Char): String? {
+  val peekCharactersCount = this?.length?.peekCharactersCount ?: return null
+  if (0 == peekCharactersCount) {
+    return null
+  }
+
+  val trailingIndex = length - peekCharactersCount
+
+  return substring(0, peekCharactersCount) +
+    "$obfuscateChar".repeat(trailingIndex) +
+    substring(trailingIndex)
+}
+
+private fun String.obfuscateStringOr(
+  obfuscateChar: Char,
+  fallback: String? = null,
+): String = obfuscateString(obfuscateChar) ?: fallback ?: this
 
 private val HOST_NAME_PATTERN: java.util.regex.Pattern =
   java.util.regex.Pattern.compile("^[a-z0-9-]\$")
