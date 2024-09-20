@@ -330,6 +330,9 @@ class SipHash internal constructor(
     value2 = rotateLeft(value2, 32)
   }
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Rotate long left by shift bits. bits rotated off to the left are put back
@@ -387,6 +390,9 @@ class SipHashFactory(
    */
   fun newInstance(): SipHash = SipHash(key)
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Converts [ByteArray] in LittleEndian format to a long.

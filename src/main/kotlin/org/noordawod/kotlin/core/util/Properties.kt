@@ -128,6 +128,9 @@ open class Properties protected constructor(
     }
   }
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Loads [Properties] from the specified [file].

@@ -92,6 +92,9 @@ constructor(
     }
   }
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     @Throws(java.io.IOException::class)
     private fun ensureDir(dir: java.io.File): java.io.File = synchronized(lock) {

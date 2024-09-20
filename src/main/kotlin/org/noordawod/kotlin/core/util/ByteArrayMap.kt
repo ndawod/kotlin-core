@@ -51,6 +51,9 @@ class ByteArrayMap<V> : java.util.TreeMap<ByteArray, V>(ByteArrayComparator) {
    */
   fun contains(value: ByteArrayWrapper): Boolean = containsKey(value.bytes)
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Generate a unique set of values from the specified map.

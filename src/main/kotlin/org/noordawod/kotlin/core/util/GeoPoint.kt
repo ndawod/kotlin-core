@@ -126,6 +126,9 @@ class GeoPoint(
     latitude == other.latitude &&
     longitude == other.longitude
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * A default and unrealistic geographic location to serve as "null".
@@ -281,6 +284,9 @@ enum class GeoUnit(
     else -> distance
   }
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * How many [meters][METER] in one [mile][MILE].

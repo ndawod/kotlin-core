@@ -42,6 +42,9 @@ class ByteArrayWrapper private constructor(
 
   override fun hashCode(): Int = bytes.contentHashCode()
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Wraps the provided [bytes] in a [ByteArrayWrapper] instance.

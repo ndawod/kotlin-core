@@ -45,6 +45,9 @@ open class Localization(
 
   override fun hashCode(): Int = locale.hashCode() * 349 + translation.hashCode() * 1609
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Loads [Localization] from the specified [file].

@@ -147,6 +147,9 @@ class Base62 {
     charset = target,
   )
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * The alphabet (GMP) as a [String] this class is using to encode and decode Base62 data.

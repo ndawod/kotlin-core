@@ -424,6 +424,9 @@ enum class ByteArrayStrength(
 
   override fun toString(): String = name
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Returns a [ByteArrayStrength] for a valid [strength], [fallback] otherwise.

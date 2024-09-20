@@ -103,6 +103,9 @@ interface Cache<V> {
    */
   fun clear()
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Default maximum number of entries to keep in the cache at any given time.

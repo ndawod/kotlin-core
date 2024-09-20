@@ -29,6 +29,9 @@ package org.noordawod.kotlin.core.util
  * Provides support for a [Set] of [ByteArray] objects.
  */
 class ByteArraySet : java.util.TreeSet<ByteArray>(ByteArrayComparator) {
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Returns a [ByteArraySet] from a list of [ByteArray] objects.

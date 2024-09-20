@@ -110,6 +110,9 @@ enum class Environment(
    */
   override fun toString() = identifier
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Returns an [Environment] matching the specified [identifier] on success,

@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.3.4 (September 20, 2024)
+    Fix lint issues.
+
 4.3.3 (September 20, 2024)
     Add new extension functions.
 

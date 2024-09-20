@@ -111,6 +111,9 @@ class ExecutorService private constructor(
     }
   }
 
+  /**
+   * Static functions, constants and other values.
+   */
   companion object {
     /**
      * Returns a new [ExecutorService] instance with a default keep-alive time of 30 seconds.
