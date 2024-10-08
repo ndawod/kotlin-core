@@ -82,13 +82,12 @@ class SipHash internal constructor(
    * Note: this method is NOT thread safe.
    */
   fun asByteArray(
-    string: String?,
+    string: String,
     ignoreCase: Boolean = true,
-  ): ByteArray? = if (string.isNullOrBlank()) {
-    null
-  } else {
+  ): ByteArray {
     val normalized = if (ignoreCase) string.lowercase() else string
-    asByteArray(normalized.toByteArray())
+
+    return asByteArray(normalized.toByteArray())
   }
 
   /**
@@ -112,11 +111,8 @@ class SipHash internal constructor(
    *
    * Note: this method is NOT thread safe.
    */
-  fun asByteArray(bytes: ByteArray?): ByteArray? = if (true == bytes?.isNotEmpty()) {
+  fun asByteArray(bytes: ByteArray): ByteArray =
     SipHashFactory.longToBytes(compute(bytes))
-  } else {
-    null
-  }
 
   /**
    * Hashes the specified [bytes] and returns the result as a [ByteArray].
