@@ -111,8 +111,7 @@ class SipHash internal constructor(
    *
    * Note: this method is NOT thread safe.
    */
-  fun asByteArray(bytes: ByteArray): ByteArray =
-    SipHashFactory.longToBytes(compute(bytes))
+  fun asByteArray(bytes: ByteArray): ByteArray = SipHashFactory.longToBytes(compute(bytes))
 
   /**
    * Hashes the specified [bytes] and returns the result as a [ByteArray].
