@@ -606,6 +606,21 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
 }
 
 /**
+ * Returns an international phone number for this [PairOfIntAndLong].
+ *
+ * The returned string contains a leading '+' sign always, then the international
+ * calling code, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+12.34567890`
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+fun PairOfIntAndLong.toPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): String = toPhone(
+  separator = separator,
+  leadingPlus = true
+)
+
+/**
  * Returns an international phone number for the provided [PairOfIntAndLong] on success,
  * null otherwise.
  *
