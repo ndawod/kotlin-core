@@ -44,7 +44,7 @@ typealias PairOfIntAndLong = Pair<Int, Long>
  * Strips search modifiers (`+`, `-`, `<`, `>`, `"`) from this string, and returns it.
  */
 @Suppress("ComplexCondition")
-fun String.withoutSearchModifiers(): String {
+fun CharSequence.withoutSearchModifiers(): String {
   var string = trim()
 
   if (
@@ -64,14 +64,14 @@ fun String.withoutSearchModifiers(): String {
     string = string.substring(1, length - 1)
   }
 
-  return string.trim()
+  return "$string".trim()
 }
 
 /**
  * Strips any trailing slash characters
  * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
-fun String.withoutTrailingSlash(): String {
+fun CharSequence.withoutTrailingSlash(): String {
   var endIndex = length
   while (0 < endIndex && java.io.File.separatorChar == this[endIndex - 1]) {
     endIndex--
@@ -84,7 +84,7 @@ fun String.withoutTrailingSlash(): String {
  * Strips any leading slash characters
  * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
-fun String.withoutLeadingSlash(): String {
+fun CharSequence.withoutLeadingSlash(): String {
   var startIndex = 0
   val length = length
   while (length > startIndex && java.io.File.separatorChar == this[startIndex]) {
@@ -98,26 +98,32 @@ fun String.withoutLeadingSlash(): String {
  * Strips any leading and trailing slash characters
  * (value of [File.separatorChar][java.io.File.separatorChar]) from this [String].
  */
-fun String.withoutSlashes() = withoutLeadingSlash().withoutTrailingSlash()
+fun CharSequence.withoutSlashes() = withoutLeadingSlash().withoutTrailingSlash()
 
 /**
- * Returns a [String] where the specified [string] appears at its end.
+ * Returns a [String] where the specified [chars] appears at its end.
+ *
+ * @param chars the trailing value to add
  */
-fun String.withTrailing(string: String): String {
-  val length = this.length
-  val stringLength = string.length
+fun CharSequence.withTrailing(chars: CharSequence): String {
+  val thisLength = length
+  val charsLength = chars.length
+  val thisString = toString()
+  val charsString = "$chars"
 
-  return if (length < stringLength || string != substring(length - stringLength)) {
-    "$this$string"
+  return if (thisLength < charsLength || substring(thisLength - charsLength) != charsString) {
+    thisString + charsString
   } else {
-    this
+    thisString
   }
 }
 
 /**
  * Returns a [String] where the specified [extension] appears at its end.
+ *
+ * @param extension the trailing extension to add
  */
-fun String.withExtension(extension: String): String {
+fun CharSequence.withExtension(extension: CharSequence): String {
   val extensionWithDot = if ('.' == extension[0]) extension else ".$extension"
 
   return withTrailing(extensionWithDot)
@@ -128,7 +134,7 @@ fun String.withExtension(extension: String): String {
  *
  * @param delimiters a list of delimiter characters, if any, between words
  */
-fun String.camelCase(delimiters: String = ""): String {
+fun CharSequence.camelCase(delimiters: CharSequence = ""): String {
   val length = this.length
   var shouldConvertNextCharToLower = true
   var idx = -1
@@ -156,44 +162,48 @@ fun String.camelCase(delimiters: String = ""): String {
  * success, null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.trimOrNull(): String? {
+fun CharSequence?.trimOrNull(): String? {
   contract {
     returnsNotNull() implies (this@trimOrNull != null)
   }
 
   val trimmed = this?.trim()
 
-  return if (trimmed.isNullOrEmpty()) null else trimmed
+  return if (trimmed.isNullOrEmpty()) null else "$trimmed"
 }
 
 /**
  * Trims characters from this string matching [predicate]; returns the trimmed
  * string if non-empty on success, null otherwise.
+ *
+ * @param predicate the callback that checks whether to trim a character or not
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.trimOrNull(predicate: (Char) -> Boolean): String? {
+fun CharSequence?.trimOrNull(predicate: (Char) -> Boolean): String? {
   contract {
     returnsNotNull() implies (this@trimOrNull != null)
   }
 
   val trimmed = this?.trim(predicate)
 
-  return if (trimmed.isNullOrEmpty()) null else trimmed
+  return if (trimmed.isNullOrEmpty()) null else "$trimmed"
 }
 
 /**
  * Trims white spaces from this string; returns the trimmed string if non-empty on
  * success, [fallback] otherwise.
+ *
+ * @param fallback the fallback value to return
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.trimOr(fallback: String): String {
+fun CharSequence?.trimOr(fallback: CharSequence): String {
   contract {
     returnsNotNull() implies (this@trimOr != null)
   }
 
   val trimmed = trimOrNull()
 
-  return if (trimmed.isNullOrEmpty()) fallback else trimmed
+  return if (trimmed.isNullOrEmpty()) "$fallback" else trimmed
 }
 
 /**
@@ -201,7 +211,7 @@ fun String?.trimOr(fallback: String): String {
  * empty string.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.trimOrBlank(): String {
+fun CharSequence?.trimOrBlank(): String {
   contract {
     returnsNotNull() implies (this@trimOrBlank != null)
   }
@@ -213,15 +223,15 @@ fun String?.trimOrBlank(): String {
  * Returns [fallback] if this String is null, otherwise whether this String is equal to
  * either "1" or "true".
  *
- * @param fallback default value when this String is null
+ * @param fallback the fallback value to return
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.toBooleanOr(fallback: Boolean = false): Boolean {
+fun CharSequence?.toBooleanOr(fallback: Boolean = false): Boolean {
   contract {
     returns(true) implies (this@toBooleanOr != null)
   }
 
-  val value = this?.lowercase(java.util.Locale.ENGLISH)
+  val value = this?.toString()?.lowercase(java.util.Locale.ENGLISH)
 
   return if (null == value) fallback else "1" == value || "true" == value
 }
@@ -231,7 +241,7 @@ fun String?.toBooleanOr(fallback: Boolean = false): Boolean {
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("MagicNumber")
-fun String?.toLocaleOrNull(): java.util.Locale? {
+fun CharSequence?.toLocaleOrNull(): java.util.Locale? {
   contract {
     returnsNotNull() implies (this@toLocaleOrNull != null)
   }
@@ -241,10 +251,12 @@ fun String?.toLocaleOrNull(): java.util.Locale? {
 
 /**
  * Converts this String into a [Locale][java.util.Locale] if valid, [fallback] otherwise.
+ *
+ * @param fallback the fallback value to return
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("MagicNumber")
-fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale {
+fun CharSequence?.toLocaleOr(fallback: java.util.Locale): java.util.Locale {
   contract {
     returnsNotNull() implies (this@toLocaleOr != null)
   }
@@ -257,7 +269,7 @@ fun String?.toLocaleOr(fallback: java.util.Locale): java.util.Locale {
  * null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun Collection<String>?.toLocales(): Collection<java.util.Locale>? {
+fun Collection<CharSequence>?.toLocales(): Collection<java.util.Locale>? {
   contract {
     returnsNotNull() implies (this@toLocales != null)
   }
@@ -270,7 +282,7 @@ fun Collection<String>?.toLocales(): Collection<java.util.Locale>? {
  * null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun List<String>?.toLocales(): List<java.util.Locale>? {
+fun List<CharSequence>?.toLocales(): List<java.util.Locale>? {
   contract {
     returnsNotNull() implies (this@toLocales != null)
   }
@@ -287,7 +299,7 @@ fun List<String>?.toLocales(): List<java.util.Locale>? {
  * null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun Array<String>?.toLocales(): Array<java.util.Locale>? {
+fun Array<CharSequence>?.toLocales(): Array<java.util.Locale>? {
   contract {
     returnsNotNull() implies (this@toLocales != null)
   }
@@ -300,9 +312,9 @@ fun Array<String>?.toLocales(): Array<java.util.Locale>? {
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("NestedBlockDepth")
-fun String?.ensureCountryCode(): String? {
+fun CharSequence?.toCountryCodeOrNull(): String? {
   contract {
-    returnsNotNull() implies (this@ensureCountryCode != null)
+    returnsNotNull() implies (this@toCountryCodeOrNull != null)
   }
 
   val country = trimOrNull()?.uppercase(java.util.Locale.ENGLISH)
@@ -322,15 +334,15 @@ fun String?.ensureCountryCode(): String? {
  * Returns true if this [String] is the [default language][Constants.DEFAULT_LANGUAGE_CODE],
  * false otherwise.
  */
-fun String.isDefaultLanguage(): Boolean =
-  Constants.DEFAULT_LANGUAGE_CODE == lowercase(java.util.Locale.ENGLISH)
+fun CharSequence.isDefaultLanguage(): Boolean =
+  Constants.DEFAULT_LANGUAGE_CODE == toString().lowercase(java.util.Locale.ENGLISH)
 
 /**
  * Given that this is a 2-character language code, returns the new language variation for an
  * old language code.
  */
-fun String.getNewLanguage(): String {
-  val language = lowercase(java.util.Locale.ENGLISH)
+fun CharSequence.getNewLanguage(): String {
+  val language = toString().lowercase(java.util.Locale.ENGLISH)
 
   for (locale in NewLocaleLanguage.entries) {
     if (language == locale.oldCode) {
@@ -347,9 +359,9 @@ fun String.getNewLanguage(): String {
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("ComplexCondition", "MagicNumber")
-fun String?.parseEmail(): PairOfStrings? {
+fun CharSequence?.decodeEmail(): PairOfStrings? {
   contract {
-    returnsNotNull() implies (this@parseEmail != null)
+    returnsNotNull() implies (this@decodeEmail != null)
   }
 
   val email = trimOrNull() ?: return null
@@ -397,9 +409,9 @@ fun String?.parseEmail(): PairOfStrings? {
  * null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun PairOfStrings?.asEmail(): String? {
+fun PairOfStrings?.toEmailOrNull(): String? {
   contract {
-    returnsNotNull() implies (this@asEmail != null)
+    returnsNotNull() implies (this@toEmailOrNull != null)
   }
 
   val first = this?.first?.trim()
@@ -412,27 +424,33 @@ fun PairOfStrings?.asEmail(): String? {
  * Returns true if this [String] has a valid email address structure, false otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.isEmail(): Boolean {
+fun CharSequence?.isEmail(): Boolean {
   contract {
     returns(true) implies (this@isEmail != null)
   }
 
-  return null != parseEmail()
+  return null != decodeEmail()
 }
 
 /**
- * Returns true if this [String] has a valid email address and equals the provided
- * [email], false otherwise. Pay attention that email addresses are case-insensitive and
- * this function will satisfy that requirement.
+ * Returns true if this [String] has a valid email address and equals another email
+ * address, false otherwise.
+ *
+ * Pay attention that email addresses are case-insensitive and this function will
+ * satisfy that requirement.
+ *
+ * @param email the other email address
  */
-fun String.isSameEmail(email: String): Boolean =
-  isEmail() && email.isEmail() && trim().equals(email.trim(), ignoreCase = true)
+fun CharSequence.isSameEmail(email: CharSequence): Boolean =
+  isEmail() && email.isEmail() && toString().trim().equals("$email".trim(), ignoreCase = true)
 
 /**
- * Returns this String as an obfuscated email address.
+ * Returns this String as an obfuscated email address on success, null otherwise.
+ *
+ * @param obfuscateChar the character used to obfuscate the value
  */
-fun String?.obfuscateEmail(obfuscateChar: Char = '*'): String? {
-  val emailParts = parseEmail() ?: return null
+fun CharSequence?.obfuscateEmailOrNull(obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR): String? {
+  val emailParts = decodeEmail() ?: return null
   val account = emailParts.first.obfuscateString(obfuscateChar)
   val domain = emailParts.second
   val domainParts = domain.split(".", ignoreCase = true)
@@ -458,16 +476,26 @@ fun String?.obfuscateEmail(obfuscateChar: Char = '*'): String? {
 }
 
 /**
- * Returns this String as an obfuscated phone number.
+ * Returns this String as an obfuscated email address on success, the same email otherwise.
  *
- * @param obfuscateChar the character used for the obfuscated parts, defaults to '*'
- * @param separator the character used to separate the phone code and number, defaults to '.'
+ * @param obfuscateChar the character used to obfuscate the value
  */
-fun String?.obfuscatePhone(
-  obfuscateChar: Char = '*',
-  separator: Char = '.',
+fun CharSequence.obfuscateEmail(obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR): String =
+  obfuscateEmailOrNull(obfuscateChar) ?: toString()
+
+/**
+ * Returns this String as an obfuscated phone number on success, false otherwise.
+ *
+ * @param obfuscateChar the character used for the obfuscated parts,
+ * defaults to [DEFAULT_OBFUSCATION_CHAR]
+ * @param separator the character used to separate the phone code and number,
+ * defaults to [DEFAULT_PHONE_SEPARATOR]
+ */
+fun CharSequence?.obfuscatePhoneOrNull(
+  obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR,
+  separator: Char = DEFAULT_PHONE_SEPARATOR,
 ): String? {
-  val decodedPhone = this?.parsePhone(separator) ?: return null
+  val decodedPhone = this?.decodePhone(separator) ?: return null
   val callingCode = decodedPhone.first
   val phoneNumber = "${decodedPhone.second}"
   val obfuscatedPhoneNumber = phoneNumber.obfuscateStringOr(
@@ -479,16 +507,40 @@ fun String?.obfuscatePhone(
 }
 
 /**
+ * Returns this String as an obfuscated phone number on success, the same phone otherwise.
+ *
+ * @param obfuscateChar the character used to obfuscate the value
+ */
+fun CharSequence.obfuscatePhone(obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR): String =
+  obfuscatePhoneOrNull(obfuscateChar) ?: toString()
+
+/**
+ * Returns this String as an obfuscated phone number on success, the same phone otherwise.
+ *
+ * @param obfuscateChar the character used for the obfuscated parts,
+ * defaults to [DEFAULT_OBFUSCATION_CHAR]
+ * @param separator the character used to separate the phone code and number,
+ * defaults to [DEFAULT_PHONE_SEPARATOR]
+ */
+fun CharSequence.obfuscatePhone(
+  obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR,
+  separator: Char = DEFAULT_PHONE_SEPARATOR,
+): String = obfuscatePhoneOrNull(
+  obfuscateChar = obfuscateChar,
+  separator = separator,
+) ?: toString()
+
+/**
  * Returns a [URL][java.net.URL] if this [String] is a valid URL, null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.parseUrl(): java.net.URL? {
+fun CharSequence?.parseUrl(): java.net.URL? {
   contract {
     returnsNotNull() implies (this@parseUrl != null)
   }
 
   return try {
-    java.net.URL(this)
+    java.net.URL(toString())
   } catch (ignored: java.net.MalformedURLException) {
     null
   }
@@ -498,7 +550,7 @@ fun String?.parseUrl(): java.net.URL? {
  * Returns true if this [String] is a valid URL, false otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.isUrl(): Boolean {
+fun CharSequence?.isUrl(): Boolean {
   contract {
     returns(true) implies (this@isUrl != null)
   }
@@ -516,31 +568,39 @@ fun String?.isUrl(): Boolean {
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("ComplexCondition", "MagicNumber")
-fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
+fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOfIntAndLong? {
   contract {
-    returnsNotNull() implies (this@parsePhone != null)
+    returnsNotNull() implies (this@decodePhone != null)
   }
 
+  // Remove any character that is a whitespace or a + sign. What remains are digits and
+  // the separator character.
   val phone = trimOrNull {
     it.isWhitespace() || '+' == it
   } ?: return null
 
+  // At least one digit for the international calling code, and one for the number, plus
+  // the 2 reserved for a leading plus and a separator character.
+  if (4 > length) {
+    return null
+  }
+
   // A separator must exist.
   val separatorPos = phone.indexOf(separator)
 
-  // The separator position must appear after at least 2 digits (international calling code).
+  // The separator position must appear after at least one or more digits, which
+  // corresponds with the international calling code (12.34567890).
   if (2 > separatorPos) {
     return null
   }
 
   // First part is the international calling code.
-  val callingCode = phone.substring(
-    startIndex = 0,
-    endIndex = separatorPos,
-  ).toIntOrNull() ?: return null
+  val callingCode = phone.substring(0, separatorPos).toIntOrNull()
+    ?: return null
 
   // Second part is the phone number.
-  val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull() ?: return null
+  val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull()
+    ?: return null
 
   return callingCode to phoneNumber
 }
@@ -553,16 +613,29 @@ fun String?.parsePhone(separator: Char = '.'): PairOfIntAndLong? {
  * @param leadingPlus add a leading `+` to returned phone number
  */
 @OptIn(ExperimentalContracts::class)
-fun PairOfIntAndLong?.asPhone(
-  separator: Char? = '.',
+fun PairOfIntAndLong?.toPhoneOrNull(
+  separator: Char? = DEFAULT_PHONE_SEPARATOR,
   leadingPlus: Boolean = false,
-): String {
-  contract {
-    returnsNotNull() implies (this@asPhone != null)
-  }
-
+): String? {
   val first = this?.first
   val second = this?.second
+  val plusChar = if (leadingPlus) "+" else ""
+
+  return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
+}
+
+/**
+ * Returns an international phone number for the provided [PairOfIntAndLong].
+ *
+ * @param separator the character used to separate the international calling code and number
+ * @param leadingPlus add a leading `+` to returned phone number
+ */
+fun PairOfIntAndLong.toPhone(
+  separator: Char? = DEFAULT_PHONE_SEPARATOR,
+  leadingPlus: Boolean = false,
+): String {
+  val first = this.first
+  val second = this.second
   val plusChar = if (leadingPlus) "+" else ""
 
   return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
@@ -574,12 +647,12 @@ fun PairOfIntAndLong?.asPhone(
  * @param separator the character used to separate the international calling code and number
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.isPhone(separator: Char = '.'): Boolean {
+fun CharSequence?.isPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): Boolean {
   contract {
     returns(true) implies (this@isPhone != null)
   }
 
-  return null != parsePhone(separator)
+  return null != decodePhone(separator)
 }
 
 /**
@@ -588,9 +661,9 @@ fun String?.isPhone(separator: Char = '.'): Boolean {
  * @param opacity apply a constant opacity value (0..255) to the color
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.toColor(opacity: Int? = null): Int? {
+fun CharSequence?.toColorOrNull(opacity: Int? = null): Int? {
   contract {
-    returnsNotNull() implies (this@toColor != null)
+    returnsNotNull() implies (this@toColorOrNull != null)
   }
 
   var color = trimOrNull() ?: return null
@@ -646,7 +719,7 @@ fun String?.toColor(opacity: Int? = null): Int? {
  * @param ignoreCase whether to ignore the string's case, defaults to lower casing it
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.normalizedHandle(
+fun CharSequence?.normalizedHandle(
   dictionary: java.util.regex.Pattern,
   ignoreCase: Boolean = true,
 ): String? {
@@ -658,11 +731,11 @@ fun String?.normalizedHandle(
     return null
   }
 
-  var normalizedHandle = if (ignoreCase) trim().lowercase() else trim()
+  val handleTrimmed = if (ignoreCase) toString().trim().lowercase() else trim()
 
-  normalizedHandle = StringBuilder(length.coerceAtLeast(1))
+  val handleNormalized = StringBuilder(length.coerceAtLeast(1))
     .apply {
-      normalizedHandle.forEach {
+      handleTrimmed.forEach {
         if (dictionary.matcher("$it").matches()) {
           append(it)
         }
@@ -670,7 +743,7 @@ fun String?.normalizedHandle(
     }
     .toString()
 
-  return normalizedHandle.ifEmpty { null }
+  return if (handleNormalized.isEmpty()) null else handleNormalized
 }
 
 /**
@@ -678,43 +751,43 @@ fun String?.normalizedHandle(
  * success, null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.normalizedKey(): String? {
+fun CharSequence?.normalizedKey(): String? {
   contract {
     returnsNotNull() implies (this@normalizedKey != null)
   }
 
-  val normalizedKey = trimOrNull()?.lowercase()
+  val keyNormalized = trimOrNull()?.lowercase()
 
-  return if (isNullOrEmpty()) null else normalizedKey
+  return if (isNullOrEmpty()) null else keyNormalized
 }
 
 /**
  * Returns an [ImageDimension] matching this string on success, null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.imageDimension(): ImageDimension? {
+fun CharSequence?.imageDimension(): ImageDimension? {
   contract {
     returnsNotNull() implies (this@imageDimension != null)
   }
 
-  val normalizedString = this?.trim()
-  if (normalizedString.isNullOrEmpty()) {
+  val stringNormalized = this?.trim()
+  if (stringNormalized.isNullOrEmpty()) {
     return null
   }
 
-  val xPosition = normalizedString.indexOf('x')
+  val xPosition = stringNormalized.indexOf('x')
   if (0 > xPosition) {
     return null
   }
 
-  val width = normalizedString
+  val width = stringNormalized
     .substring(0, xPosition)
     .toIntOrNull()
   if (null == width || 0 > width) {
     return null
   }
 
-  val height = normalizedString
+  val height = stringNormalized
     .substring(1 + xPosition)
     .toIntOrNull()
   if (null == height || 0 > height) {
@@ -728,7 +801,7 @@ fun String?.imageDimension(): ImageDimension? {
  * Normalizes and returns this String a host name.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.normalizeHostName(): String? {
+fun CharSequence?.normalizeHostName(): String? {
   contract {
     returnsNotNull() implies (this@normalizeHostName != null)
   }
@@ -743,7 +816,7 @@ fun String?.normalizeHostName(): String? {
  * Returns true if this String is a valid host name, false otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.isHostName(): Boolean {
+fun CharSequence?.isHostName(): Boolean {
   contract {
     returns(true) implies (this@isHostName != null)
   }
@@ -755,7 +828,7 @@ fun String?.isHostName(): Boolean {
  * Normalizes and returns this String a domain name.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.normalizeDomainName(): String? {
+fun CharSequence?.normalizeDomainName(): String? {
   contract {
     returnsNotNull() implies (this@normalizeDomainName != null)
   }
@@ -770,7 +843,7 @@ fun String?.normalizeDomainName(): String? {
  * Returns true if this String is a valid domain name, false otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun String?.isDomainName(): Boolean {
+fun CharSequence?.isDomainName(): Boolean {
   contract {
     returns(true) implies (this@isDomainName != null)
   }
@@ -778,8 +851,8 @@ fun String?.isDomainName(): Boolean {
   return null != this && DOMAIN_NAME_PATTERN.matcher(this).matches()
 }
 
-private fun String.toLocaleImpl(): java.util.Locale? {
-  val parts = replace("-", "_").split('_')
+private fun CharSequence.toLocaleImpl(): java.util.Locale? {
+  val parts = toString().replace("-", "_").split('_')
 
   return try {
     if (1 < parts.size) java.util.Locale(parts[0], parts[1]) else java.util.Locale(parts[0])
@@ -788,12 +861,12 @@ private fun String.toLocaleImpl(): java.util.Locale? {
   }
 }
 
-private fun Iterator<String>.toLocalesImpl(size: Int): Collection<java.util.Locale>? {
+private fun Iterator<CharSequence>.toLocalesImpl(size: Int): Collection<java.util.Locale>? {
   val result = mutableListWith<java.util.Locale>(size)
 
   for (string in this) {
-    val normalizedString = string.trimOrNull() ?: continue
-    val stringParts = normalizedString
+    val stringNormalized = string.trimOrNull() ?: continue
+    val stringParts = stringNormalized
       .replace('_', '-')
       .split('-')
       .ifEmpty { null } ?: continue
@@ -816,7 +889,7 @@ private val Int.peekCharactersCount: Int
     else -> 0
   }
 
-private fun String?.obfuscateString(obfuscateChar: Char): String? {
+private fun CharSequence?.obfuscateString(obfuscateChar: Char): String? {
   val peekCharactersCount = this?.length?.peekCharactersCount ?: return null
   if (0 == peekCharactersCount) {
     return null
@@ -829,16 +902,18 @@ private fun String?.obfuscateString(obfuscateChar: Char): String? {
     substring(trailingIndex)
 }
 
-private fun String.obfuscateStringOr(
+private fun CharSequence.obfuscateStringOr(
   obfuscateChar: Char,
-  fallback: String? = null,
-): String = obfuscateString(obfuscateChar) ?: fallback ?: this
+  fallback: CharSequence? = null,
+): String = obfuscateString(obfuscateChar) ?: fallback?.toString() ?: toString()
 
-private val HOST_NAME_PATTERN: java.util.regex.Pattern =
-  java.util.regex.Pattern.compile("^[a-z0-9-]\$")
+private val HOST_NAME_PATTERN: java.util.regex.Pattern = java.util.regex.Pattern
+  .compile("^[a-z0-9-]\$")
 
-private val DOMAIN_NAME_PATTERN: java.util.regex.Pattern =
-  java.util.regex.Pattern.compile("^[a-z0-9.-]\$")
+private val DOMAIN_NAME_PATTERN: java.util.regex.Pattern = java.util.regex.Pattern
+  .compile("^[a-z0-9.-]\$")
 
-private val ISO_COUNTRIES: Array<String> =
-  java.util.Locale.getISOCountries()
+private val ISO_COUNTRIES: Array<String> = java.util.Locale.getISOCountries()
+
+private const val DEFAULT_OBFUSCATION_CHAR: Char = '*'
+private const val DEFAULT_PHONE_SEPARATOR: Char = '.'

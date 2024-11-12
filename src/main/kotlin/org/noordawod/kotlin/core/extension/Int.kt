@@ -36,12 +36,12 @@ import kotlin.contracts.contract
  */
 @OptIn(ExperimentalContracts::class)
 @Suppress("MagicNumber")
-fun Int?.toColor(
+fun Int?.toColorOrNull(
   opacity: Int? = null,
   dash: Boolean = false,
 ): String? {
   contract {
-    returnsNotNull() implies (this@toColor != null)
+    returnsNotNull() implies (this@toColorOrNull != null)
   }
 
   return if (null == this) {
