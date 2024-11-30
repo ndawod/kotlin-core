@@ -866,6 +866,52 @@ fun CharSequence?.isDomainName(): Boolean {
   return null != this && DOMAIN_NAME_PATTERN.matcher(this).matches()
 }
 
+/**
+ * Returns the numerical (integer) value of this hexadecimal color on success, null otherwise.
+ *
+ * The color can be preceded by a `#` character, and can be either represented as a
+ * 3-char string (RGB) or 6-char string (RRGGBB).
+ *
+ * If the string starts with a `#`, it will be stripped.
+ */
+fun String.toColor(): Int? {
+  val color = trimOrNull { it.isWhitespace() || '#' == it } ?: return null
+  val colorLength = color.length
+
+  val colorNormalized = when (colorLength) {
+    3 -> {
+      val r = color[0]
+      val g = color[1]
+      val b = color[2]
+
+      "$r$r$g$g$b$b"
+    }
+    6 -> color
+    else -> return null
+  }
+
+  return try {
+    colorNormalized.toInt(16)
+  } catch (_: NumberFormatException) {
+    null
+  }
+}
+
+/**
+ * Returns this numeric value as a color string (RRGGBB) value on success, null otherwise.
+ *
+ * @param withHash whether to prefix the color with a `#` character
+ */
+fun Int.toColor(withHash: Boolean = true): String? {
+  val color = try {
+    toString(16)
+  } catch (_: NumberFormatException) {
+    return null
+  }
+
+  return if (withHash) "#$color" else color
+}
+
 private fun CharSequence.toLocaleImpl(): java.util.Locale? {
   val parts = toString().replace("-", "_").split('_')
 
@@ -897,6 +943,7 @@ private fun Iterator<CharSequence>.toLocalesImpl(size: Int): Collection<java.uti
   return if (result.isEmpty()) null else result
 }
 
+@Suppress("KotlinConstantConditions")
 private val Int.peekCharactersCount: Int
   get() = when {
     4 < this -> 2
