@@ -874,7 +874,7 @@ fun CharSequence?.isDomainName(): Boolean {
  *
  * If the string starts with a `#`, it will be stripped.
  */
-fun String.toColor(): Int? {
+fun CharSequence.toColor(): Int? {
   val color = trimOrNull { it.isWhitespace() || '#' == it } ?: return null
   val colorLength = color.length
 
@@ -911,6 +911,33 @@ fun Int.toColor(withHash: Boolean = true): String? {
 
   return if (withHash) "#$color" else color
 }
+
+/**
+ * Returns a one-liner from this character sequence, which may contain multiple lines.
+ */
+fun CharSequence.oneLiner(): String = "$this"
+  .replace("\b", "\\b")
+  .replace("\t", "\\t")
+  .replace("\n", "\\n")
+  .replace("\r", "\\r")
+
+/**
+ * Returns this character sequence enclosed inside double quotes.
+ *
+ * Note: If you pass `false` to [withBackslash], then double quotes characters will
+ * be replaced with a 2 double quotes characters, which is what's needed for escaping
+ * values in a CSV file.
+ *
+ * @param withBackslash whether to escape double quotes with a backslash, or not
+ */
+fun CharSequence.withDoubleQuotes(withBackslash: Boolean): String = '"' +
+  "$this".replace("\"", if (withBackslash) "\\\"" else "\"\"") + '"'
+
+/**
+ * Returns this character sequence enclosed inside single quotes.
+ */
+fun CharSequence.withSingleQuotes(): String = "'" +
+  "$this".replace("'", "\\'") + "'"
 
 private fun CharSequence.toLocaleImpl(): java.util.Locale? {
   val parts = toString().replace("-", "_").split('_')
