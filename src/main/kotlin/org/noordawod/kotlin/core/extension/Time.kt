@@ -388,3 +388,14 @@ fun java.time.Duration.humanReadable(): String = "$this"
  */
 fun kotlin.time.Duration.humanReadable(): String =
   java.time.Duration.ofMillis(inWholeMilliseconds).humanReadable()
+
+/**
+ * Returns a [GregorianCalendar][java.util.GregorianCalendar] for this [Date][java.util.Date].
+ */
+fun java.util.Date.gregorianCalendar(): java.util.Calendar {
+  val calendar: java.util.Calendar = java.util.GregorianCalendar()
+
+  calendar.setTime(java.util.Date())
+
+  return calendar
+}
