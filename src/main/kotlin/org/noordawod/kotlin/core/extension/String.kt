@@ -503,7 +503,7 @@ fun CharSequence?.obfuscatePhoneOrNull(
     fallback = "$obfuscateChar".repeat(phoneNumber.length.coerceIn(2..6)),
   )
 
-  return "+$callingCode$separator$obfuscatedPhoneNumber"
+  return "$DEFAULT_PHONE_PREFIX$callingCode$separator$obfuscatedPhoneNumber"
 }
 
 /**
@@ -576,12 +576,12 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
   // Remove any character that is a whitespace or a + sign. What remains are digits and
   // the separator character.
   val phone = trimOrNull {
-    it.isWhitespace() || '+' == it
+    it.isWhitespace() || DEFAULT_PHONE_PREFIX == it
   } ?: return null
 
   // At least one digit for the international calling code, and one for the number, plus
-  // the 2 reserved for a leading plus and a separator character.
-  if (4 > length) {
+  // one reserved for a separator character.
+  if (3 > length) {
     return null
   }
 
@@ -590,7 +590,7 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
 
   // The separator position must appear after at least one or more digits, which
   // corresponds with the international calling code (12.34567890).
-  if (2 > separatorPos) {
+  if (1 > separatorPos) {
     return null
   }
 
@@ -617,7 +617,7 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
  */
 fun PairOfIntAndLong.toPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): String = toPhone(
   separator = separator,
-  leadingPlus = true
+  leadingPlus = true,
 )
 
 /**
@@ -634,7 +634,7 @@ fun PairOfIntAndLong?.toPhoneOrNull(
 ): String? {
   val first = this?.first
   val second = this?.second
-  val plusChar = if (leadingPlus) "+" else ""
+  val plusChar = if (leadingPlus) "$DEFAULT_PHONE_PREFIX" else ""
 
   return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
 }
@@ -651,7 +651,7 @@ fun PairOfIntAndLong.toPhone(
 ): String {
   val first = this.first
   val second = this.second
-  val plusChar = if (leadingPlus) "+" else ""
+  val plusChar = if (leadingPlus) "$DEFAULT_PHONE_PREFIX" else ""
 
   return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
 }
@@ -886,6 +886,7 @@ fun CharSequence.toColor(): Int? {
 
       "$r$r$g$g$b$b"
     }
+
     6 -> color
     else -> return null
   }
@@ -915,6 +916,7 @@ fun Int.toColor(withHash: Boolean = true): String? {
 /**
  * Returns a one-liner from this character sequence, which may contain multiple lines.
  */
+@Suppress("StringLiteralDuplication")
 fun CharSequence.oneLiner(): String = "$this"
   .replace("\b", "\\b")
   .replace("\t", "\\t")
@@ -1006,3 +1008,4 @@ private val ISO_COUNTRIES: Array<String> = java.util.Locale.getISOCountries()
 
 private const val DEFAULT_OBFUSCATION_CHAR: Char = '*'
 private const val DEFAULT_PHONE_SEPARATOR: Char = '.'
+private const val DEFAULT_PHONE_PREFIX: Char = '+'
