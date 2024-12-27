@@ -399,3 +399,34 @@ fun java.util.Date.gregorianCalendar(): java.util.Calendar {
 
   return calendar
 }
+
+/**
+ * Returns a [GregorianCalendar][java.util.GregorianCalendar] for this [Date][java.util.Date].
+ *
+ * @param time the time to convert to a Gregorian calendar, defaults to current time
+ */
+fun java.util.Date.toGregorianCalendar(
+  time: java.util.Date = java.util.Date(),
+): java.util.Calendar {
+  val calendar: java.util.Calendar = java.util.GregorianCalendar()
+  calendar.setTime(time)
+
+  return calendar
+}
+
+/**
+ * Returns a localized, formatted date time string for a pattern.
+ *
+ * The pattern conforms to the rules outlined for [SimpleDateFormat][java.text.SimpleDateFormat].
+ *
+ * @param pattern the date/time formatting pattern
+ * @param locale the locale to use to localize month names
+ */
+fun java.util.Date.format(
+  pattern: String,
+  locale: java.util.Locale,
+): String = java.text.SimpleDateFormat(pattern, locale)
+  .format(this)
+  .replace('׳', '\'')
+  .replace('ʼ', '\'')
+  .replace('’', '\'')

@@ -354,6 +354,12 @@ fun CharSequence.getNewLanguage(): String {
 }
 
 /**
+ * Normalizes and returns this [String] as a language code.
+ */
+@Suppress("StringLiteralDuplication")
+fun CharSequence.toLanguageCode(): String = "$this".lowercase(java.util.Locale.ENGLISH)
+
+/**
  * Returns parsed parts (account and domain) if this [String] is a valid email,
  * null otherwise.
  */
@@ -604,6 +610,20 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
 
   return callingCode to phoneNumber
 }
+
+/**
+ * Returns this String after decoding it as a [PairOfIntAndLong] on success, null otherwise.
+ *
+ * The encoded phone contains a leading '+' sign always, then the international
+ * calling code, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+47.12345678`
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+fun CharSequence?.decodePhoneOrThrow(separator: Char = '.'): PairOfIntAndLong =
+  decodePhone(separator)
+    ?: error("Phone number format invalid for ($separator) separator: $this")
 
 /**
  * Returns an international phone number for this [PairOfIntAndLong].

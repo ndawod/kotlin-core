@@ -141,6 +141,11 @@ fun String?.toCountryCode(): String? {
 }
 
 /**
+ * Returns the language contained within this [Locale][java.util.Locale].
+ */
+fun java.util.Locale.toLanguageCode(): String = language.toLanguageCode()
+
+/**
  * Maps old language codes to new ones. This follows the ISO standard for 2-letter languages.
  *
  * @param oldCode the old language code
