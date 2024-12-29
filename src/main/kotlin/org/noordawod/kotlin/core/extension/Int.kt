@@ -70,3 +70,10 @@ fun Int?.toColorOrNull(
     buffer.toString().uppercase(java.util.Locale.ENGLISH)
   }
 }
+
+/**
+ * Returns the start offset in pagination based on a page number and its capacity.
+ *
+ * Note: Starting page is `1`, and the returned offset value starts from `0`.
+ */
+internal fun Int.offset(page: Int): Int = ((page - 1) * this).coerceAtLeast(0)

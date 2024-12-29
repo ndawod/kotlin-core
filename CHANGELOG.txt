@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.5.1 (December 29, 2024)
+    Add a few more extension functions.
+
 4.5.0 (December 27, 2024)
     Fix `String.decodePhone` function, add numerous new extension functions, bump up
     Kotlin version to `2.1.0`, and Gradle version to `7.6.4`.

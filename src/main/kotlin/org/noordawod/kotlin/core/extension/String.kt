@@ -961,6 +961,14 @@ fun CharSequence.withDoubleQuotes(withBackslash: Boolean): String = '"' +
 fun CharSequence.withSingleQuotes(): String = "'" +
   "$this".replace("'", "\\'") + "'"
 
+/**
+ * Returns this [CharSequence] if its length is of a specific value, null otherwise.
+ *
+ * @param targetLength the requested length
+ */
+fun CharSequence.withLengthOrNull(targetLength: Int): CharSequence? =
+  if (length == targetLength) this else null
+
 private fun CharSequence.toLocaleImpl(): java.util.Locale? {
   val parts = toString().replace("-", "_").split('_')
 

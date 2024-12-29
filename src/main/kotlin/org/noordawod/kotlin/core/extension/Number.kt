@@ -23,8 +23,42 @@
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.math.roundToLong
+
 /**
  * Returns the exact value of this [Float] as a [Double] without any side effects, such
  * as converting the floating points to some imaginary value.
  */
 fun Float.toExactDouble(): Double = "$this".toDouble()
+
+/**
+ * Returns a Float number trimmed to a certain number of floating points.
+ *
+ * @param floatingPoints how many floating-point numbers to include, defaults to 2
+ */
+@Suppress("MagicNumber")
+internal fun Float.withFloatingPoints(floatingPoints: Int = 2): Float {
+  var multiplier = 1f
+  for (idx in 1..floatingPoints) {
+    multiplier *= 10f
+  }
+
+  return times(multiplier).roundToLong().div(multiplier)
+}
+
+/**
+ * Returns a string representation of this Float and trim any floating-point numbers
+ * if they're equal to 0.
+ *
+ * This is normally called after [withFloatingPoints].
+ */
+@Suppress("MagicNumber")
+internal fun Float.trimIfZero(): String {
+  val stringified = "$this"
+
+  return if (stringified.endsWith(".0")) {
+    stringified.substring(0, stringified.length - 2)
+  } else {
+    stringified
+  }
+}

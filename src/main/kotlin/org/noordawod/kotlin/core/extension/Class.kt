@@ -33,8 +33,11 @@ package org.noordawod.kotlin.core.extension
  * - Otherwise, returns the same [Class].
  */
 @Suppress("UNCHECKED_CAST")
-fun Class<in Any>.simplifyType(): Class<Any> = when {
+fun <T : Any> Class<T>.simplifyType(): Class<T> = when {
   Map::class.java.isAssignableFrom(this) -> Map::class.java
+  Array::class.java.isAssignableFrom(this) -> Array::class.java
+  List::class.java.isAssignableFrom(this) -> List::class.java
   Collection::class.java.isAssignableFrom(this) -> Collection::class.java
+  Iterable::class.java.isAssignableFrom(this) -> Iterable::class.java
   else -> this
-} as Class<Any>
+} as Class<T>
