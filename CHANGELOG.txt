@@ -3,7 +3,7 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
-4.5.1 (December 29, 2024)
+4.5.2 (December 29, 2024)
     Add a few more extension functions.
 
 4.5.0 (December 27, 2024)

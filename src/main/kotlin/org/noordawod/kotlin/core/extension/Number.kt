@@ -21,6 +21,8 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+@file:Suppress("MagicNumber")
+
 package org.noordawod.kotlin.core.extension
 
 import kotlin.math.roundToLong
@@ -36,8 +38,7 @@ fun Float.toExactDouble(): Double = "$this".toDouble()
  *
  * @param floatingPoints how many floating-point numbers to include, defaults to 2
  */
-@Suppress("MagicNumber")
-internal fun Float.withFloatingPoints(floatingPoints: Int = 2): Float {
+fun Float.withFloatingPoints(floatingPoints: Int = 2): Float {
   var multiplier = 1f
   for (idx in 1..floatingPoints) {
     multiplier *= 10f
@@ -53,7 +54,7 @@ internal fun Float.withFloatingPoints(floatingPoints: Int = 2): Float {
  * This is normally called after [withFloatingPoints].
  */
 @Suppress("MagicNumber")
-internal fun Float.trimIfZero(): String {
+fun Float.trimIfZero(): String {
   val stringified = "$this"
 
   return if (stringified.endsWith(".0")) {

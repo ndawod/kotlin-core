@@ -76,4 +76,4 @@ fun Int?.toColorOrNull(
  *
  * Note: Starting page is `1`, and the returned offset value starts from `0`.
  */
-internal fun Int.offset(page: Int): Int = ((page - 1) * this).coerceAtLeast(0)
+fun Int.offset(page: Int): Int = ((page - 1) * this).coerceAtLeast(0)
