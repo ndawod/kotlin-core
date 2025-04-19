@@ -28,6 +28,7 @@ package org.noordawod.kotlin.core.extension
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
 import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.security.ByteUtils
 import org.noordawod.kotlin.core.util.ImageDimension
 
 /**
@@ -127,6 +128,15 @@ fun CharSequence.withExtension(extension: CharSequence): String {
   val extensionWithDot = if ('.' == extension[0]) extension else ".$extension"
 
   return withTrailing(extensionWithDot)
+}
+
+/**
+ * Deletes the file pointed to by this String from the filesystem.
+ */
+fun String.deleteFile(): Boolean = try {
+  java.io.File(this).delete()
+} catch (_: SecurityException) {
+  false
 }
 
 /**
@@ -358,6 +368,28 @@ fun CharSequence.getNewLanguage(): String {
  */
 @Suppress("StringLiteralDuplication")
 fun CharSequence.toLanguageCode(): String = "$this".lowercase(java.util.Locale.ENGLISH)
+
+/**
+ * Returns a string consisting of all items of this collection without a separator.
+ */
+fun Iterable<CharSequence>.joined(): String = joinToString(separator = "")
+
+/**
+ * Returns a string consisting of all items of this collection separated by a space.
+ */
+fun Iterable<CharSequence>.spaceSeparated(): String = joinToString(separator = " ")
+
+/**
+ * Returns a string consisting of all items of this collection separated by a comma
+ * if the collection isn't empty, null otherwise.
+ */
+inline fun <reified T> Iterable<T>.commaSeparated(): String = when {
+  T::class.java.isAssignableFrom(ByteArray::class.java) -> joinToString(separator = ",") {
+    ByteUtils.toHex(it as ByteArray, true)
+  }
+
+  else -> joinToString(separator = ",")
+}
 
 /**
  * Returns parsed parts (account and domain) if this [String] is a valid email,
@@ -600,11 +632,11 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
     return null
   }
 
-  // First part is the international calling code.
+  // The first part is the international calling code.
   val callingCode = phone.substring(0, separatorPos).toIntOrNull()
     ?: return null
 
-  // Second part is the phone number.
+  // The second part is the phone number.
   val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull()
     ?: return null
 
@@ -750,7 +782,7 @@ fun CharSequence?.toColorOrNull(opacity: Int? = null): Int? {
  *
  * If the string includes other characters, they'll be removed.
  *
- * @param dictionary allowed list of characters expressed as a regexp pattern
+ * @param dictionary the allowed list of characters expressed as a regexp pattern
  * @param ignoreCase whether to ignore the string's case, defaults to lower casing it
  */
 @OptIn(ExperimentalContracts::class)
@@ -778,7 +810,7 @@ fun CharSequence?.normalizedHandle(
     }
     .toString()
 
-  return if (handleNormalized.isEmpty()) null else handleNormalized
+  return handleNormalized.ifEmpty { null }
 }
 
 /**
@@ -947,7 +979,7 @@ fun CharSequence.oneLiner(): String = "$this"
  * Returns this character sequence enclosed inside double quotes.
  *
  * Note: If you pass `false` to [withBackslash], then double quotes characters will
- * be replaced with a 2 double quotes characters, which is what's needed for escaping
+ * be replaced with 2 double-quotes characters, which is what's needed for escaping
  * values in a CSV file.
  *
  * @param withBackslash whether to escape double quotes with a backslash, or not
@@ -1000,7 +1032,6 @@ private fun Iterator<CharSequence>.toLocalesImpl(size: Int): Collection<java.uti
   return if (result.isEmpty()) null else result
 }
 
-@Suppress("KotlinConstantConditions")
 private val Int.peekCharactersCount: Int
   get() = when {
     4 < this -> 2
@@ -1027,10 +1058,10 @@ private fun CharSequence.obfuscateStringOr(
 ): String = obfuscateString(obfuscateChar) ?: fallback?.toString() ?: toString()
 
 private val HOST_NAME_PATTERN: java.util.regex.Pattern = java.util.regex.Pattern
-  .compile("^[a-z0-9-]\$")
+  .compile("^[a-z0-9-]$")
 
 private val DOMAIN_NAME_PATTERN: java.util.regex.Pattern = java.util.regex.Pattern
-  .compile("^[a-z0-9.-]\$")
+  .compile("^[a-z0-9.-]$")
 
 private val ISO_COUNTRIES: Array<String> = java.util.Locale.getISOCountries()
 
