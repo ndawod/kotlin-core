@@ -34,7 +34,7 @@ import org.noordawod.kotlin.core.extension.mutableMapWith
  * @param maxEntries maximum number of entries to keep in the cache at any given time
  * @param seconds number of seconds to cache each value
  */
-class MemoryCache<V>(
+class MemoryCache<V : Any>(
   override val maxEntries: Int,
   override val seconds: Int,
 ) : Cache<V> {
@@ -48,7 +48,7 @@ class MemoryCache<V>(
 
   /**
    * Creates a new [MemoryCache] instance having a default timeout set to
-   * [Cache.SHORT_TIMEOUT_IN_SECONDS] and a default max entries set to [Cache.MAX_ENTRIES].
+   * [Cache.SHORT_TIMEOUT_IN_SECONDS] and default max entries set to [Cache.MAX_ENTRIES].
    */
   constructor() : this(Cache.MAX_ENTRIES)
 
