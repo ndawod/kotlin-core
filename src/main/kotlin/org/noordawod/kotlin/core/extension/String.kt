@@ -32,6 +32,21 @@ import org.noordawod.kotlin.core.security.ByteUtils
 import org.noordawod.kotlin.core.util.ImageDimension
 
 /**
+ * The default character used to obfuscate phone numbers.
+ */
+const val DEFAULT_OBFUSCATION_CHAR: Char = '*'
+
+/**
+ * The default character used to separate phone parts.
+ */
+const val DEFAULT_PHONE_SEPARATOR: Char = '.'
+
+/**
+ * The default character used as a prefix to international phone numbers.
+ */
+const val DEFAULT_PHONE_PREFIX: Char = '+'
+
+/**
  * A signature of a [Pair] of two [String]s.
  */
 typealias PairOfStrings = Pair<String, String>
@@ -40,6 +55,11 @@ typealias PairOfStrings = Pair<String, String>
  * A signature of a [Pair] of an [Int] and a [Long].
  */
 typealias PairOfIntAndLong = Pair<Int, Long>
+
+/**
+ * A signature of a [Pair] of a [String] and a [Long].
+ */
+typealias PairOfStringAndLong = Pair<String, Long>
 
 /**
  * Strips search modifiers (`+`, `-`, `<`, `>`, `"`) from this string, and returns it.
@@ -600,6 +620,11 @@ fun CharSequence?.isUrl(): Boolean {
  * Returns parsed parts (international calling code and phone number) if this [String]
  * is a valid phone number, null otherwise.
  *
+ * The encoded phone contains a leading '+' sign always, then the international
+ * calling code, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+47.12345678`
+ *
  * Note: The function can treat strings with or without a leading '+' sign.
  *
  * @param separator the character used to separate the international calling code and number
@@ -611,7 +636,7 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
     returnsNotNull() implies (this@decodePhone != null)
   }
 
-  // Remove any character that is a whitespace or a + sign. What remains are digits and
+  // Remove any character that is a whitespace or a prefix sign. What remains are digits and
   // the separator character.
   val phone = trimOrNull {
     it.isWhitespace() || DEFAULT_PHONE_PREFIX == it
@@ -653,7 +678,7 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
  *
  * @param separator the character used to separate the international calling code and number
  */
-fun CharSequence?.decodePhoneOrThrow(separator: Char = '.'): PairOfIntAndLong =
+fun CharSequence?.decodePhoneOrThrow(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOfIntAndLong =
   decodePhone(separator)
     ?: error("Phone number format invalid for ($separator) separator: $this")
 
@@ -676,9 +701,15 @@ fun PairOfIntAndLong.toPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): String 
  * Returns an international phone number for the provided [PairOfIntAndLong] on success,
  * null otherwise.
  *
+ * The encoded phone contains a leading '+' sign always, then the international
+ * calling code, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+47.12345678`
+ *
  * @param separator the character used to separate the international calling code and number
  * @param leadingPlus add a leading `+` to returned phone number
  */
+@Suppress("DuplicatedCode")
 @OptIn(ExperimentalContracts::class)
 fun PairOfIntAndLong?.toPhoneOrNull(
   separator: Char? = DEFAULT_PHONE_SEPARATOR,
@@ -694,9 +725,15 @@ fun PairOfIntAndLong?.toPhoneOrNull(
 /**
  * Returns an international phone number for the provided [PairOfIntAndLong].
  *
+ * The encoded phone contains a leading '+' sign always, then the international
+ * calling code, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+47.12345678`
+ *
  * @param separator the character used to separate the international calling code and number
  * @param leadingPlus add a leading `+` to returned phone number
  */
+@Suppress("DuplicatedCode")
 fun PairOfIntAndLong.toPhone(
   separator: Char? = DEFAULT_PHONE_SEPARATOR,
   leadingPlus: Boolean = false,
@@ -720,6 +757,153 @@ fun CharSequence?.isPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): Boolean {
   }
 
   return null != decodePhone(separator)
+}
+
+/**
+ * Returns parsed parts (country code and phone number) if this [String]
+ * is a valid phone number, null otherwise.
+ *
+ * The encoded phone contains a leading '+' sign always, then the country code as
+ * 2 characters, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+XX.12345678`
+ *
+ * Note: The function can treat strings with or without a leading '+' sign.
+ *
+ * @param separator the character used to separate the country code and number
+ */
+@OptIn(ExperimentalContracts::class)
+@Suppress("ComplexCondition", "MagicNumber")
+fun CharSequence?.decodeCountryPhone(
+  separator: Char = DEFAULT_PHONE_SEPARATOR,
+): PairOfStringAndLong? {
+  contract {
+    returnsNotNull() implies (this@decodeCountryPhone != null)
+  }
+
+  // Remove any character that is a whitespace or a prefix sign. What remains are digits and
+  // the separator character.
+  val phone = trimOrNull {
+    it.isWhitespace() || DEFAULT_PHONE_PREFIX == it
+  } ?: return null
+
+  // At least 2 characters for the country code, and one for the number, plus
+  // one reserved for a separator character.
+  if (4 > length) {
+    return null
+  }
+
+  // A separator must exist.
+  val separatorPos = phone.indexOf(separator)
+
+  // The separator position must appear after at least two characters, which
+  // corresponds with the country code (XX.34567890).
+  if (2 != separatorPos) {
+    return null
+  }
+
+  // The first part is the country code.
+  val callingCode = phone.substring(0, separatorPos).uppercase(java.util.Locale.ENGLISH)
+
+  // The second part is the phone number.
+  val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull()
+    ?: return null
+
+  return callingCode to phoneNumber
+}
+
+/**
+ * Returns this String after decoding it as a [PairOfStringAndLong] on success, null otherwise.
+ *
+ * The encoded phone contains a leading '+' sign always, then the country code as
+ * 2 characters, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+XX.12345678`
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+fun CharSequence?.decodeCountryPhoneOrThrow(
+  separator: Char = DEFAULT_PHONE_SEPARATOR,
+): PairOfStringAndLong = decodeCountryPhone(separator)
+    ?: error("CountryPhone number format invalid for ($separator) separator: $this")
+
+/**
+ * Returns an international phone number for this [PairOfStringAndLong].
+ *
+ * The encoded phone contains a leading '+' sign always, then the country code as
+ * 2 characters, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+XX.12345678`
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+fun PairOfStringAndLong.toCountryPhone(
+  separator: Char = DEFAULT_PHONE_SEPARATOR,
+): String = toCountryPhone(
+  separator = separator,
+  leadingPlus = true,
+)
+
+/**
+ * Returns an international phone number for the provided [PairOfStringAndLong] on success,
+ * null otherwise.
+ *
+ * The encoded phone contains a leading '+' sign always, then the country code as
+ * 2 characters, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+XX.12345678`
+ *
+ * @param separator the character used to separate the international calling code and number
+ * @param leadingPlus add a leading `+` to returned phone number
+ */
+@Suppress("DuplicatedCode")
+@OptIn(ExperimentalContracts::class)
+fun PairOfStringAndLong?.toCountryPhoneOrNull(
+  separator: Char? = DEFAULT_PHONE_SEPARATOR,
+  leadingPlus: Boolean = false,
+): String? {
+  val first = this?.first
+  val second = this?.second
+  val plusChar = if (leadingPlus) "$DEFAULT_PHONE_PREFIX" else ""
+
+  return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
+}
+
+/**
+ * Returns an international phone number for the provided [PairOfStringAndLong].
+ *
+ * The encoded phone contains a leading '+' sign always, then the country code as
+ * 2 characters, then a single separator character, and ends with the phone number.
+ *
+ * For example: `+XX.12345678`
+ *
+ * @param separator the character used to separate the international calling code and number
+ * @param leadingPlus add a leading `+` to returned phone number
+ */
+@Suppress("DuplicatedCode")
+fun PairOfStringAndLong.toCountryPhone(
+  separator: Char? = DEFAULT_PHONE_SEPARATOR,
+  leadingPlus: Boolean = false,
+): String {
+  val first = this.first
+  val second = this.second
+  val plusChar = if (leadingPlus) "$DEFAULT_PHONE_PREFIX" else ""
+
+  return if (null == separator) "$plusChar$first$second" else "$plusChar$first$separator$second"
+}
+
+/**
+ * Returns true if this [String] is a valid international phone number, false otherwise.
+ *
+ * @param separator the character used to separate the international calling code and number
+ */
+@OptIn(ExperimentalContracts::class)
+fun CharSequence?.isCountryPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): Boolean {
+  contract {
+    returns(true) implies (this@isCountryPhone != null)
+  }
+
+  return null != decodeCountryPhone(separator)
 }
 
 /**
@@ -1064,7 +1248,3 @@ private val DOMAIN_NAME_PATTERN: java.util.regex.Pattern = java.util.regex.Patte
   .compile("^[a-z0-9.-]$")
 
 private val ISO_COUNTRIES: Array<String> = java.util.Locale.getISOCountries()
-
-private const val DEFAULT_OBFUSCATION_CHAR: Char = '*'
-private const val DEFAULT_PHONE_SEPARATOR: Char = '.'
-private const val DEFAULT_PHONE_PREFIX: Char = '+'

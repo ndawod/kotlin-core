@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.5.5 (April 29, 2025)
+    Add few more functions to encode/decode phone using its 2-letter country code.
+
 4.5.4 (April 19, 2025)
     Bump up dependencies versions, including Kotlin version (2.1.20).
 
