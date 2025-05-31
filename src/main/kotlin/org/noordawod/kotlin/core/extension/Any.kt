@@ -11,16 +11,23 @@
 
 package org.noordawod.kotlin.core.extension
 
+import kotlin.contracts.ExperimentalContracts
+import kotlin.contracts.contract
 import org.noordawod.kotlin.core.repository.HashValue
 
 /**
  * Ensures that a value is valid by invoking a callback function, throws [error] otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun <T> T?.ensureValidOrThrow(
   isValidFn: (T.() -> Boolean),
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
 ): T {
+  contract {
+    returnsNotNull() implies (this@ensureValidOrThrow != null)
+  }
+
   if (null == this) {
     loggerFn?.invoke("The value cannot be null.")
     throw errorFn()
@@ -37,14 +44,20 @@ fun <T> T?.ensureValidOrThrow(
 /**
  * Ensures that a value is non-null, throws [error] otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun <T> T?.ensureNonNullOrThrow(
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
 ): T {
+  contract {
+    returnsNotNull() implies (this@ensureNonNullOrThrow != null)
+  }
+
   if (null == this) {
     loggerFn?.invoke("The value cannot be null.")
     throw errorFn()
   }
+
   return this
 }
 
@@ -65,11 +78,16 @@ fun <T> T?.ensureNullOrThrow(
  * Ensures that a value is non-null and non-empty if it's a [String],
  * an [Iterable] or an [Array], throws otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 @Suppress("ComplexCondition")
 fun <T> T?.ensureNonEmptyOrThrow(
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
 ): T {
+  contract {
+    returnsNotNull() implies (this@ensureNonEmptyOrThrow != null)
+  }
+
   if (
     null == this ||
     this is HashValue && isEmpty() ||
@@ -80,16 +98,22 @@ fun <T> T?.ensureNonEmptyOrThrow(
     loggerFn?.invoke("Value of variable cannot be null or empty.")
     throw errorFn()
   }
+
   return this
 }
 
 /**
  * Ensures that a value is a valid email, throws [error] otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun String?.ensureEmailOrThrow(
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
 ): String {
+  contract {
+    returnsNotNull() implies (this@ensureEmailOrThrow != null)
+  }
+
   if (null == this) {
     val message = "The email address cannot be null."
     loggerFn?.invoke(message)
@@ -144,10 +168,17 @@ fun <T : Number> T?.ensurePositiveOrNull(loggerFn: ((String) -> Unit)? = null): 
  * Ensures that a numeric value is non-null and positive (1, 2, 3, ...),
  * throws otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun <T : Number> T?.ensurePositiveOrThrow(
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
-): T = ensurePositiveOrNull(loggerFn) ?: throw errorFn()
+): T {
+  contract {
+    returnsNotNull() implies (this@ensurePositiveOrThrow != null)
+  }
+
+  return ensurePositiveOrNull(loggerFn) ?: throw errorFn()
+}
 
 /**
  * Ensures that a numeric value is non-null and falls within a specific range (inclusive),
@@ -184,13 +215,20 @@ fun <T : Number> T?.ensureRangeOrNull(
  * Ensures that a numeric value is non-null and falls within a specific range (inclusive),
  * throws otherwise.
  */
+@OptIn(ExperimentalContracts::class)
 fun <T : Number> T?.ensureRangeOrThrow(
   start: T,
   end: T? = null,
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
-): T = ensureRangeOrNull(
-  start = start,
-  end = end,
-  loggerFn = loggerFn,
-) ?: throw errorFn()
+): T {
+  contract {
+    returnsNotNull() implies (this@ensureRangeOrThrow != null)
+  }
+
+  return ensureRangeOrNull(
+    start = start,
+    end = end,
+    loggerFn = loggerFn,
+  ) ?: throw errorFn()
+}

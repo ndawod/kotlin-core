@@ -709,7 +709,7 @@ fun PairOfIntAndLong.toPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): String 
  * @param separator the character used to separate the international calling code and number
  * @param leadingPlus add a leading `+` to returned phone number
  */
-@Suppress("DuplicatedCode")
+@Suppress("DuplicatedCode", "StringLiteralDuplication")
 @OptIn(ExperimentalContracts::class)
 fun PairOfIntAndLong?.toPhoneOrNull(
   separator: Char? = DEFAULT_PHONE_SEPARATOR,
@@ -825,7 +825,7 @@ fun CharSequence?.decodeCountryPhone(
 fun CharSequence?.decodeCountryPhoneOrThrow(
   separator: Char = DEFAULT_PHONE_SEPARATOR,
 ): PairOfStringAndLong = decodeCountryPhone(separator)
-    ?: error("CountryPhone number format invalid for ($separator) separator: $this")
+  ?: error("CountryPhone number format invalid for ($separator) separator: $this")
 
 /**
  * Returns an international phone number for this [PairOfStringAndLong].
@@ -837,12 +837,11 @@ fun CharSequence?.decodeCountryPhoneOrThrow(
  *
  * @param separator the character used to separate the international calling code and number
  */
-fun PairOfStringAndLong.toCountryPhone(
-  separator: Char = DEFAULT_PHONE_SEPARATOR,
-): String = toCountryPhone(
-  separator = separator,
-  leadingPlus = true,
-)
+fun PairOfStringAndLong.toCountryPhone(separator: Char = DEFAULT_PHONE_SEPARATOR): String =
+  toCountryPhone(
+    separator = separator,
+    leadingPlus = true,
+  )
 
 /**
  * Returns an international phone number for the provided [PairOfStringAndLong] on success,
