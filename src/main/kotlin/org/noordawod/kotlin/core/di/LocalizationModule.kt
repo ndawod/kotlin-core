@@ -27,7 +27,7 @@ package org.noordawod.kotlin.core.di
 
 import dagger.Module
 import dagger.Provides
-import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.DEFAULT_LIST_CAPACITY
 import org.noordawod.kotlin.core.config.LocalizationConfiguration
 import org.noordawod.kotlin.core.config.TranslationConfiguration
 import org.noordawod.kotlin.core.extension.mutableMapWith
@@ -75,12 +75,10 @@ class LocalizationModule(
   init {
     val locationRepositories =
       java.util.concurrent.ConcurrentHashMap<java.util.Locale, LocalizationRepository>(
-        Constants.DEFAULT_LIST_CAPACITY,
+        DEFAULT_LIST_CAPACITY,
       )
 
-    val translations = mutableMapWith<java.util.Locale, Localization>(
-      Constants.DEFAULT_LIST_CAPACITY,
-    )
+    val translations = mutableMapWith<java.util.Locale, Localization>(DEFAULT_LIST_CAPACITY)
 
     fun load(translation: TranslationConfiguration): Localization {
       val locale = java.util.Locale.forLanguageTag(translation.locale)

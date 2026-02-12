@@ -66,7 +66,7 @@ internal class MessageDigestRepositoryImpl(
     value: Any,
   ): HashValue {
     // Convert to a string always.
-    val string = value.toString()
+    val string = "$value"
     val length = string.length
 
     // When there's no input value, return an empty byte array.

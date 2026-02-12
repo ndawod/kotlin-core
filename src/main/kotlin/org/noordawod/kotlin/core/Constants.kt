@@ -28,72 +28,67 @@ package org.noordawod.kotlin.core
 import org.noordawod.kotlin.core.extension.MILLIS_IN_1_SECOND
 
 /**
- * Common constants and values that can be reused in multiple scenarios.
+ * The locale used to deal with Internet-related resources, such as URI's, server logs, etc.
  */
-object Constants {
-  /**
-   * Default timeout when connecting to network services.
-   */
-  const val DEFAULT_CONNECTION_TIMEOUT: Long = 10 * MILLIS_IN_1_SECOND
+val ASCII_LOCALE: java.util.Locale = java.util.Locale.ENGLISH
 
-  /**
-   * Default number of items to initial an array or list with.
-   */
-  const val DEFAULT_LIST_CAPACITY: Int = 25
+/**
+ * The [java.util.Locale] considered as default or fallback.
+ */
+val DEFAULT_LOCALE: java.util.Locale = java.util.Locale.US
 
-  /**
-   * Capacity of a medium-sized byte buffer.
-   */
-  const val MEDIUM_BLOCK_SIZE: Int = 1024
+/**
+ * The default language code (`en`).
+ */
+val DEFAULT_LANGUAGE_CODE: String = DEFAULT_LOCALE.language.lowercase(ASCII_LOCALE)
 
-  /**
-   * Capacity of a large-sized byte buffer.
-   */
-  const val LARGE_BLOCK_SIZE: Int = 4096
+/**
+ * The default country code (`US`).
+ */
+val DEFAULT_COUNTRY_CODE: String = DEFAULT_LOCALE.country.uppercase(ASCII_LOCALE)
 
-  /**
-   * Default width of a line of text.
-   */
-  const val DEFAULT_LINE_WIDTH: Int = 80
+/**
+ * Default timeout when connecting to network services.
+ */
+const val DEFAULT_CONNECTION_TIMEOUT: Long = 10 * MILLIS_IN_1_SECOND
 
-  /**
-   * The [java.util.Locale] considered as default or fallback.
-   */
-  val DEFAULT_LOCALE: java.util.Locale = java.util.Locale.US
+/**
+ * Default number of items to initial an array or list with.
+ */
+const val DEFAULT_LIST_CAPACITY: Int = 25
 
-  /**
-   * The default language code (`en`).
-   */
-  val DEFAULT_LANGUAGE_CODE: String = DEFAULT_LOCALE.language.lowercase(java.util.Locale.ENGLISH)
+/**
+ * Capacity of a medium-sized byte buffer.
+ */
+const val MEDIUM_BLOCK_SIZE: Int = 1024
 
-  /**
-   * The default country code (`US`).
-   */
-  val DEFAULT_COUNTRY_CODE: String = DEFAULT_LOCALE.country.uppercase(java.util.Locale.ENGLISH)
+/**
+ * Capacity of a large-sized byte buffer.
+ */
+const val LARGE_BLOCK_SIZE: Int = 4096
 
-  /**
-   * A list of characters that includes white spaces.
-   */
-  val WHITE_SPACES: CharArray = charArrayOf(' ', '\r', '\n', '\t')
+/**
+ * Default width of a line of text.
+ */
+const val DEFAULT_LINE_WIDTH: Int = 80
 
-  /**
-   * A list of characters that includes white spaces and the slash ("/") character.
-   */
-  val WHITE_SPACES_WITH_SLASH_CHARS: CharArray = WHITE_SPACES + charArrayOf('/')
+/**
+ * A list of characters that includes white spaces.
+ */
+val WHITE_SPACES: CharArray = charArrayOf(' ', '\r', '\n', '\t')
 
-  /**
-   * Matches one or more white-space characters.
-   */
-  val WHITE_SPACES_PATTERN: java.util.regex.Pattern =
-    java.util.regex.Pattern.compile("\\s+")
+/**
+ * A list of characters that includes white spaces and the slash ("/") character.
+ */
+val WHITE_SPACES_WITH_SLASH_CHARS: CharArray = WHITE_SPACES + charArrayOf('/')
 
-  /**
-   * The date/time format used to tag log messages.
-   */
-  const val LOG_DATE_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ssXXX"
+/**
+ * Matches one or more white-space characters.
+ */
+val WHITE_SPACES_PATTERN: java.util.regex.Pattern =
+  java.util.regex.Pattern.compile("\\s+")
 
-  /**
-   * The locale used to output log messages.
-   */
-  val LOG_LOCALE: java.util.Locale = java.util.Locale.ENGLISH
-}
+/**
+ * The date/time format used to tag log messages.
+ */
+const val LOG_DATE_FORMAT: String = "yyyy-MM-dd'T'HH:mm:ssXXX"

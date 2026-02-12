@@ -65,7 +65,7 @@ open class UriConfiguration(
     if (path.isNotBlank()) {
       builder.append(path)
     }
-    return builder.toString()
+    return "$builder"
   }
 
   override fun equals(other: Any?): Boolean = other is UriConfiguration &&

@@ -100,7 +100,7 @@ object FileSystem {
       buffer.append(extension)
     }
 
-    return buffer.toString()
+    return "$buffer"
   }
 
   /**
@@ -215,6 +215,6 @@ object FileSystem {
       throw java.io.IOException(error)
     }
 
-    return buffer.toString().trim { it <= ' ' }
+    return "$buffer".trim { it <= ' ' }
   }
 }

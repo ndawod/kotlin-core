@@ -25,7 +25,7 @@
 
 package org.noordawod.kotlin.core.logger
 
-import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.MEDIUM_BLOCK_SIZE
 import org.noordawod.kotlin.core.extension.trimOr
 import org.noordawod.kotlin.core.extension.trimOrBlank
 
@@ -48,7 +48,7 @@ class MemoryLogger(
    */
   constructor(environment: String) : this(
     environment = environment,
-    buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
+    buffer = StringBuffer(MEDIUM_BLOCK_SIZE),
   )
 
   /**
@@ -62,7 +62,7 @@ class MemoryLogger(
     minimumLogType: LogType = LogType.INFO,
   ) : this(
     environment = environment,
-    buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE),
+    buffer = StringBuffer(MEDIUM_BLOCK_SIZE),
     minimumLogType = minimumLogType,
   )
 
@@ -97,11 +97,10 @@ class MemoryLogger(
    * @param error the error to "stringify"
    */
   @Suppress("MemberVisibilityCanBePrivate")
-  fun stackTraceOf(error: Throwable): String =
-    java.io.StringWriter(Constants.MEDIUM_BLOCK_SIZE).use {
-      error.printStackTrace(java.io.PrintWriter(it))
-      it.toString().trimOrBlank()
-    }
+  fun stackTraceOf(error: Throwable): String = java.io.StringWriter(MEDIUM_BLOCK_SIZE).use {
+    error.printStackTrace(java.io.PrintWriter(it))
+    "$it".trimOrBlank()
+  }
 
-  override fun toString(): String = buffer.toString().trimOrBlank()
+  override fun toString(): String = "$buffer".trimOrBlank()
 }

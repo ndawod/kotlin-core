@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 Noor Dawod. All rights reserved.
+ * Copyright 2026 Noor Dawod. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,13 +26,36 @@
 package org.noordawod.kotlin.core.util
 
 /**
- * A reusable [SecureRandom][java.security.SecureRandom] instance for any use.
+ * Denotes the sorting direction which can be either [ascending][ASCENDING] or
+ * [descending][DESCENDING].
+ *
+ * @param value a human-friendly value of this instance
  */
-val secureRandom: java.util.Random
-  get() = java.security.SecureRandom("${System.currentTimeMillis()}".toByteArray())
+enum class SortingDirection(
+  private val value: String,
+) {
+  /**
+   * The sorting direction is ascending.
+   */
+  ASCENDING("ASC"),
 
-/**
- * Returns a random UUID string on each call.
- */
-val randomUuid: String
-  get() = "${java.util.UUID.randomUUID()}"
+  /**
+   * The sorting direction is descending.
+   */
+  DESCENDING("DESC"),
+  ;
+
+  override fun toString(): String = value
+
+  /**
+   * Returns true if this [SortingDirection] is [ascending][ASCENDING], false otherwise.
+   */
+  val isAscending: Boolean
+    get() = ASCENDING == this
+
+  /**
+   * Returns true if this [SortingDirection] is [descending][DESCENDING], false otherwise.
+   */
+  val isDescending: Boolean
+    get() = DESCENDING == this
+}

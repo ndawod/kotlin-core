@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 Noor Dawod. All rights reserved.
+ * Copyright 2026 Noor Dawod. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,13 +26,34 @@
 package org.noordawod.kotlin.core.util
 
 /**
- * A reusable [SecureRandom][java.security.SecureRandom] instance for any use.
+ * A multithreaded-friendly singleton value holder.
+ *
+ * @param T type of the value
+ * @param provider a callback to provide a non-null singleton value
  */
-val secureRandom: java.util.Random
-  get() = java.security.SecureRandom("${System.currentTimeMillis()}".toByteArray())
+@Suppress("UseDataClass")
+class SingletonValueProvider<T>(
+  private val provider: () -> T,
+) {
+  private var valuePrivate: T? = null
+  private val lock = Any()
 
-/**
- * Returns a random UUID string on each call.
- */
-val randomUuid: String
-  get() = "${java.util.UUID.randomUUID()}"
+  /**
+   * Returns the singleton value, instantiating it once if needed.
+   */
+  val value: T
+    get() {
+      val valueLocked = valuePrivate
+      if (null != valueLocked) {
+        return valueLocked
+      }
+
+      val newValueLocked = provider()
+
+      synchronized(lock) {
+        valuePrivate = newValueLocked
+      }
+
+      return newValueLocked
+    }
+}

@@ -25,7 +25,7 @@
 
 package org.noordawod.kotlin.core.logger
 
-import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.MEDIUM_BLOCK_SIZE
 import org.noordawod.kotlin.core.util.getStackTraceAsString
 
 private val lock = Any()
@@ -60,7 +60,7 @@ constructor(
       return
     }
 
-    val buffer = StringBuffer(Constants.MEDIUM_BLOCK_SIZE)
+    val buffer = StringBuffer(MEDIUM_BLOCK_SIZE)
 
     val logMessage = logMessage(
       type = type,

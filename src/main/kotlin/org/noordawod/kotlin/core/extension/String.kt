@@ -21,13 +21,14 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused", "MagicNumber")
+@file:Suppress("unused", "MagicNumber", "IfThenToSafeAccess")
 
 package org.noordawod.kotlin.core.extension
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
-import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.ASCII_LOCALE
+import org.noordawod.kotlin.core.DEFAULT_LANGUAGE_CODE
 import org.noordawod.kotlin.core.security.ByteUtils
 import org.noordawod.kotlin.core.util.ImageDimension
 
@@ -184,7 +185,7 @@ fun CharSequence.camelCase(delimiters: CharSequence = ""): String {
     }
   }
 
-  return builder.toString()
+  return "$builder"
 }
 
 /**
@@ -261,7 +262,7 @@ fun CharSequence?.toBooleanOr(fallback: Boolean = false): Boolean {
     returns(true) implies (this@toBooleanOr != null)
   }
 
-  val value = this?.toString()?.lowercase(java.util.Locale.ENGLISH)
+  val value = this?.toString()?.lowercase(ASCII_LOCALE)
 
   return if (null == value) fallback else "1" == value || "true" == value
 }
@@ -347,7 +348,7 @@ fun CharSequence?.toCountryCodeOrNull(): String? {
     returnsNotNull() implies (this@toCountryCodeOrNull != null)
   }
 
-  val country = trimOrNull()?.uppercase(java.util.Locale.ENGLISH)
+  val country = trimOrNull()?.uppercase(ASCII_LOCALE)
 
   if (null != country) {
     for (isoCountry in ISO_COUNTRIES) {
@@ -361,18 +362,18 @@ fun CharSequence?.toCountryCodeOrNull(): String? {
 }
 
 /**
- * Returns true if this [String] is the [default language][Constants.DEFAULT_LANGUAGE_CODE],
+ * Returns true if this [String] is the [default language][DEFAULT_LANGUAGE_CODE],
  * false otherwise.
  */
 fun CharSequence.isDefaultLanguage(): Boolean =
-  Constants.DEFAULT_LANGUAGE_CODE == toString().lowercase(java.util.Locale.ENGLISH)
+  DEFAULT_LANGUAGE_CODE == toString().lowercase(ASCII_LOCALE)
 
 /**
  * Given that this is a 2-character language code, returns the new language variation for an
  * old language code.
  */
 fun CharSequence.getNewLanguage(): String {
-  val language = toString().lowercase(java.util.Locale.ENGLISH)
+  val language = toString().lowercase(ASCII_LOCALE)
 
   for (locale in NewLocaleLanguage.entries) {
     if (language == locale.oldCode) {
@@ -387,7 +388,7 @@ fun CharSequence.getNewLanguage(): String {
  * Normalizes and returns this [String] as a language code.
  */
 @Suppress("StringLiteralDuplication")
-fun CharSequence.toLanguageCode(): String = "$this".lowercase(java.util.Locale.ENGLISH)
+fun CharSequence.toLanguageCode(): String = "$this".lowercase(ASCII_LOCALE)
 
 /**
  * Returns a string consisting of all items of this collection without a separator.
@@ -617,6 +618,15 @@ fun CharSequence?.isUrl(): Boolean {
 }
 
 /**
+ * Returns the hostname of this URI on success, null otherwise.
+ */
+fun CharSequence?.hostName(): String? {
+  val hostName = (parseUrl() ?: "https://$this".parseUrl())?.host.trimOrNull()
+
+  return if (null == hostName) null else hostName.lowercase()
+}
+
+/**
  * Returns parsed parts (international calling code and phone number) if this [String]
  * is a valid phone number, null otherwise.
  *
@@ -803,7 +813,7 @@ fun CharSequence?.decodeCountryPhone(
   }
 
   // The first part is the country code.
-  val callingCode = phone.substring(0, separatorPos).uppercase(java.util.Locale.ENGLISH)
+  val callingCode = phone.substring(0, separatorPos).uppercase(ASCII_LOCALE)
 
   // The second part is the phone number.
   val phoneNumber = phone.substring(1 + separatorPos).toLongOrNull()
@@ -991,9 +1001,8 @@ fun CharSequence?.normalizedHandle(
         }
       }
     }
-    .toString()
 
-  return handleNormalized.ifEmpty { null }
+  return if (handleNormalized.isEmpty()) null else "$handleNormalized"
 }
 
 /**
@@ -1100,6 +1109,20 @@ fun CharSequence?.isDomainName(): Boolean {
 
   return null != this && DOMAIN_NAME_PATTERN.matcher(this).matches()
 }
+
+/**
+ * Returns the normalized currency code from this [CharSequence] success, null otherwise.
+ */
+fun CharSequence.normalizeCurrencyCodeOrNull(): CharSequence? = trimOrNull()
+  ?.uppercase(ASCII_LOCALE)
+  ?.withLengthOrNull(3)
+
+/**
+ * Returns the normalized language code from this [CharSequence] success, null otherwise.
+ */
+fun CharSequence.normalizeLanguageCodeOrNull(): CharSequence? = trimOrNull()
+  ?.lowercase(ASCII_LOCALE)
+  ?.withLengthOrNull(2)
 
 /**
  * Returns the numerical (integer) value of this hexadecimal color on success, null otherwise.

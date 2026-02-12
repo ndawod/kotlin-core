@@ -25,68 +25,62 @@
 
 package org.noordawod.kotlin.core.util
 
+import org.noordawod.kotlin.core.ASCII_LOCALE
+
 /**
  * Let the app know in which environment they're executing in.
  *
  * @param identifier a machine-friendly identifier with all characters lower-cased
- * @param label a human-friendly identifier
- * @param isLocal whether this is the [LOCAL] environment
- * @param isDevel whether this is the [DEVEL] environment
- * @param isBeta whether this is the [BETA] environment
- * @param isProduction whether this is the [PRODUCTION] environment
+ * @param description a human-friendly description of the environment
  *
  */
 @Suppress("LongParameterList")
 enum class Environment(
   val identifier: String,
-  val label: String,
-  val isLocal: Boolean,
-  val isDevel: Boolean,
-  val isBeta: Boolean,
-  val isProduction: Boolean,
+  val description: String,
 ) {
   /**
-   * Local-only environment.
+   * Local-only development environment.
    *
-   * In this environment, applications are connecting to the localhost only as developers are
-   * busy writing new features and fixing bugs.
+   * In this environment, applications are connecting to the localhost only for both
+   * frontend and backend.
    */
   LOCAL(
     identifier = "local",
-    label = "Local-only",
-    isLocal = true,
-    isDevel = false,
-    isBeta = false,
-    isProduction = false,
+    description = "Local-only development environment",
   ),
 
   /**
-   * Development environment.
+   * Local frontend development with remote backend.
    *
-   * Much like the [LOCAL] environment, but the applications can be deployed remotely as well.
+   * In this environment, applications are connecting to localhost for frontend, and
+   * a remote host for backend.
+   */
+  REMOTE(
+    identifier = "local",
+    description = "Local frontend development with remote backend",
+  ),
+
+  /**
+   * Development (Testing) environment.
+   *
+   * In this environment, applications are deployed on a remote server where
+   * developers are able to test it out before the next deployment to [BETA].
    */
   DEVEL(
     identifier = "devel",
-    label = "Development",
-    isLocal = false,
-    isDevel = true,
-    isBeta = false,
-    isProduction = false,
+    description = "Remote-only testing environment for developers",
   ),
 
   /**
-   * Beta (Staging) environment.
+   * Beta (a.k.a. Staging) environment.
    *
-   * In this environment, applications are deployed on a staging, usually remote, server where
-   * beta users are able to test it out before the final deployment to [PRODUCTION].
+   * In this environment, applications are deployed on a remote server where
+   * developers are able to test it out before the final deployment to [PRODUCTION].
    */
   BETA(
     identifier = "beta",
-    label = "Beta",
-    isLocal = false,
-    isDevel = false,
-    isBeta = true,
-    isProduction = false,
+    description = "Remote-only testing environment for users",
   ),
 
   /**
@@ -97,13 +91,34 @@ enum class Environment(
    */
   PRODUCTION(
     identifier = "production",
-    label = "Production",
-    isLocal = false,
-    isDevel = false,
-    isBeta = false,
-    isProduction = true,
+    description = "Final deployment environment for rock-solid applications",
   ),
   ;
+
+  /**
+   * Resolves to `true` when this is the [LOCAL] environment, `false` otherwise.
+   */
+  val isLocal: Boolean get() = this == LOCAL
+
+  /**
+   * Resolves to `true` when this is the [REMOTE] environment, `false` otherwise.
+   */
+  val isRemote: Boolean get() = this == REMOTE
+
+  /**
+   * Resolves to `true` when this is the [DEVEL] environment, `false` otherwise.
+   */
+  val isDevel: Boolean get() = this == DEVEL
+
+  /**
+   * Resolves to `true` when this is the [BETA] environment, `false` otherwise.
+   */
+  val isBeta: Boolean get() = this == BETA
+
+  /**
+   * Resolves to `true` when this is the [PRODUCTION] environment, `false` otherwise.
+   */
+  val isProduction: Boolean get() = this == PRODUCTION
 
   /**
    * Returns this [Environment]'s identifier.
@@ -121,7 +136,7 @@ enum class Environment(
      * @param identifier the environment's value to evaluate
      */
     fun from(identifier: String): Environment? {
-      val identifierNormalized = identifier.lowercase(java.util.Locale.ENGLISH)
+      val identifierNormalized = identifier.lowercase(ASCII_LOCALE)
       for (environment in entries) {
         if (environment.identifier == identifierNormalized) {
           return environment

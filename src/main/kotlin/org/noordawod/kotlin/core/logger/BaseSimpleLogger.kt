@@ -23,7 +23,8 @@
 
 package org.noordawod.kotlin.core.logger
 
-import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.ASCII_LOCALE
+import org.noordawod.kotlin.core.LOG_DATE_FORMAT
 
 /**
  * A [Logger] that simply prints log messages to the console.
@@ -33,7 +34,7 @@ import org.noordawod.kotlin.core.Constants
 abstract class BaseSimpleLogger protected constructor(
   environment: String,
 ) : BaseProxyLogger() {
-  private val environmentTag: String = environment.uppercase(java.util.Locale.ENGLISH)
+  private val environmentTag: String = environment.uppercase(ASCII_LOCALE)
 
   /**
    * Implementation to log an error [message] to standard output and return it.
@@ -47,12 +48,12 @@ abstract class BaseSimpleLogger protected constructor(
     message: String,
   ): String {
     val dateFormatter = java.text.SimpleDateFormat(
-      Constants.LOG_DATE_FORMAT,
-      Constants.LOG_LOCALE,
+      LOG_DATE_FORMAT,
+      ASCII_LOCALE,
     )
     val dateTag = "[${dateFormatter.format(java.util.Date())}]"
     val envTag = "[$environmentTag/$tag]"
-    val typeTag = "${type.toString().uppercase(Constants.LOG_LOCALE)}:"
+    val typeTag = "${"$type".uppercase(ASCII_LOCALE)}:"
 
     return arrayOf(dateTag, envTag, typeTag, message).joinToString(separator = " ")
   }

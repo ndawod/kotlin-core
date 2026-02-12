@@ -21,16 +21,22 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "IfThenToSafeAccess")
 @file:OptIn(ExperimentalContracts::class)
 
 package org.noordawod.kotlin.core.extension
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 private val JAVA_UTIL_DURATION_REGEX: Regex = """([0-9]+)(\.[0-9]+)?([HMS])""".toRegex()
+
+/**
+ * The UTC [TimeZone][java.util.TimeZone].
+ */
+val TIME_ZONE_UTC: java.util.TimeZone = java.util.TimeZone.getTimeZone("UTC")
 
 /**
  * How many hours in one day.
@@ -306,6 +312,18 @@ fun java.util.Date.plusDays(days: Int): java.util.Date = plusDays(
 )
 
 /**
+ * Adds the amount of [months] to this [java.util.Date] instance, and returns it.
+ *
+ * @param months number of months to add to this date
+ */
+fun java.util.Date.plusMonths(months: Number): java.util.Date {
+  val calendar = toUtcGregorianCalendar()
+  calendar.add(java.util.Calendar.MONTH, months.toInt())
+
+  return calendar.time
+}
+
+/**
  * Subtracts the amount of [millis] from this [java.util.Date] instance, and returns it.
  */
 fun java.util.Date.minusMillis(millis: Long): java.util.Date = java.util.Date(
@@ -376,6 +394,43 @@ fun java.util.Date.minusDays(days: Int): java.util.Date = minusDays(
 )
 
 /**
+ * Subtracts the amount of [months] to this [java.util.Date] instance, and returns it.
+ *
+ * @param months number of months to subtract to this date
+ */
+fun java.util.Date.minusMonths(months: Number): java.util.Date = plusMonths(-abs(months.toLong()))
+
+/**
+ * Returns a new [java.util.Date] instance set to the first day of this
+ * [java.util.Date]'s month.
+ */
+fun java.util.Date.startOfTheMonth(): java.util.Date {
+  val calendar = toUtcGregorianCalendar()
+  calendar.set(java.util.Calendar.DAY_OF_MONTH, 1)
+
+  return calendar.time
+}
+
+/**
+ * Returns a new [java.util.Date] instance set to the last day of this
+ * [java.util.Date]'s month.
+ */
+fun java.util.Date.endOfTheMonth(): java.util.Date {
+  val calendar = toUtcGregorianCalendar()
+  val currentDayOfTheMonth = calendar.get(java.util.Calendar.DAY_OF_MONTH)
+  val lastDayOfTheMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH)
+
+  if (currentDayOfTheMonth < lastDayOfTheMonth) {
+    calendar.add(
+      java.util.Calendar.DAY_OF_MONTH,
+      lastDayOfTheMonth - currentDayOfTheMonth,
+    )
+  }
+
+  return calendar.time
+}
+
+/**
  * Returns a human-readable representation of this [Duration][java.time.Duration].
  */
 fun java.time.Duration.humanReadable(): String = "$this"
@@ -392,24 +447,20 @@ fun kotlin.time.Duration.humanReadable(): String =
 /**
  * Returns a [GregorianCalendar][java.util.GregorianCalendar] for this [Date][java.util.Date].
  */
-fun java.util.Date.gregorianCalendar(): java.util.Calendar {
+fun java.util.Date.toGregorianCalendar(): java.util.Calendar {
   val calendar: java.util.Calendar = java.util.GregorianCalendar()
-
-  calendar.setTime(java.util.Date())
+  calendar.setTime(this)
 
   return calendar
 }
 
 /**
- * Returns a [GregorianCalendar][java.util.GregorianCalendar] for this [Date][java.util.Date].
- *
- * @param time the time to convert to a Gregorian calendar, defaults to current time
+ * Returns a [GregorianCalendar][java.util.GregorianCalendar] for this [Date][java.util.Date]
+ * configured with [UTC time zone][TIME_ZONE_UTC].
  */
-fun java.util.Date.toGregorianCalendar(
-  time: java.util.Date = java.util.Date(),
-): java.util.Calendar {
-  val calendar: java.util.Calendar = java.util.GregorianCalendar()
-  calendar.setTime(time)
+fun java.util.Date.toUtcGregorianCalendar(): java.util.Calendar {
+  val calendar: java.util.Calendar = java.util.GregorianCalendar(TIME_ZONE_UTC)
+  calendar.setTime(this)
 
   return calendar
 }

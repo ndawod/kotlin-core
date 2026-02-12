@@ -30,6 +30,11 @@ import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
+import org.noordawod.kotlin.core.ASCII_LOCALE
+import org.noordawod.kotlin.core.util.GeoPoint.Companion.LATITUDE_MAX
+import org.noordawod.kotlin.core.util.GeoPoint.Companion.LATITUDE_MIN
+import org.noordawod.kotlin.core.util.GeoPoint.Companion.LONGITUDE_MAX
+import org.noordawod.kotlin.core.util.GeoPoint.Companion.LONGITUDE_MIN
 
 /**
  * Represents a geographical location on earth using a[latitude] and [longitude].
@@ -113,8 +118,8 @@ class GeoPoint(
     highAccuracy: Boolean = false,
   ): String {
     val format = if (highAccuracy) "%.17f" else "%.7f"
-    val latitudeValue = String.format(java.util.Locale.ENGLISH, format, latitude)
-    val longitudeValue = String.format(java.util.Locale.ENGLISH, format, longitude)
+    val latitudeValue = String.format(ASCII_LOCALE, format, latitude)
+    val longitudeValue = String.format(ASCII_LOCALE, format, longitude)
 
     return "$latitudeValue$separator$longitudeValue"
   }
@@ -220,7 +225,7 @@ class GeoPoint(
       value: Double,
       highAccuracy: Boolean = false,
     ): String = String.format(
-      java.util.Locale.ENGLISH,
+      ASCII_LOCALE,
       if (highAccuracy) "%.17f" else "%.7f",
       value,
     )
@@ -229,6 +234,8 @@ class GeoPoint(
 
 /**
  * Type of unit when referring to a [GeoPoint].
+ *
+ * @param value a human-friendly value of this instance
  */
 enum class GeoUnit(
   private val value: String,
@@ -311,7 +318,7 @@ enum class GeoUnit(
     fun decode(value: String?): GeoUnit? = if (null == value) {
       null
     } else {
-      val lowerCaseValue = value.lowercase(java.util.Locale.ENGLISH)
+      val lowerCaseValue = value.lowercase(ASCII_LOCALE)
 
       entries.firstOrNull { it.value == lowerCaseValue }
     }

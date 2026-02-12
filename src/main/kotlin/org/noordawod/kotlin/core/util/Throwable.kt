@@ -25,7 +25,7 @@
 
 package org.noordawod.kotlin.core.util
 
-import org.noordawod.kotlin.core.Constants
+import org.noordawod.kotlin.core.DEFAULT_LINE_WIDTH
 
 /**
  * A signature of a simple function that returns nothing.
@@ -41,11 +41,11 @@ typealias ThrowableHandler = (Throwable) -> Unit
  * A default instance implementing a [ThrowableHandler].
  */
 val defaultThrowableHandler: ThrowableHandler = { error ->
-  System.err.println("*".repeat(Constants.DEFAULT_LINE_WIDTH))
+  System.err.println("*".repeat(DEFAULT_LINE_WIDTH))
   System.err.println("FATAL: UNEXPECTED ERROR DETECTED! A STACK TRACE FOLLOWS:")
-  System.err.println("-".repeat(Constants.DEFAULT_LINE_WIDTH))
+  System.err.println("-".repeat(DEFAULT_LINE_WIDTH))
   error.printStackTrace()
-  System.err.println("*".repeat(Constants.DEFAULT_LINE_WIDTH))
+  System.err.println("*".repeat(DEFAULT_LINE_WIDTH))
 }
 
 /**
@@ -124,5 +124,5 @@ fun invalidFileThrowable(
  */
 fun Throwable.getStackTraceAsString(): String = java.io.StringWriter().use { writer ->
   printStackTrace(java.io.PrintWriter(writer))
-  writer.toString().trim()
+  "$writer".trim()
 }

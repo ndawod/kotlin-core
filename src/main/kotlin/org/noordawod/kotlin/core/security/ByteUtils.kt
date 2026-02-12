@@ -25,9 +25,8 @@
 
 package org.noordawod.kotlin.core.security
 
-import java.util.concurrent.ThreadLocalRandom
-import java.util.regex.Pattern
-import javax.xml.bind.DatatypeConverter
+import org.noordawod.kotlin.core.ASCII_LOCALE
+import org.noordawod.kotlin.core.util.secureRandom
 
 /**
  * Internal singleton instance to handle [Base62] encoding and decoding.
@@ -38,13 +37,6 @@ private val BASE62: Base62 = Base62()
  * Helper methods for dealing with bytes and [ByteArray].
  */
 object ByteUtils {
-  /**
-   * A secure random number generator.
-   */
-  internal val RANDOM: java.util.Random = java.security.SecureRandom(
-    System.currentTimeMillis().toString().toByteArray(),
-  )
-
   /**
    * How many bytes in one [Long].
    */
@@ -66,16 +58,16 @@ object ByteUtils {
   val HEX_BYTES: ByteArray = HEX_STRING.toByteArray()
 
   /**
-   * A case-insensitive [Pattern] that can match against hexadecimal input.
+   * A case-insensitive [java.util.regex.Pattern] that can match against hexadecimal input.
    */
-  val HEX_PATTERN: Pattern = Pattern.compile("^[A-Fa-f0-9]+$")
+  val HEX_PATTERN: java.util.regex.Pattern = java.util.regex.Pattern.compile("^[A-Fa-f0-9]+$")
 
   /**
    * Generates random bytes and returns them as a [ByteArray].
    */
   fun randomBytes(length: Int): ByteArray {
     val result = ByteArray(length)
-    RANDOM.nextBytes(result)
+    secureRandom.nextBytes(result)
 
     return result
   }
@@ -85,7 +77,7 @@ object ByteUtils {
    */
   fun randomBytes(bytes: ByteArray) {
     if (bytes.isNotEmpty()) {
-      RANDOM.nextBytes(bytes)
+      secureRandom.nextBytes(bytes)
     }
   }
 
@@ -97,7 +89,7 @@ object ByteUtils {
     length: Int,
   ): ByteArray {
     val bytes = ByteArray(length)
-    val random: ThreadLocalRandom = ThreadLocalRandom.current()
+    val random = java.util.concurrent.ThreadLocalRandom.current()
     var idx = 0
     while (length > idx) {
       bytes[idx] = dictionary[random.nextInt(0, dictionary.size)]
@@ -151,7 +143,9 @@ object ByteUtils {
     bytes: ByteArray,
     escape: Boolean = false,
   ): String {
-    val hex = DatatypeConverter.printHexBinary(bytes).lowercase(java.util.Locale.ENGLISH)
+    val hex = javax.xml.bind.DatatypeConverter
+      .printHexBinary(bytes)
+      .lowercase(ASCII_LOCALE)
 
     return if (escape) "x'$hex'" else hex
   }
@@ -197,7 +191,7 @@ object ByteUtils {
   /**
    * Decodes an encoded, hexadecimal string into its binary data.
    */
-  fun fromHex(str: String): ByteArray = DatatypeConverter.parseHexBinary(str)
+  fun fromHex(str: String): ByteArray = javax.xml.bind.DatatypeConverter.parseHexBinary(str)
 
   /**
    * Encodes the given binary data to a Base62 string.

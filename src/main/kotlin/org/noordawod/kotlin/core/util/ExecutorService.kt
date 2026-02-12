@@ -25,21 +25,15 @@
 
 package org.noordawod.kotlin.core.util
 
-import java.time.Duration
-import java.util.concurrent.Executors
-import java.util.concurrent.SynchronousQueue
-import java.util.concurrent.ThreadPoolExecutor
-import java.util.concurrent.TimeUnit
-
 private const val DEFAULT_KEEP_ALIVE = 30L
 
 /**
  * Alternative, simpler service to execute code on separate threads.
  */
 class ExecutorService private constructor(
-  keepAlive: Duration,
+  keepAlive: java.time.Duration,
 ) {
-  private val immediately: java.util.concurrent.ExecutorService = ThreadPoolExecutor(
+  private val immediately = java.util.concurrent.ThreadPoolExecutor(
     // corePoolSize
     0,
     // maximumPoolSize
@@ -47,11 +41,11 @@ class ExecutorService private constructor(
     // keepAliveTime
     keepAlive.seconds,
     // keepAliveUnit
-    TimeUnit.SECONDS,
+    java.util.concurrent.TimeUnit.SECONDS,
     // workQueue
-    SynchronousQueue(),
+    java.util.concurrent.SynchronousQueue(),
   )
-  private val delayed = Executors.newSingleThreadScheduledExecutor()
+  private val delayed = java.util.concurrent.Executors.newSingleThreadScheduledExecutor()
 
   /**
    * Whether this instance is destroyed or not.
@@ -72,7 +66,7 @@ class ExecutorService private constructor(
    */
   fun execute(
     task: () -> Unit,
-    delay: Duration,
+    delay: java.time.Duration,
   ) {
     ensureNotDestroyed()
     execute(Runnable(task), delay)
@@ -91,10 +85,14 @@ class ExecutorService private constructor(
    */
   fun execute(
     task: Runnable,
-    delay: Duration,
+    delay: java.time.Duration,
   ) {
     ensureNotDestroyed()
-    delayed.schedule(task, delay.toMillis(), TimeUnit.MILLISECONDS)
+    delayed.schedule(
+      task,
+      delay.toMillis(),
+      java.util.concurrent.TimeUnit.MILLISECONDS,
+    )
   }
 
   /**
@@ -107,7 +105,7 @@ class ExecutorService private constructor(
 
   private fun ensureNotDestroyed() {
     check(!isDestroyed) {
-      throw IllegalStateException("This executor service instance is destroyed.")
+      error("This executor service instance is destroyed.")
     }
   }
 
@@ -118,11 +116,12 @@ class ExecutorService private constructor(
     /**
      * Returns a new [ExecutorService] instance with a default keep-alive time of 30 seconds.
      */
-    fun newInstance(): ExecutorService = ExecutorService(Duration.ofSeconds(DEFAULT_KEEP_ALIVE))
+    fun newInstance(): ExecutorService =
+      ExecutorService(java.time.Duration.ofSeconds(DEFAULT_KEEP_ALIVE))
 
     /**
      * Returns a new [ExecutorService] instance with the specified [keepAlive] duration.
      */
-    fun newInstance(keepAlive: Duration): ExecutorService = ExecutorService(keepAlive)
+    fun newInstance(keepAlive: java.time.Duration): ExecutorService = ExecutorService(keepAlive)
   }
 }

@@ -25,8 +25,6 @@
 
 package org.noordawod.kotlin.core.security
 
-import java.nio.charset.Charset
-
 /**
  * A class that provides an implementation for Base62 encoding.
  */
@@ -66,7 +64,7 @@ class Base62 {
    */
   fun encodeMessage(
     message: String,
-    charset: Charset,
+    charset: java.nio.charset.Charset,
   ): String = encodeInternal(
     string = message,
     source = charset,
@@ -110,7 +108,7 @@ class Base62 {
    */
   fun decodeMessage(
     message: String,
-    charset: Charset,
+    charset: java.nio.charset.Charset,
   ): String = decodeInternal(
     string = message,
     source = Charsets.ISO_8859_1,
@@ -130,8 +128,8 @@ class Base62 {
   @Suppress("SameParameterValue")
   private fun encodeInternal(
     string: String,
-    source: Charset,
-    target: Charset,
+    source: java.nio.charset.Charset,
+    target: java.nio.charset.Charset,
   ): String = String(
     bytes = instance.encode(string.toByteArray(source)),
     charset = target,
@@ -140,8 +138,8 @@ class Base62 {
   @Suppress("SameParameterValue")
   private fun decodeInternal(
     string: String,
-    source: Charset,
-    target: Charset,
+    source: java.nio.charset.Charset,
+    target: java.nio.charset.Charset,
   ): String = String(
     bytes = decode(string.toByteArray(source)),
     charset = target,

@@ -27,6 +27,7 @@ package org.noordawod.kotlin.core.extension
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import org.noordawod.kotlin.core.ASCII_LOCALE
 
 /**
  * Returns the String representation of this [Locale][java.util.Locale].
@@ -60,7 +61,7 @@ fun java.util.Locale.getNewLanguage(): String = language.getNewLanguage()
  */
 fun java.util.Locale.toNewString(): String {
   val localeString = toString()
-  val lowerCaseLocaleString = localeString.lowercase(java.util.Locale.ENGLISH)
+  val lowerCaseLocaleString = localeString.lowercase(ASCII_LOCALE)
   for (locale in NewLocaleLanguage.entries) {
     if (lowerCaseLocaleString == locale.oldCode) {
       return locale.newCode
@@ -135,7 +136,7 @@ fun String?.toCountryCode(): String? {
     returnsNotNull() implies (this@toCountryCode != null)
   }
 
-  val language = trimOrNull()?.lowercase(java.util.Locale.ENGLISH) ?: return null
+  val language = trimOrNull()?.lowercase(ASCII_LOCALE) ?: return null
 
   return LANGUAGES_IN_IMPERIAL_COUNTRIES[language]
 }
@@ -179,7 +180,7 @@ internal enum class NewLocaleLanguage(
      */
     fun decode(code: Any?): NewLocaleLanguage? {
       if (null != code) {
-        val normalizedCode = "$code".lowercase(java.util.Locale.ENGLISH)
+        val normalizedCode = "$code".lowercase(ASCII_LOCALE)
         for (locale in entries) {
           if (locale.oldCode == normalizedCode || locale.newCode == normalizedCode) {
             return locale

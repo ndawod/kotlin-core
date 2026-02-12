@@ -127,5 +127,5 @@ internal class ExecutorRepositoryImpl : ExecutorRepository {
 
   @Suppress("UseCheckOrError")
   private fun ensureStarted(): java.util.concurrent.ScheduledExecutorService = executor
-    ?: throw IllegalStateException("The ExecutorRepository is stopped.")
+    ?: error("The ExecutorRepository is stopped.")
 }

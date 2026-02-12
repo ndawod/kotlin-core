@@ -24,6 +24,7 @@
 package org.noordawod.kotlin.core.repository.impl
 
 import com.ibm.icu.text.PluralRules
+import org.noordawod.kotlin.core.ASCII_LOCALE
 import org.noordawod.kotlin.core.extension.trimOrNull
 import org.noordawod.kotlin.core.repository.LocalizationRepository
 import org.noordawod.kotlin.core.util.Localization
@@ -48,7 +49,11 @@ internal class LocalizationRepositoryImpl(
       java.lang.String.format(
         l10n.locale,
         text,
-        *args.map { it.toString() }.toTypedArray(),
+        *args
+          .map {
+            "$it"
+          }
+          .toTypedArray(),
       )
     }
   }
@@ -58,7 +63,8 @@ internal class LocalizationRepositoryImpl(
     count: Int,
   ): String {
     val pluralRules = PluralRules.forLocale(l10n.locale)
-    val rule = pluralRules.select(count.toDouble()).lowercase(java.util.Locale.ENGLISH)
+    val rule = pluralRules.select(count.toDouble()).lowercase(ASCII_LOCALE)
+
     return translate(keyRuleValue(key, rule))
   }
 
@@ -68,7 +74,8 @@ internal class LocalizationRepositoryImpl(
     args: Iterable<Any>,
   ): String {
     val pluralRules = PluralRules.forLocale(l10n.locale)
-    val rule = pluralRules.select(count.toDouble()).lowercase(java.util.Locale.ENGLISH)
+    val rule = pluralRules.select(count.toDouble()).lowercase(ASCII_LOCALE)
+
     return translate(keyRuleValue(key, rule), args)
   }
 
@@ -86,6 +93,7 @@ internal class LocalizationRepositoryImpl(
     args: Iterable<Any>,
   ): String {
     val rule = quantifyRule(quantity)
+
     return translate(keyRuleValue(key, rule), args)
   }
 

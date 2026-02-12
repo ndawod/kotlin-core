@@ -28,13 +28,36 @@ package org.noordawod.kotlin.core.extension
 import org.noordawod.kotlin.core.util.Environment
 
 /**
+ * Resolves to true if this [Environment] instance is [Environment.LOCAL] or
+ * [Environment.REMOTE], false otherwise.
+ */
+val Environment.isLocalOrRemote: Boolean
+  get() = isLocal || isRemote
+
+/**
+ * Resolves to true if this [Environment] instance is [Environment.LOCAL] or
+ * [Environment.DEVEL], false otherwise.
+ */
+val Environment.isLocalOrDevel: Boolean
+  get() = isLocal || isDevel
+
+/**
+ * Resolves to true if this [Environment] instance is [Environment.LOCAL],
+ * [Environment.DEVEL] or [Environment.DEVEL], false otherwise.
+ */
+val Environment.isLocalOrRemoteOrDevel: Boolean
+  get() = isLocal || isRemote || isDevel
+
+/**
  * Returns the appropriate log level for this [Environment] instance.
  */
-fun Environment.logLevel(): String = when {
-  isLocal -> "DEBUG"
-  isDevel -> "DEBUG"
-  isBeta -> "WARNING"
-  else -> "ERROR"
+@Suppress("StringLiteralDuplication")
+fun Environment.logLevel(): String = when (this) {
+  Environment.LOCAL -> "DEBUG"
+  Environment.REMOTE -> "DEBUG"
+  Environment.DEVEL -> "DEBUG"
+  Environment.BETA -> "WARNING"
+  Environment.PRODUCTION -> "ERROR"
 }
 
 /**
@@ -42,7 +65,7 @@ fun Environment.logLevel(): String = when {
  */
 @Suppress("MagicNumber")
 fun Environment?.timeoutInSeconds(): Int = when (this) {
-  Environment.LOCAL -> 5
+  Environment.LOCAL, Environment.REMOTE -> 5
   Environment.DEVEL, null -> 10
   Environment.BETA -> 20
   Environment.PRODUCTION -> 30

@@ -27,6 +27,7 @@ package org.noordawod.kotlin.core.extension
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import org.noordawod.kotlin.core.ASCII_LOCALE
 
 /**
  * Converts an [Int] value to its [String] representation.
@@ -67,7 +68,7 @@ fun Int?.toColorOrNull(
     buffer.append(Integer.toHexString(greenValue))
     buffer.append(Integer.toHexString(blueValue))
 
-    buffer.toString().uppercase(java.util.Locale.ENGLISH)
+    "$buffer".uppercase(ASCII_LOCALE)
   }
 }
 

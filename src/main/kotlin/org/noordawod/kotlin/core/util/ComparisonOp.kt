@@ -1,7 +1,7 @@
 /*
  * The MIT License
  *
- * Copyright 2022 Noor Dawod. All rights reserved.
+ * Copyright 2026 Noor Dawod. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -26,13 +26,43 @@
 package org.noordawod.kotlin.core.util
 
 /**
- * A reusable [SecureRandom][java.security.SecureRandom] instance for any use.
+ * Describes the possible comparison operators for an arbitrary value.
+ *
+ * @param value a human-friendly value of this instance
  */
-val secureRandom: java.util.Random
-  get() = java.security.SecureRandom("${System.currentTimeMillis()}".toByteArray())
+enum class ComparisonOp(
+  private val value: String,
+) {
+  /**
+   * Comparison for an equal value.
+   */
+  EQUAL("="),
 
-/**
- * Returns a random UUID string on each call.
- */
-val randomUuid: String
-  get() = "${java.util.UUID.randomUUID()}"
+  /**
+   * Comparison for a non-equal value.
+   */
+  NOT_EQUAL("!="),
+
+  /**
+   * Comparison for a lesser value.
+   */
+  LESS_THAN("<"),
+
+  /**
+   * Comparison for a lesser or equal value.
+   */
+  LESS_THAN_OR_EQUAL("<="),
+
+  /**
+   * Comparison for a greater value.
+   */
+  GREATER_THAN(">"),
+
+  /**
+   * Comparison for a greater or equal value.
+   */
+  GREATER_THAN_OR_EQUAL(">="),
+  ;
+
+  override fun toString(): String = value
+}

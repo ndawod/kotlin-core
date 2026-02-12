@@ -33,6 +33,7 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
+import org.noordawod.kotlin.core.ASCII_LOCALE
 
 /**
  * Lists the three most used algorithms when creating a JWT, just for making things a
@@ -118,9 +119,9 @@ class EncryptionAlgorithmSerializer : KSerializer<EncryptionAlgorithm> {
     encoder: Encoder,
     value: EncryptionAlgorithm,
   ) {
-    encoder.encodeString(value.name.uppercase(java.util.Locale.ENGLISH))
+    encoder.encodeString(value.name.uppercase(ASCII_LOCALE))
   }
 
   override fun deserialize(decoder: Decoder): EncryptionAlgorithm = EncryptionAlgorithm
-    .valueOf(decoder.decodeString().uppercase(java.util.Locale.ENGLISH))
+    .valueOf(decoder.decodeString().uppercase(ASCII_LOCALE))
 }

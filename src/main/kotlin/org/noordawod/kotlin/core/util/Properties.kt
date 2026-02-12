@@ -25,10 +25,7 @@
 
 package org.noordawod.kotlin.core.util
 
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.io.InputStreamReader
+import org.noordawod.kotlin.core.extension.mutableListWith
 
 /**
  * Handles loading k:v properties into a [Properties] class using *.properties files.
@@ -46,7 +43,7 @@ open class Properties protected constructor(
   val keys: Set<String>
     get() {
       val keys = props.keys
-      val result = org.noordawod.kotlin.core.extension.mutableListWith<String>(keys.size)
+      val result = mutableListWith<String>(keys.size)
 
       for (key in keys) {
         result.add("$key".trim())
@@ -75,25 +72,27 @@ open class Properties protected constructor(
    */
   open fun merge(
     paths: Iterable<String>? = null,
-    files: Iterable<File>? = null,
+    files: Iterable<java.io.File>? = null,
   ) {
     checkNotDestroyed()
 
-    fun mergeFrom(fis: FileInputStream) {
-      InputStreamReader(fis, Charsets.UTF_8).use {
+    fun mergeFrom(fis: java.io.FileInputStream) {
+      java.io.InputStreamReader(fis, Charsets.UTF_8).use {
         val fileProps = java.util.Properties()
         fileProps.load(it)
-        fileProps.forEach { k, v -> props[k.toString()] = v }
+        fileProps.forEach { (key, value) ->
+          props["$key"] = value
+        }
         fileProps.clear()
       }
     }
 
     paths?.forEach {
-      mergeFrom(FileInputStream(it))
+      mergeFrom(java.io.FileInputStream(it))
     }
 
     files?.forEach {
-      mergeFrom(FileInputStream(it))
+      mergeFrom(java.io.FileInputStream(it))
     }
   }
 
@@ -135,7 +134,7 @@ open class Properties protected constructor(
     /**
      * Loads [Properties] from the specified [file].
      */
-    @Throws(IOException::class)
+    @Throws(java.io.IOException::class)
     fun from(file: String): Properties {
       val props = Properties(java.util.Properties())
       props.merge(paths = listOf(file))
@@ -145,8 +144,8 @@ open class Properties protected constructor(
     /**
      * Loads [Properties] from the specified [file].
      */
-    @Throws(IOException::class)
-    fun from(file: File): Properties {
+    @Throws(java.io.IOException::class)
+    fun from(file: java.io.File): Properties {
       val props = Properties(java.util.Properties())
       props.merge(files = listOf(file))
       return props
@@ -156,10 +155,10 @@ open class Properties protected constructor(
      * Loads [Properties] from the list of [files] / [paths] by merging all together.
      * Entries appearing in later files override those in earlier positions.
      */
-    @Throws(IOException::class)
+    @Throws(java.io.IOException::class)
     fun from(
       paths: Iterable<String>?,
-      files: Iterable<File>?,
+      files: Iterable<java.io.File>?,
     ): Properties {
       val props = Properties(java.util.Properties())
       props.merge(paths, files)
