@@ -79,7 +79,7 @@ fun <T> T?.ensureNullOrThrow(
  * an [Iterable] or an [Array], throws otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-@Suppress("ComplexCondition")
+@Suppress("ComplexCondition", "ThrowsCount")
 fun <T> T?.ensureNonEmptyOrThrow(
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
@@ -88,14 +88,28 @@ fun <T> T?.ensureNonEmptyOrThrow(
     returnsNotNull() implies (this@ensureNonEmptyOrThrow != null)
   }
 
-  if (
-    null == this ||
-    this is HashValue && isEmpty() ||
-    this is CharSequence && isEmpty() ||
-    this is Iterable<*> && !iterator().hasNext() ||
-    this is Array<*> && !iterator().hasNext()
-  ) {
-    loggerFn?.invoke("Value of variable cannot be null or empty.")
+  if (null == this) {
+    loggerFn?.invoke("Value of variable cannot be null.")
+    throw errorFn()
+  }
+
+  if (this is HashValue && isEmpty()) {
+    loggerFn?.invoke("Hash variable value cannot be empty.")
+    throw errorFn()
+  }
+
+  if (this is CharSequence && isEmpty()) {
+    loggerFn?.invoke("Character sequence variable value cannot be empty.")
+    throw errorFn()
+  }
+
+  if (this is Iterable<*> && !iterator().hasNext()) {
+    loggerFn?.invoke("Iterable variable value cannot be empty.")
+    throw errorFn()
+  }
+
+  if (this is Array<*> && !iterator().hasNext()) {
+    loggerFn?.invoke("Array variable value cannot be empty.")
     throw errorFn()
   }
 

@@ -28,7 +28,10 @@ package org.noordawod.kotlin.core.util
  */
 val ByteArrayComparator: Comparator<ByteArray> = Comparator { o1, o2 ->
   when {
-    null != o1 && null != o2 && o1.size != o2.size -> o1.size - o2.size
+    null != o1 && null != o2 && o1.size != o2.size -> {
+      o1.size - o2.size
+    }
+
     null != o1 && null != o2 -> {
       var result = 0
       var idx = -1
@@ -41,8 +44,16 @@ val ByteArrayComparator: Comparator<ByteArray> = Comparator { o1, o2 ->
       result
     }
 
-    null == o1 && null == o2 -> 0
-    null == o1 -> -1
-    else -> 1
+    null == o1 && null == o2 -> {
+      0
+    }
+
+    null == o1 -> {
+      -1
+    }
+
+    else -> {
+      1
+    }
   }
 }

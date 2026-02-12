@@ -79,6 +79,8 @@ fun CharSequence.withoutSearchModifiers(): String {
   }
 
   val length = string.length
+
+  @Suppress("ktlint:standard:condition-wrapping")
   if (
     '"' == string[0] && '"' == string[length - 1] ||
     '\'' == string[0] && '\'' == string[length - 1]
@@ -959,7 +961,9 @@ fun CharSequence?.toColorOrNull(opacity: Int? = null): Int? {
       blueValue = Integer.parseInt(color.substring(6, 2), 16)
     }
 
-    else -> return null
+    else -> {
+      return null
+    }
   }
 
   if (null != opacity && opacity in 0..255) {
@@ -1145,8 +1149,13 @@ fun CharSequence.toColor(): Int? {
       "$r$r$g$g$b$b"
     }
 
-    6 -> color
-    else -> return null
+    6 -> {
+      color
+    }
+
+    else -> {
+      return null
+    }
   }
 
   return try {

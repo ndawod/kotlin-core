@@ -36,6 +36,7 @@ class ByteArrayWrapper private constructor(
   override operator fun compareTo(other: ByteArrayWrapper): Int =
     ByteArrayComparator.compare(bytes, other.bytes)
 
+  @Suppress("ktlint:standard:condition-wrapping")
   override fun equals(other: Any?): Boolean =
     other is ByteArrayWrapper && bytes.contentEquals(other.bytes) ||
       other is ByteArray && bytes.contentEquals(other)

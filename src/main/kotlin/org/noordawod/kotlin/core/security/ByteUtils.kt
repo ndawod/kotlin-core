@@ -242,7 +242,9 @@ object ByteUtils {
         value = number
       }
 
-      else -> return null
+      else -> {
+        return null
+      }
     }
 
     val array = ByteArray(length)
