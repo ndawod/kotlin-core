@@ -418,7 +418,7 @@ fun java.util.Date.startOfTheMonth(): java.util.Date {
 fun java.util.Date.endOfTheMonth(): java.util.Date {
   val calendar = toUtcGregorianCalendar()
   val currentDayOfTheMonth = calendar.get(java.util.Calendar.DAY_OF_MONTH)
-  val lastDayOfTheMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH)
+  val lastDayOfTheMonth = calendar.getMaximum(java.util.Calendar.DAY_OF_MONTH)
 
   if (currentDayOfTheMonth < lastDayOfTheMonth) {
     calendar.add(
@@ -429,6 +429,37 @@ fun java.util.Date.endOfTheMonth(): java.util.Date {
 
   return calendar.time
 }
+
+/**
+ * Returns the date of the next month at a specific day.
+ *
+ * The day of month remains the same, and only the month component is advanced by one. If the
+ * day of month happens to be invalid for that month, then it's set to the last available day
+ * of that month.
+ */
+fun java.util.Date.nextMonthOn(day: Number): java.util.Date {
+  val calendar = toUtcGregorianCalendar()
+  val lastDayOfTheMonth = calendar.getMaximum(java.util.Calendar.DAY_OF_MONTH)
+
+  // This will precisely advance the year if the current happens to be December.
+  calendar.add(java.util.Calendar.MONTH, 1)
+
+  calendar.set(
+    java.util.Calendar.DAY_OF_MONTH,
+    day.toInt().coerceAtMost(lastDayOfTheMonth),
+  )
+
+  return calendar.time
+}
+
+/**
+ * Returns the date of the next month at a specific day.
+ *
+ * The day of month remains the same, and only the month component is advanced by one. If the
+ * day of month happens to be invalid for that month, then it's set to the last available day
+ * of that month.
+ */
+fun Number.nextMonth(): java.util.Date = java.util.Date().nextMonthOn(this)
 
 /**
  * Returns a human-readable representation of this [Duration][java.time.Duration].
