@@ -1117,14 +1117,14 @@ fun CharSequence?.isDomainName(): Boolean {
 /**
  * Returns the normalized currency code from this [CharSequence] success, null otherwise.
  */
-fun CharSequence.normalizeCurrencyCodeOrNull(): CharSequence? = trimOrNull()
+fun CharSequence?.normalizeCurrencyCodeOrNull(): String? = trimOrNull()
   ?.uppercase(ASCII_LOCALE)
   ?.withLengthOrNull(3)
 
 /**
  * Returns the normalized language code from this [CharSequence] success, null otherwise.
  */
-fun CharSequence.normalizeLanguageCodeOrNull(): CharSequence? = trimOrNull()
+fun CharSequence?.normalizeLanguageCodeOrNull(): String? = trimOrNull()
   ?.lowercase(ASCII_LOCALE)
   ?.withLengthOrNull(2)
 
@@ -1136,7 +1136,7 @@ fun CharSequence.normalizeLanguageCodeOrNull(): CharSequence? = trimOrNull()
  *
  * If the string starts with a `#`, it will be stripped.
  */
-fun CharSequence.toColor(): Int? {
+fun CharSequence?.toColorOrNull(): Int? {
   val color = trimOrNull { it.isWhitespace() || '#' == it } ?: return null
   val colorLength = color.length
 
@@ -1170,7 +1170,10 @@ fun CharSequence.toColor(): Int? {
  *
  * @param withHash whether to prefix the color with a `#` character
  */
-fun Int.toColor(withHash: Boolean = true): String? {
+fun Int?.toColorOrNull(withHash: Boolean = true): String? {
+  if (null == this) {
+    return null
+  }
   val color = try {
     toString(16)
   } catch (_: NumberFormatException) {
@@ -1213,8 +1216,8 @@ fun CharSequence.withSingleQuotes(): String = "'" +
  *
  * @param targetLength the requested length
  */
-fun CharSequence.withLengthOrNull(targetLength: Int): CharSequence? =
-  if (length == targetLength) this else null
+fun CharSequence.withLengthOrNull(targetLength: Int): String? =
+  if (length == targetLength) toString() else null
 
 private fun CharSequence.toLocaleImpl(): java.util.Locale? {
   val parts = toString().replace("-", "_").split('_')
