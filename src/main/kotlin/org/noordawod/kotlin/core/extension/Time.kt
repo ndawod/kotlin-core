@@ -418,7 +418,7 @@ fun java.util.Date.startOfTheMonth(): java.util.Date {
 fun java.util.Date.endOfTheMonth(): java.util.Date {
   val calendar = toUtcGregorianCalendar()
   val currentDayOfTheMonth = calendar.get(java.util.Calendar.DAY_OF_MONTH)
-  val lastDayOfTheMonth = calendar.getMaximum(java.util.Calendar.DAY_OF_MONTH)
+  val lastDayOfTheMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH)
 
   if (currentDayOfTheMonth < lastDayOfTheMonth) {
     calendar.add(
@@ -439,7 +439,7 @@ fun java.util.Date.endOfTheMonth(): java.util.Date {
  */
 fun java.util.Date.nextMonthOn(day: Number): java.util.Date {
   val calendar = toUtcGregorianCalendar()
-  val lastDayOfTheMonth = calendar.getMaximum(java.util.Calendar.DAY_OF_MONTH)
+  val lastDayOfTheMonth = calendar.getActualMaximum(java.util.Calendar.DAY_OF_MONTH)
 
   // This will precisely advance the year if the current happens to be December.
   calendar.add(java.util.Calendar.MONTH, 1)

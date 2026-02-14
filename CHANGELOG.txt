@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.6.2 (Feb 14, 2026)
+    Fix a bug when retrieving the maximum value of a Date field.
+
 4.6.1 (Feb 13, 2026)
     Adjust a couple of character-related extension functions to return a `String`.
 
