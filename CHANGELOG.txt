@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.6.3 (Feb 15, 2026)
+    Use correct label for `Environment.REMOTE`.
+
 4.6.2 (Feb 14, 2026)
     Fix a bug when retrieving the maximum value of a Date field.
 

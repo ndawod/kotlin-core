@@ -57,7 +57,7 @@ enum class Environment(
    * a remote host for backend.
    */
   REMOTE(
-    identifier = "local",
+    identifier = "remote",
     description = "Local frontend development with remote backend",
   ),
 
