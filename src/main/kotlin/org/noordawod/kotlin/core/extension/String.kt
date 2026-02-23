@@ -264,9 +264,9 @@ fun CharSequence?.toBooleanOr(fallback: Boolean = false): Boolean {
     returns(true) implies (this@toBooleanOr != null)
   }
 
-  val value = this?.toString()?.lowercase(ASCII_LOCALE)
+  val normalized = this?.toString()?.lowercase(ASCII_LOCALE)
 
-  return if (null == value) fallback else "1" == value || "true" == value
+  return if (null == normalized) fallback else "1" == normalized || "true" == normalized
 }
 
 /**
@@ -600,8 +600,10 @@ fun CharSequence?.parseUrl(): java.net.URL? {
     returnsNotNull() implies (this@parseUrl != null)
   }
 
+  val normalized = trimOrNull() ?: return null
+
   return try {
-    java.net.URL(toString())
+    java.net.URL(normalized)
   } catch (ignored: java.net.MalformedURLException) {
     null
   }
@@ -995,7 +997,8 @@ fun CharSequence?.normalizedHandle(
     return null
   }
 
-  val handleTrimmed = if (ignoreCase) toString().trim().lowercase() else trim()
+  val normalized = trimOrNull() ?: return null
+  val handleTrimmed = if (ignoreCase) normalized.trim().lowercase() else trim()
 
   val handleNormalized = StringBuilder(length.coerceAtLeast(1))
     .apply {

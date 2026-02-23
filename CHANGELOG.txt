@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.6.4 (Feb 23, 2026)
+    Normalize character sequences for a couple of functions.
+
 4.6.3 (Feb 15, 2026)
     Use correct label for `Environment.REMOTE`.
 
