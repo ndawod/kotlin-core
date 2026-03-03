@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.7.0 (Mar 3, 2026)
+    Bump up target Kotlin language version.
+
 4.6.4 (Feb 23, 2026)
     Normalize character sequences for a couple of functions.
 
