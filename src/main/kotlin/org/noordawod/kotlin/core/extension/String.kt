@@ -510,7 +510,12 @@ fun CharSequence.isSameEmail(email: CharSequence): Boolean =
  *
  * @param obfuscateChar the character used to obfuscate the value
  */
+@OptIn(ExperimentalContracts::class)
 fun CharSequence?.obfuscateEmailOrNull(obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR): String? {
+  contract {
+    returnsNotNull() implies (this@obfuscateEmailOrNull != null)
+  }
+
   val emailParts = decodeEmail() ?: return null
   val account = emailParts.first.obfuscateString(obfuscateChar)
   val domain = emailParts.second
@@ -552,10 +557,15 @@ fun CharSequence.obfuscateEmail(obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR):
  * @param separator the character used to separate the phone code and number,
  * defaults to [DEFAULT_PHONE_SEPARATOR]
  */
+@OptIn(ExperimentalContracts::class)
 fun CharSequence?.obfuscatePhoneOrNull(
   obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR,
   separator: Char = DEFAULT_PHONE_SEPARATOR,
 ): String? {
+  contract {
+    returnsNotNull() implies (this@obfuscatePhoneOrNull != null)
+  }
+
   val decodedPhone = this?.decodePhone(separator) ?: return null
   val callingCode = decodedPhone.first
   val phoneNumber = "${decodedPhone.second}"
@@ -594,12 +604,7 @@ fun CharSequence.obfuscatePhone(
 /**
  * Returns a [URL][java.net.URL] if this [String] is a valid URL, null otherwise.
  */
-@OptIn(ExperimentalContracts::class)
-fun CharSequence?.parseUrl(): java.net.URL? {
-  contract {
-    returnsNotNull() implies (this@parseUrl != null)
-  }
-
+fun CharSequence.parseUrl(): java.net.URL? {
   val normalized = trimOrNull() ?: return null
 
   return try {
@@ -618,17 +623,16 @@ fun CharSequence?.isUrl(): Boolean {
     returns(true) implies (this@isUrl != null)
   }
 
-  return null != parseUrl()
+  return null != this && null != parseUrl()
 }
 
 /**
  * Returns the hostname of this URI on success, null otherwise.
  */
-fun CharSequence?.hostName(): String? {
-  val hostName = (parseUrl() ?: "https://$this".parseUrl())?.host.trimOrNull()
-
-  return if (null == hostName) null else hostName.lowercase()
-}
+fun CharSequence.hostName(): String? = (parseUrl() ?: "https://$this".parseUrl())
+  ?.host
+  .trimOrNull()
+  ?.lowercase()
 
 /**
  * Returns parsed parts (international calling code and phone number) if this [String]
@@ -692,9 +696,15 @@ fun CharSequence?.decodePhone(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOf
  *
  * @param separator the character used to separate the international calling code and number
  */
-fun CharSequence?.decodePhoneOrThrow(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOfIntAndLong =
-  decodePhone(separator)
+@OptIn(ExperimentalContracts::class)
+fun CharSequence?.decodePhoneOrThrow(separator: Char = DEFAULT_PHONE_SEPARATOR): PairOfIntAndLong {
+  contract {
+    returnsNotNull() implies (this@decodePhoneOrThrow != null)
+  }
+
+  return decodePhone(separator)
     ?: error("Phone number format invalid for ($separator) separator: $this")
+}
 
 /**
  * Returns an international phone number for this [PairOfIntAndLong].
@@ -836,10 +846,17 @@ fun CharSequence?.decodeCountryPhone(
  *
  * @param separator the character used to separate the international calling code and number
  */
+@OptIn(ExperimentalContracts::class)
 fun CharSequence?.decodeCountryPhoneOrThrow(
   separator: Char = DEFAULT_PHONE_SEPARATOR,
-): PairOfStringAndLong = decodeCountryPhone(separator)
-  ?: error("CountryPhone number format invalid for ($separator) separator: $this")
+): PairOfStringAndLong {
+  contract {
+    returnsNotNull() implies (this@decodeCountryPhoneOrThrow != null)
+  }
+
+  return decodeCountryPhone(separator)
+    ?: error("CountryPhone number format invalid for ($separator) separator: $this")
+}
 
 /**
  * Returns an international phone number for this [PairOfStringAndLong].
@@ -875,6 +892,10 @@ fun PairOfStringAndLong?.toCountryPhoneOrNull(
   separator: Char? = DEFAULT_PHONE_SEPARATOR,
   leadingPlus: Boolean = false,
 ): String? {
+  contract {
+    returnsNotNull() implies (this@toCountryPhoneOrNull != null)
+  }
+
   val first = this?.first
   val second = this?.second
   val plusChar = if (leadingPlus) "$DEFAULT_PHONE_PREFIX" else ""
@@ -1120,16 +1141,30 @@ fun CharSequence?.isDomainName(): Boolean {
 /**
  * Returns the normalized currency code from this [CharSequence] success, null otherwise.
  */
-fun CharSequence?.normalizeCurrencyCodeOrNull(): String? = trimOrNull()
-  ?.uppercase(ASCII_LOCALE)
-  ?.withLengthOrNull(3)
+@OptIn(ExperimentalContracts::class)
+fun CharSequence?.normalizeCurrencyCodeOrNull(): String? {
+  contract {
+    returnsNotNull() implies (this@normalizeCurrencyCodeOrNull != null)
+  }
+
+  return trimOrNull()
+    ?.uppercase(ASCII_LOCALE)
+    ?.withLengthOrNull(3)
+}
 
 /**
  * Returns the normalized language code from this [CharSequence] success, null otherwise.
  */
-fun CharSequence?.normalizeLanguageCodeOrNull(): String? = trimOrNull()
-  ?.lowercase(ASCII_LOCALE)
-  ?.withLengthOrNull(2)
+@OptIn(ExperimentalContracts::class)
+fun CharSequence?.normalizeLanguageCodeOrNull(): String? {
+  contract {
+    returnsNotNull() implies (this@normalizeLanguageCodeOrNull != null)
+  }
+
+  return trimOrNull()
+    ?.lowercase(ASCII_LOCALE)
+    ?.withLengthOrNull(2)
+}
 
 /**
  * Returns the numerical (integer) value of this hexadecimal color on success, null otherwise.
@@ -1139,7 +1174,12 @@ fun CharSequence?.normalizeLanguageCodeOrNull(): String? = trimOrNull()
  *
  * If the string starts with a `#`, it will be stripped.
  */
+@OptIn(ExperimentalContracts::class)
 fun CharSequence?.toColorOrNull(): Int? {
+  contract {
+    returnsNotNull() implies (this@toColorOrNull != null)
+  }
+
   val color = trimOrNull { it.isWhitespace() || '#' == it } ?: return null
   val colorLength = color.length
 
@@ -1173,10 +1213,16 @@ fun CharSequence?.toColorOrNull(): Int? {
  *
  * @param withHash whether to prefix the color with a `#` character
  */
+@OptIn(ExperimentalContracts::class)
 fun Int?.toColorOrNull(withHash: Boolean = true): String? {
+  contract {
+    returnsNotNull() implies (this@toColorOrNull != null)
+  }
+
   if (null == this) {
     return null
   }
+
   val color = try {
     toString(16)
   } catch (_: NumberFormatException) {

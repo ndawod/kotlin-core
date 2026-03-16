@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.7.1 (Mar 16, 2026)
+    Adjust signature of few extension functions.
+
 4.7.0 (Mar 3, 2026)
     Bump up target Kotlin language version.
 
