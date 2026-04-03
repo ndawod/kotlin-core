@@ -143,6 +143,15 @@ fun CharSequence.withTrailing(chars: CharSequence): String {
 }
 
 /**
+ * Returns the extension (without the leading '.') for this file name on success,
+ * null otherwise.
+ */
+fun CharSequence.fileExtensionOrNull(): String? = toString()
+  .substringAfterLast('.', "")
+  .lowercase(ASCII_LOCALE)
+  .ifEmpty { null }
+
+/**
  * Returns a [String] where the specified [extension] appears at its end.
  *
  * @param extension the trailing extension to add

@@ -84,47 +84,41 @@ const val SECONDS_IN_1_DAY: Long = SECONDS_IN_1_HOUR * HOURS_IN_1_DAY
 const val MILLIS_IN_1_DAY: Long = MILLIS_IN_1_SECOND * SECONDS_IN_1_DAY
 
 /**
- * Converts an optional [Int] into a [java.util.Date] on success, null otherwise.
+ * Converts this [number of seconds][Int] to a [java.util.Date] and returns it.
  */
-fun Int?.toDate(): java.util.Date? {
-  contract {
-    returnsNotNull() implies (this@toDate != null)
-  }
-
-  return if (null == this) null else java.util.Date(this * MILLIS_IN_1_SECOND)
-}
+fun Int.toDate(): java.util.Date = java.util.Date(this * MILLIS_IN_1_SECOND)
 
 /**
- * Converts an optional [Int] into a [java.util.Date] on success, current time otherwise.
+ * Returns this [number of seconds][Int] as a [java.util.Date] on success,
+ * [fallback] otherwise.
+ *
+ * @param fallback value to return if this number of seconds is null or invalid
  */
 fun Int?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date {
   contract {
     returnsNotNull() implies (this@toDateOr != null)
   }
 
-  return if (null == this) fallback else java.util.Date(this * MILLIS_IN_1_SECOND)
+  return this?.toDate() ?: fallback
 }
 
 /**
- * Converts an optional [Long] into a [java.util.Date] on success, null otherwise.
+ * Converts this [number of milliseconds][Int] to a [java.util.Date] and returns it.
  */
-fun Long?.toDate(): java.util.Date? {
-  contract {
-    returnsNotNull() implies (this@toDate != null)
-  }
-
-  return if (null == this) null else java.util.Date(this)
-}
+fun Long.toDate(): java.util.Date = java.util.Date(this)
 
 /**
- * Converts an optional [Long] into a [java.util.Date] on success, current time otherwise.
+ * Returns this [number of milliseconds][Long] as a [java.util.Date] on success,
+ * [fallback] otherwise.
+ *
+ * @param fallback value to return if this number of milliseconds is null or invalid
  */
 fun Long?.toDateOr(fallback: java.util.Date = java.util.Date()): java.util.Date {
   contract {
     returnsNotNull() implies (this@toDateOr != null)
   }
 
-  return if (null == this) fallback else java.util.Date(this)
+  return if (null == this) fallback else times(MILLIS_IN_1_SECOND).toDate()
 }
 
 /**
