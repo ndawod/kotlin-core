@@ -137,13 +137,7 @@ fun java.util.Date?.normalized(): java.util.Date? {
  * Converts this optional [java.util.Date] into a [Long] representing the milliseconds that
  * passed since UNIX epoch on success, null otherwise.
  */
-fun java.util.Date?.millisecondsSinceEpoch(): Long? {
-  contract {
-    returnsNotNull() implies (this@millisecondsSinceEpoch != null)
-  }
-
-  return this?.time
-}
+fun java.util.Date.millisecondsSinceEpoch(): Long = time
 
 /**
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
@@ -161,38 +155,25 @@ fun java.util.Date?.millisecondsSinceEpochOr(fallback: java.util.Date = java.uti
  * Converts this optional [java.util.Date] into a [Long] representing the seconds that
  * passed since UNIX epoch on success, null otherwise.
  */
-fun java.util.Date?.secondsSinceEpoch(): Int? {
-  contract {
-    returnsNotNull() implies (this@secondsSinceEpoch != null)
-  }
-
-  val millis = millisecondsSinceEpoch()
-
-  return if (null == millis) null else (millis / MILLIS_IN_1_SECOND).toInt()
-}
+fun java.util.Date.secondsSinceEpoch(): Long = millisecondsSinceEpoch().div(MILLIS_IN_1_SECOND)
 
 /**
  * Converts this optional [java.util.Date], or [fallback] if null, into a [Long] representing
  * the seconds that passed since UNIX epoch on success.
  */
-fun java.util.Date?.secondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Int {
+fun java.util.Date?.secondsSinceEpochOr(fallback: java.util.Date = java.util.Date()): Long {
   contract {
     returnsNotNull() implies (this@secondsSinceEpochOr != null)
   }
 
-  return (millisecondsSinceEpochOr(fallback) / MILLIS_IN_1_SECOND).toInt()
+  return millisecondsSinceEpochOr(fallback).div(MILLIS_IN_1_SECOND)
 }
 
 /**
  * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.
  */
-fun java.util.Date?.offsetDateTime(): java.time.OffsetDateTime? {
-  contract {
-    returnsNotNull() implies (this@offsetDateTime != null)
-  }
-
-  return if (null == this) null else toInstant().atOffset(java.time.ZoneOffset.UTC)
-}
+fun java.util.Date.offsetDateTime(): java.time.OffsetDateTime =
+  toInstant().atOffset(java.time.ZoneOffset.UTC)
 
 /**
  * Converts this [java.util.Date], or [fallback] if null, into a [java.time.OffsetDateTime].
@@ -212,13 +193,7 @@ fun java.util.Date?.offsetDateTimeOr(
 /**
  * Converts this optional [java.util.Date] into a [java.time.OffsetDateTime], null otherwise.
  */
-fun java.time.OffsetDateTime?.date(): java.util.Date? {
-  contract {
-    returnsNotNull() implies (this@date != null)
-  }
-
-  return if (null == this) null else java.util.Date(toInstant().toEpochMilli())
-}
+fun java.time.OffsetDateTime.date(): java.util.Date = java.util.Date(toInstant().toEpochMilli())
 
 /**
  * Converts this [java.util.Date], or [fallback] if null, into a [java.time.OffsetDateTime].

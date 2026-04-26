@@ -27,6 +27,7 @@ package org.noordawod.kotlin.core.extension
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import kotlin.text.lowercase
 import org.noordawod.kotlin.core.ASCII_LOCALE
 import org.noordawod.kotlin.core.DEFAULT_LANGUAGE_CODE
 import org.noordawod.kotlin.core.security.ByteUtils
@@ -204,14 +205,22 @@ fun CharSequence.camelCase(delimiters: CharSequence = ""): String {
  * success, null otherwise.
  */
 @OptIn(ExperimentalContracts::class)
-fun CharSequence?.trimOrNull(): String? {
+fun CharSequence?.trimOrNull(nullIfZeroOrFalse: Boolean = false): String? {
   contract {
     returnsNotNull() implies (this@trimOrNull != null)
   }
 
-  val trimmed = this?.trim()
+  var trimmed = this?.trim()?.toString()
 
-  return if (trimmed.isNullOrEmpty()) null else "$trimmed"
+  if (nullIfZeroOrFalse && null != trimmed) {
+    val lowerCased = trimmed.lowercase(ASCII_LOCALE)
+
+    if ("false" == lowerCased || lowerCased.trim { '0' == it }.isEmpty()) {
+      trimmed = null
+    }
+  }
+
+  return if (trimmed.isNullOrEmpty()) null else trimmed
 }
 
 /**
@@ -238,12 +247,15 @@ fun CharSequence?.trimOrNull(predicate: (Char) -> Boolean): String? {
  * @param fallback the fallback value to return
  */
 @OptIn(ExperimentalContracts::class)
-fun CharSequence?.trimOr(fallback: CharSequence): String {
+fun CharSequence?.trimOr(
+  fallback: CharSequence,
+  nullIfZeroOrFalse: Boolean = false,
+): String {
   contract {
     returnsNotNull() implies (this@trimOr != null)
   }
 
-  val trimmed = trimOrNull()
+  val trimmed = trimOrNull(nullIfZeroOrFalse)
 
   return if (trimmed.isNullOrEmpty()) "$fallback" else trimmed
 }
@@ -253,12 +265,15 @@ fun CharSequence?.trimOr(fallback: CharSequence): String {
  * empty string.
  */
 @OptIn(ExperimentalContracts::class)
-fun CharSequence?.trimOrBlank(): String {
+fun CharSequence?.trimOrBlank(nullIfZeroOrFalse: Boolean = false): String {
   contract {
     returnsNotNull() implies (this@trimOrBlank != null)
   }
 
-  return trimOr("")
+  return trimOr(
+    fallback = "",
+    nullIfZeroOrFalse = nullIfZeroOrFalse,
+  )
 }
 
 /**
@@ -557,6 +572,23 @@ fun CharSequence?.obfuscateEmailOrNull(obfuscateChar: Char = DEFAULT_OBFUSCATION
  */
 fun CharSequence.obfuscateEmail(obfuscateChar: Char = DEFAULT_OBFUSCATION_CHAR): String =
   obfuscateEmailOrNull(obfuscateChar) ?: toString()
+
+/**
+ * Returns a Set of unique email addresses from this collection of character sequences.
+ *
+ * @param lowercased whether to convert the email addresses to lower-case
+ */
+fun Collection<CharSequence>.uniqueEmails(lowercased: Boolean): Set<String> {
+  val result = mutableMapWith<String, String>(size)
+
+  for (row in this) {
+    val email = row.decodeEmail().toEmailOrNull() ?: continue
+
+    result[email.lowercase()] = email
+  }
+
+  return (if (lowercased) result.keys else result.values).toSet()
+}
 
 /**
  * Returns this String as an obfuscated phone number on success, false otherwise.
