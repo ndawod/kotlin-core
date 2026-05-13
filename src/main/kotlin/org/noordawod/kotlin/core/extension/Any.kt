@@ -13,6 +13,8 @@ package org.noordawod.kotlin.core.extension
 
 import kotlin.contracts.ExperimentalContracts
 import kotlin.contracts.contract
+import org.noordawod.kotlin.core.error.DataInvalidError
+import org.noordawod.kotlin.core.error.DataMissingError
 import org.noordawod.kotlin.core.repository.HashValue
 
 /**
@@ -62,6 +64,19 @@ fun <T> T?.ensureNonNullOrThrow(
 }
 
 /**
+ * Ensures that a value is non-null, throws otherwise.
+ */
+fun <T> T?.ensureNonNullOrThrow(loggerFn: ((String) -> Unit)? = null): T = ensureNonNullOrThrow(
+  errorFn = {
+    DataMissingError(
+      message = "The value cannot be null.",
+      statusCode = 412,
+    )
+  },
+  loggerFn = loggerFn,
+)
+
+/**
  * Ensures that a value is null, throws [error] otherwise.
  */
 fun <T> T?.ensureNullOrThrow(
@@ -72,6 +87,21 @@ fun <T> T?.ensureNullOrThrow(
     loggerFn?.invoke("The value must be null.")
     throw errorFn(this)
   }
+}
+
+/**
+ * Ensures that a value is null, throws otherwise.
+ */
+fun <T> T?.ensureNullOrThrow(loggerFn: ((String) -> Unit)? = null) {
+  ensureNullOrThrow(
+    errorFn = {
+      DataMissingError(
+        message = "The value must be null.",
+        statusCode = 412,
+      )
+    },
+    loggerFn = loggerFn,
+  )
 }
 
 /**
@@ -117,6 +147,20 @@ fun <T> T?.ensureNonEmptyOrThrow(
 }
 
 /**
+ * Ensures that a value is non-null and non-empty if it's a [String],
+ * an [Iterable] or an [Array], throws otherwise.
+ */
+fun <T> T?.ensureNonEmptyOrThrow(loggerFn: ((String) -> Unit)? = null): T = ensureNonEmptyOrThrow(
+  errorFn = {
+    DataMissingError(
+      message = "The value cannot be null.",
+      statusCode = 412,
+    )
+  },
+  loggerFn = loggerFn,
+)
+
+/**
  * Ensures that a value is a valid email, throws [error] otherwise.
  */
 @OptIn(ExperimentalContracts::class)
@@ -144,6 +188,19 @@ fun String?.ensureEmailOrThrow(
 }
 
 /**
+ * Ensures that a value is a valid email, throws [error] otherwise.
+ */
+fun String?.ensureEmailOrThrow(loggerFn: ((String) -> Unit)? = null): String = ensureEmailOrThrow(
+  errorFn = {
+    DataMissingError(
+      message = "The email address is either empty or invalid.",
+      statusCode = 412,
+    )
+  },
+  loggerFn = loggerFn,
+)
+
+/**
  * Ensures that a numeric value is non-null and natural (0, 1, 2, 3, ...),
  * null otherwise.
  */
@@ -164,6 +221,22 @@ fun <T : Number> T?.ensureNaturalOrThrow(
   errorFn: () -> Throwable,
   loggerFn: ((String) -> Unit)? = null,
 ): T = ensureNaturalOrNull(loggerFn) ?: throw errorFn()
+
+/**
+ * Ensures that a numeric value is non-null and natural (0, 1, 2, 3, ...),
+ * throws otherwise.
+ */
+fun <T : Number> T?.ensureNaturalOrThrow(loggerFn: ((String) -> Unit)? = null): T =
+  ensureNaturalOrThrow(
+    errorFn = {
+      DataInvalidError(
+        message = "Value of number cannot be less than 0.",
+        data = "$this",
+        statusCode = 412,
+      )
+    },
+    loggerFn = loggerFn,
+  )
 
 /**
  * Ensures that a numeric value is non-null and positive (1, 2, 3, ...),
@@ -193,6 +266,22 @@ fun <T : Number> T?.ensurePositiveOrThrow(
 
   return ensurePositiveOrNull(loggerFn) ?: throw errorFn()
 }
+
+/**
+ * Ensures that a numeric value is non-null and positive (1, 2, 3, ...),
+ * throws otherwise.
+ */
+fun <T : Number> T?.ensurePositiveOrThrow(loggerFn: ((String) -> Unit)? = null): T =
+  ensurePositiveOrThrow(
+    errorFn = {
+      DataInvalidError(
+        message = "Value of number cannot be less than 1.",
+        data = "$this",
+        statusCode = 412,
+      )
+    },
+    loggerFn = loggerFn,
+  )
 
 /**
  * Ensures that a numeric value is non-null and falls within a specific range (inclusive),
@@ -246,3 +335,24 @@ fun <T : Number> T?.ensureRangeOrThrow(
     loggerFn = loggerFn,
   ) ?: throw errorFn()
 }
+
+/**
+ * Ensures that a numeric value is non-null and falls within a specific range (inclusive),
+ * throws otherwise.
+ */
+fun <T : Number> T?.ensureRangeOrThrow(
+  start: T,
+  end: T? = null,
+  loggerFn: ((String) -> Unit)? = null,
+): T = ensureRangeOrThrow(
+  start = start,
+  end = end,
+  errorFn = {
+    DataInvalidError(
+      message = "Value of number is out of range.",
+      data = "$start.." + (end?.toString() ?: ""),
+      statusCode = 412,
+    )
+  },
+  loggerFn = loggerFn,
+)
