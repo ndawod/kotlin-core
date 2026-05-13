@@ -71,10 +71,3 @@ fun Int?.toColorOrNull(
     "$buffer".uppercase(ASCII_LOCALE)
   }
 }
-
-/**
- * Returns the start offset in pagination based on a page number and its capacity.
- *
- * Note: Starting page is `1`, and the returned offset value starts from `0`.
- */
-fun Int.offset(page: Int): Int = ((page - 1) * this).coerceAtLeast(0)
