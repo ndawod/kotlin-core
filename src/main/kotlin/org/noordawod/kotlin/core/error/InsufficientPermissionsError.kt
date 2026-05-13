@@ -22,6 +22,7 @@ package org.noordawod.kotlin.core.error
  * @param path requested endpoint's path
  * @param cause optional exception that caused this error
  */
+@Suppress("LongParameterList")
 class InsufficientPermissionsError(
   message: String,
   val klass: Class<*>,

@@ -31,7 +31,7 @@ fun <T> T?.ensureValidOrThrow(
   }
 
   if (null == this) {
-    loggerFn?.invoke("The value cannot be null.")
+    loggerFn?.invoke(VALUE_CANNOT_BE_NULL)
     throw errorFn()
   }
 
@@ -56,7 +56,7 @@ fun <T> T?.ensureNonNullOrThrow(
   }
 
   if (null == this) {
-    loggerFn?.invoke("The value cannot be null.")
+    loggerFn?.invoke(VALUE_CANNOT_BE_NULL)
     throw errorFn()
   }
 
@@ -69,7 +69,7 @@ fun <T> T?.ensureNonNullOrThrow(
 fun <T> T?.ensureNonNullOrThrow(loggerFn: ((String) -> Unit)? = null): T = ensureNonNullOrThrow(
   errorFn = {
     DataMissingError(
-      message = "The value cannot be null.",
+      message = VALUE_CANNOT_BE_NULL,
       statusCode = 412,
     )
   },
@@ -153,7 +153,7 @@ fun <T> T?.ensureNonEmptyOrThrow(
 fun <T> T?.ensureNonEmptyOrThrow(loggerFn: ((String) -> Unit)? = null): T = ensureNonEmptyOrThrow(
   errorFn = {
     DataMissingError(
-      message = "The value cannot be null.",
+      message = VALUE_CANNOT_BE_NULL,
       statusCode = 412,
     )
   },
@@ -206,7 +206,7 @@ fun String?.ensureEmailOrThrow(loggerFn: ((String) -> Unit)? = null): String = e
  */
 fun <T : Number> T?.ensureNaturalOrNull(loggerFn: ((String) -> Unit)? = null): T? {
   if (null == this || 0 > toDouble()) {
-    loggerFn?.invoke("Value of number cannot be less than 0.")
+    loggerFn?.invoke(NUMBER_CANNOT_BE_NEGATIVE)
     return null
   }
 
@@ -230,7 +230,7 @@ fun <T : Number> T?.ensureNaturalOrThrow(loggerFn: ((String) -> Unit)? = null): 
   ensureNaturalOrThrow(
     errorFn = {
       DataInvalidError(
-        message = "Value of number cannot be less than 0.",
+        message = NUMBER_CANNOT_BE_NEGATIVE,
         data = "$this",
         statusCode = 412,
       )
@@ -356,3 +356,6 @@ fun <T : Number> T?.ensureRangeOrThrow(
   },
   loggerFn = loggerFn,
 )
+
+private const val VALUE_CANNOT_BE_NULL = "The value cannot be null."
+private const val NUMBER_CANNOT_BE_NEGATIVE = "Number cannot be less than 0."
