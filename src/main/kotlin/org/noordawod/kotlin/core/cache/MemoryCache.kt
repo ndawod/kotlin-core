@@ -64,7 +64,7 @@ class MemoryCache<V : Any>(
     cache = com.google.common.cache.CacheBuilder
       .newBuilder()
       .maximumSize(maxEntries.toLong())
-      .expireAfterWrite(seconds.toLong(), java.util.concurrent.TimeUnit.SECONDS)
+      .expireAfterWrite(java.time.Duration.ofSeconds(seconds.toLong()))
       .build()
   }
 
