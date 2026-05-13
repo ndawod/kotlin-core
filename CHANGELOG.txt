@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.8.0 (May 13, 2026)
+    Adjust extension functions, add new generic error classes.
+
 4.7.3 (April 26, 2026)
     Change signature of a new functions for better nullability support.
 
