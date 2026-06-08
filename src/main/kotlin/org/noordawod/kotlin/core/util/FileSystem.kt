@@ -176,21 +176,27 @@ object FileSystem {
   }
 
   /**
-   * Spawns a new process and executes the provided [program], optionally having [args], and
-   * returns the output of the process.
-   * If [includeErrors] is true, then the errors will also be included in the result.
+   * Spawns a new process and executes the provided [program] with [args]. Returns a
+   * [Pair] holding the [process exit code][Pair.first] and the [process output][Pair.second]
+   * after it ended execution.
+   *
+   * If [includeErrors] is true, then output result will also include any errors
+   * that were reported during the execution.
    *
    * @param program absolute path to the program to run
    * @param args optional arguments to pass along to the [program]
    * @param includeErrors whether to include errors in the returned result, defaults to false
+   * @param throwOnError whether to throw when exit code indicates an error, defaults to false
    */
   fun execute(
     program: String,
     args: Collection<String>?,
     includeErrors: Boolean = false,
-  ): String {
+    throwOnError: Boolean = false,
+  ): Pair<Int, String> {
     val buffer = java.lang.StringBuilder(DEFAULT_BUFFER_SIZE)
     val programArgs = args ?: listOf()
+    val lineSeparator = System.lineSeparator()
 
     // The final execution arguments list includes the program itself.
     val commandArray: List<String> = listOf(program) + programArgs
@@ -199,22 +205,34 @@ object FileSystem {
     val processBuilder = ProcessBuilder(commandArray)
     processBuilder.redirectErrorStream(includeErrors)
 
+    var exitCode = 0
+
     // Run the program and read its output.
     try {
       val process = processBuilder.start()
+
       java.io.BufferedReader(java.io.InputStreamReader(process.inputStream)).use { reader ->
-        val lineSeparator = System.lineSeparator()
-        do {
-          val readLine = reader.readLine() ?: break
-          buffer.append(readLine)
+        while (true) {
+          val line = reader.readLine() ?: break
+          buffer.append(line)
           buffer.append(lineSeparator)
-        } while (true)
-        process.waitFor()
+        }
+
+        exitCode = process.waitFor()
       }
     } catch (error: InterruptedException) {
       throw java.io.IOException(error)
     }
 
-    return "$buffer".trim { it <= ' ' }
+    val output = "$buffer".trim { it <= ' ' }.trimOrNull()
+
+    if (throwOnError && 0 != exitCode) {
+      val outputNormalized = "Execution of '$program' failed with exit code $exitCode" +
+        if (null == output) "." else ":$lineSeparator$output"
+
+      throw java.io.IOException(outputNormalized)
+    }
+
+    return exitCode to (output ?: "")
   }
 }
