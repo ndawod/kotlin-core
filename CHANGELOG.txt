@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.9.0 (September 3, 2026)
+    Bump up dependencies versions, including Gradle Wrapper's version.
+
 4.8.1 (June 8, 2026)
     Change program execution function to return both an exit code and output.
 
