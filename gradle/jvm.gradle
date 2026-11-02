@@ -55,8 +55,16 @@ tasks.named('sourcesJar', Jar) {
     from project.sourceSets.main.allSource
 }
 
+// Disables the buggy internal variant configuration that forces the class JAR as sources
 components.java.withVariantsFromConfiguration(configurations.sourcesElements) {
-    addArtifact(tasks.named('sourcesJar').get())
+    skip()
+}
+
+// Re-registers the true sources artifact directly to the publication container
+publishing.publications.configureEach { publication ->
+    if (publication instanceof MavenPublication && publication.name == 'mavenJava') {
+        publication.artifact(tasks.named('sourcesJar'))
+    }
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
