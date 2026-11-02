@@ -47,14 +47,14 @@ java {
     withJavadocJar()
 }
 
-tasks.named('sourcesJar', Jar) {
+tasks.register('customSourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
     archiveExtension = 'jar'
     from project.sourceSets.main.allSource
 }
 
-tasks.named('javadocJar', Jar) {
+tasks.register('customJavadocJar', Jar) {
     dependsOn tasks.named('dokkaGenerateHtml')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'javadoc'
@@ -72,8 +72,8 @@ components.java.withVariantsFromConfiguration(configurations.javadocElements) { 
 }
 
 // Re-register the true archive task mappings back into the open publishing streams
-configurations.sourcesElements.outgoing.artifact(tasks.named('sourcesJar'))
-configurations.javadocElements.outgoing.artifact(tasks.named('javadocJar'))
+configurations.sourcesElements.outgoing.artifact(tasks.named('customSourcesJar'))
+configurations.javadocElements.outgoing.artifact(tasks.named('customJavadocJar'))
 
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
