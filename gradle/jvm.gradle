@@ -43,23 +43,43 @@ java {
     sourceCompatibility = versions.jdk
     targetCompatibility = versions.jdk
 
-    withSourcesJar()
-    withJavadocJar()
+//    withSourcesJar()
+//    withJavadocJar()
 }
 
-tasks.named('sourcesJar', Jar) {
+// 1. Manually configure clean packaging tasks
+tasks.register('customSourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
     archiveExtension = 'jar'
-
-    // Aggregates both Java and Kotlin directories into the source archive.
     from project.sourceSets.main.allSource
 }
 
-tasks.named('javadocJar', Jar) {
-    // Re-routes the default javadoc task target to leverage the Dokka engine output.
-    dependsOn tasks.named('dokkaGenerateHtml')
-    from tasks.named('dokkaGenerateHtml')
+tasks.register('customJavadocJar', Jar) {
+    def dokkaTask = tasks.named('dokkaGenerateHtml')
+    dependsOn dokkaTask
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier = 'javadoc'
+    archiveExtension = 'jar'
+    from(dokkaTask.flatMap { it.outputDirectory })
+}
+
+// 2. Register these custom tasks as clean independent variant features inside components.java.
+// This forces Gradle to accurately populate separate files into the output .module metadata structure.
+java {
+    registerFeature('sources') {
+        usingSourceSet(sourceSets.main)
+    }
+    registerFeature('javadoc') {
+        usingSourceSet(sourceSets.main)
+    }
+}
+
+// 3. Connect our clean packaging tasks directly to those feature variants
+artifacts {
+    sourcesRuntimeElements customSourcesJar
+    javadocRuntimeElements customJavadocJar
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
