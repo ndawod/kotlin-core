@@ -47,7 +47,7 @@ java {
 //    withJavadocJar()
 }
 
-// 1. Manually configure clean packaging tasks
+// Set up our separate archives for the variants
 tasks.register('customSourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
@@ -56,17 +56,18 @@ tasks.register('customSourcesJar', Jar) {
 }
 
 tasks.register('customJavadocJar', Jar) {
-    def dokkaTask = tasks.named('dokkaGenerateHtml')
-    dependsOn dokkaTask
+    // Hooks cleanly into Dokka v2's generation task lifecycle
+    dependsOn tasks.named('dokkaGenerateHtml')
 
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'javadoc'
     archiveExtension = 'jar'
-    from(dokkaTask.flatMap { it.outputDirectory })
+
+    // Grabs the documentation directory output directly from the project build folder
+    from layout.buildDirectory.dir("dokka/html")
 }
 
-// 2. Register these custom tasks as clean independent variant features inside components.java.
-// This forces Gradle to accurately populate separate files into the output .module metadata structure.
+// Add our explicit variants into the Java component registry framework
 java {
     registerFeature('sources') {
         usingSourceSet(sourceSets.main)
@@ -76,7 +77,7 @@ java {
     }
 }
 
-// 3. Connect our clean packaging tasks directly to those feature variants
+// Map the custom jar tasks to the modern feature metadata slots
 artifacts {
     sourcesRuntimeElements customSourcesJar
     javadocRuntimeElements customJavadocJar
