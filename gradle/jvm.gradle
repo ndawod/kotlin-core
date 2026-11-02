@@ -46,11 +46,17 @@ java {
     withSourcesJar()
 }
 
+// Captures all source files (Java, Kotlin, etc.) registered to the main source set.
+tasks.named('sourcesJar', Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from project.sourceSets.main.allSource
+}
+
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
     publications {
         // noinspection GroovyAssignabilityCheck
-        maven(MavenPublication) {
+        mavenJava(MavenPublication) {
             // noinspection GroovyAssignabilityCheck
             from components.java
         }
