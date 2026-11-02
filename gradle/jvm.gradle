@@ -55,10 +55,6 @@ tasks.named('sourcesJar', Jar) {
     from project.sourceSets.main.allSource
 }
 
-components.java.withVariantsFromConfiguration(configurations.sourcesElements) {
-    skip()
-}
-
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
     publications {
@@ -66,14 +62,12 @@ publishing {
         mavenJava(MavenPublication) {
             // noinspection GroovyAssignabilityCheck
             from components.java
-
-            // Forces JitPack to register the separate sources jar artifact
-            // in its generated POM metadata.
-            // noinspection GroovyAssignabilityCheck
-            artifact tasks.named('sourcesJar').get()
         }
     }
 }
+// Map the task definition directly to the built-in elements variant hook
+// This ensures Gradle forces the data into the structure right before serialization
+publishing.publications.mavenJava.artifact(tasks.named('sourcesJar').get())
 
 // The JAXB APIs are considered to be Java EE APIs and therefore are no longer contained
 // on the default classpath in Java SE 9. In Java 11, they are completely removed from the JDK.
