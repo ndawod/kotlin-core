@@ -43,16 +43,20 @@ java {
     targetCompatibility = versions.jdk
 
     withJavadocJar()
-//    withSourcesJar()
+    withSourcesJar()
 }
 
 // Define the archive packaging parameters cleanly.
-tasks.register('sourcesJar', Jar) {
+tasks.named('sourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
     archiveExtension = 'jar'
 
     from project.sourceSets.main.allSource
+}
+
+components.java.withVariantsFromConfiguration(configurations.sourcesElements) {
+    addArtifact(tasks.named('sourcesJar').get())
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
@@ -62,10 +66,6 @@ publishing {
         mavenJava(MavenPublication) {
             // noinspection GroovyAssignabilityCheck
             from components.java
-
-            // Explicitly links the distinct sources jar to the Maven POM infrastructure.
-            // noinspection GroovyAssignabilityCheck
-            artifact tasks.named('sourcesJar').get()
         }
     }
 }
