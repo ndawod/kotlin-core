@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.10.1 (November 2, 2026)
+    Fix a bug when preparing javadoc .jar for publication.
+
 4.10.0 (November 2, 2026)
     Bump up dependencies versions, including Gradle Wrapper's version and Kotlin language version.
 
