@@ -55,29 +55,22 @@ tasks.named('sourcesJar', Jar) {
     from project.sourceSets.main.allSource
 }
 
+components.java.withVariantsFromConfiguration(configurations.sourcesElements) {
+    skip()
+}
+
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
     publications {
         // noinspection GroovyAssignabilityCheck
         mavenJava(MavenPublication) {
-            // Explicitly publish only your exact primary and secondary jars
-            artifact tasks.named('jar').get()
-            artifact tasks.named('sourcesJar').get()
-            artifact tasks.named('javadocJar').get()
+            // noinspection GroovyAssignabilityCheck
+            from components.java
 
-            // Manually map runtime dependencies to the POM file so consumers can resolve them
-            pom.withXml {
-                final dependenciesNode = asNode().appendNode('dependencies')
-                project.configurations.implementation.allDependencies.each { dep ->
-                    if (dep.group != null && dep.name != null) {
-                        final dependencyNode = dependenciesNode.appendNode('dependency')
-                        dependencyNode.appendNode('groupId', dep.group)
-                        dependencyNode.appendNode('artifactId', dep.name)
-                        dependencyNode.appendNode('version', dep.version ?: 'unspecified')
-                        dependencyNode.appendNode('scope', 'runtime')
-                    }
-                }
-            }
+            // Forces JitPack to register the separate sources jar artifact
+            // in its generated POM metadata.
+            // noinspection GroovyAssignabilityCheck
+            artifact tasks.named('sourcesJar').get()
         }
     }
 }
