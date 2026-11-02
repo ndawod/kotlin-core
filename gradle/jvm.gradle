@@ -46,24 +46,11 @@ java {
     withSourcesJar()
 }
 
-// Define the archive packaging parameters cleanly.
-tasks.named('sourcesJar', Jar) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveClassifier = 'sources'
-    archiveExtension = 'jar'
-
-    from project.sourceSets.main.allSource
-}
-
-// Map the task reference directly into the outgoing artifacts pipeline configuration scope.
-configurations.sourcesElements.outgoing.artifacts.clear()
-configurations.sourcesElements.outgoing.artifact(tasks.named('sourcesJar'))
-
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
     publications {
         // noinspection GroovyAssignabilityCheck
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             // noinspection GroovyAssignabilityCheck
             from components.java
         }
