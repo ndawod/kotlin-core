@@ -47,6 +47,28 @@ java {
 //    withJavadocJar()
 }
 
+// 1. Explicitly create the missing configurations to store our custom variants
+configurations.create('sourcesElements') {
+    canBeResolved = false
+    canBeConsumed = true
+    attributes {
+        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+        attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, DocsType.SOURCES))
+        attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
+    }
+}
+
+configurations.create('javadocElements') {
+    canBeResolved = false
+    canBeConsumed = true
+    attributes {
+        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
+        attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, DocsType.JAVADOC))
+        attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
+    }
+}
+
+// 2. Define the discrete archive compilation steps
 tasks.register('customSourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
@@ -62,12 +84,16 @@ tasks.register('customJavadocJar', Jar) {
     from layout.buildDirectory.dir("dokka/html")
 }
 
-// Officially bind the custom archives to the existing java component configurations
-// which explicitly replaces the binary class jar mapping during metadata assembly.
+// 3. Map the custom archives to the clean, non-polluted configurations
 project.artifacts {
     add('sourcesElements', tasks.named('customSourcesJar'))
     add('javadocElements', tasks.named('customJavadocJar'))
 }
+
+// 4. Inject our customized variant configurations straight into components.java
+// before the publishing engine builds the final frozen metadata graphs.
+components.java.addVariantsFromConfiguration(configurations.sourcesElements) {}
+components.java.addVariantsFromConfiguration(configurations.javadocElements) {}
 
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
