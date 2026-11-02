@@ -22,11 +22,11 @@
  */
 
 group = 'org.noordawod.kotlin.core'
-version = '4.9.1'
+version = '4.10.0'
 description = 'Auxiliary methods and functions for the Kotlin programming language.'
 
 apply plugin: 'kotlinx-serialization'
-apply plugin: 'com.github.ben-manes.versions'
+apply plugin: 'io.github.ben-manes.versions'
 
 repositories {
     mavenCentral()
