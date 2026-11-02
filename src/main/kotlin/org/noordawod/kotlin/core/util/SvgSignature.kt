@@ -30,9 +30,7 @@ package org.noordawod.kotlin.core.util
  *
  * @param value a human-friendly value of this instance
  */
-enum class SvgSignature(
-  private val value: String,
-) {
+enum class SvgSignature(private val value: String) {
   /**
    * SVG v1.0.
    */

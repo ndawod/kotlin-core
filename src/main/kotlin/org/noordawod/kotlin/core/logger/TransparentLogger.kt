@@ -35,9 +35,7 @@ import org.noordawod.kotlin.core.extension.trimOrBlank
  *
  * @param environment the textual representation of the running environment
  */
-class TransparentLogger(
-  environment: String,
-) : BaseSimpleLogger(environment) {
+class TransparentLogger(environment: String) : BaseSimpleLogger(environment) {
   private val mutableBuffer = mutableListWith<TransparentLogEntry>(DEFAULT_LIST_CAPACITY)
 
   /**

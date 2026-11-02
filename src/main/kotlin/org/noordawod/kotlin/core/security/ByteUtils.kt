@@ -369,9 +369,7 @@ object ByteArrayLength {
  *
  * @param length strength of this instance
  */
-enum class ByteArrayStrength(
-  val length: Int,
-) {
+enum class ByteArrayStrength(val length: Int) {
   /**
    * Length of a [ByteArray] that can accommodate a hash value using [SipHash].
    */

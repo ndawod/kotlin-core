@@ -30,9 +30,7 @@ package org.noordawod.kotlin.core.util
  *
  * @param value a human-friendly value of this instance
  */
-enum class ComparisonOp(
-  private val value: String,
-) {
+enum class ComparisonOp(private val value: String) {
   /**
    * Comparison for an equal value.
    */

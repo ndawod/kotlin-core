@@ -30,9 +30,7 @@ private const val DEFAULT_KEEP_ALIVE = 30L
 /**
  * Alternative, simpler service to execute code on separate threads.
  */
-class ExecutorService private constructor(
-  keepAlive: java.time.Duration,
-) {
+class ExecutorService private constructor(keepAlive: java.time.Duration) {
   private val immediately = java.util.concurrent.ThreadPoolExecutor(
     // corePoolSize
     0,

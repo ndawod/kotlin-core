@@ -31,9 +31,7 @@ package org.noordawod.kotlin.core.security
  *
  * Note: this class is NOT thread-safe.
  */
-class SipHash internal constructor(
-  private val key: ByteArray,
-) {
+class SipHash internal constructor(private val key: ByteArray) {
   private var value0: Long = 0
   private var value1: Long = 0
   private var value2: Long = 0
@@ -371,9 +369,7 @@ fun String.toSipHashKey(): ByteArray {
 /**
  * Create a new [SipHash] object with a 16 byte key.
  */
-class SipHashFactory(
-  private val key: ByteArray,
-) {
+class SipHashFactory(private val key: ByteArray) {
   init {
     require(16 == key.size) { "Key must be exactly 16 bytes long." }
   }

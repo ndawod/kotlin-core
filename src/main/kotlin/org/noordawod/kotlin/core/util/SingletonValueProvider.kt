@@ -32,9 +32,7 @@ package org.noordawod.kotlin.core.util
  * @param provider a callback to provide a non-null singleton value
  */
 @Suppress("UseDataClass")
-class SingletonValueProvider<T>(
-  private val provider: () -> T,
-) {
+class SingletonValueProvider<T>(private val provider: () -> T) {
   private var valuePrivate: T? = null
   private val lock = Any()
 

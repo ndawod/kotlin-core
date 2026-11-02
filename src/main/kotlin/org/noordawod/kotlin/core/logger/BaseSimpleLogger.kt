@@ -31,9 +31,7 @@ import org.noordawod.kotlin.core.LOG_DATE_FORMAT
  *
  * @param environment the runtime environment of the logger
  */
-abstract class BaseSimpleLogger protected constructor(
-  environment: String,
-) : BaseProxyLogger() {
+abstract class BaseSimpleLogger protected constructor(environment: String) : BaseProxyLogger() {
   private val environmentTag: String = environment.uppercase(ASCII_LOCALE)
 
   /**

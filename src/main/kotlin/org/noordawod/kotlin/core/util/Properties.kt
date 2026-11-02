@@ -32,9 +32,7 @@ import org.noordawod.kotlin.core.extension.mutableListWith
  *
  * @param props initial properties to load from memory
  */
-open class Properties protected constructor(
-  private val props: java.util.Properties,
-) {
+open class Properties protected constructor(private val props: java.util.Properties) {
   private var destroyed = false
 
   /**

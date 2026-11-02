@@ -237,9 +237,7 @@ class GeoPoint(
  *
  * @param value a human-friendly value of this instance
  */
-enum class GeoUnit(
-  private val value: String,
-) {
+enum class GeoUnit(private val value: String) {
   /**
    * The meter unit.
    */

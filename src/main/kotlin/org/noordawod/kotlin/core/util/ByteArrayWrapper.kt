@@ -30,9 +30,7 @@ package org.noordawod.kotlin.core.util
  *
  * @param bytes the bytes to wrap
  */
-class ByteArrayWrapper private constructor(
-  val bytes: ByteArray,
-) : Comparable<ByteArrayWrapper> {
+class ByteArrayWrapper private constructor(val bytes: ByteArray) : Comparable<ByteArrayWrapper> {
   override operator fun compareTo(other: ByteArrayWrapper): Int =
     ByteArrayComparator.compare(bytes, other.bytes)
 
