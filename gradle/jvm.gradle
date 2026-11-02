@@ -47,7 +47,6 @@ java {
 //    withJavadocJar()
 }
 
-// Set up our separate archives for the variants
 tasks.register('customSourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
@@ -56,31 +55,18 @@ tasks.register('customSourcesJar', Jar) {
 }
 
 tasks.register('customJavadocJar', Jar) {
-    // Hooks cleanly into Dokka v2's generation task lifecycle
     dependsOn tasks.named('dokkaGenerateHtml')
-
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'javadoc'
     archiveExtension = 'jar'
-
-    // Grabs the documentation directory output directly from the project build folder
     from layout.buildDirectory.dir("dokka/html")
 }
 
-// Add our explicit variants into the Java component registry framework
-java {
-    registerFeature('sources') {
-        usingSourceSet(sourceSets.main)
-    }
-    registerFeature('javadoc') {
-        usingSourceSet(sourceSets.main)
-    }
-}
-
-// Map the custom jar tasks to the modern feature metadata slots
-artifacts {
-    sourcesRuntimeElements customSourcesJar
-    javadocRuntimeElements customJavadocJar
+// Officially bind the custom archives to the existing java component configurations
+// which explicitly replaces the binary class jar mapping during metadata assembly.
+project.artifacts {
+    add('sourcesElements', tasks.named('customSourcesJar'))
+    add('javadocElements', tasks.named('customJavadocJar'))
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
