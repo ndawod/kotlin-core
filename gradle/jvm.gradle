@@ -49,6 +49,9 @@ java {
 // Captures all source files (Java, Kotlin, etc.) registered to the main source set.
 tasks.named('sourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier = 'sources'
+    archiveExtension = 'jar'
+
     from project.sourceSets.main.allSource
 }
 
