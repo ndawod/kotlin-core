@@ -43,40 +43,18 @@ java {
     sourceCompatibility = versions.jdk
     targetCompatibility = versions.jdk
 
-//    withSourcesJar()
-//    withJavadocJar()
+    withSourcesJar()
+    withJavadocJar()
 }
 
-// 1. Explicitly create the missing configurations to store our custom variants
-configurations.create('sourcesElements') {
-    canBeResolved = false
-    canBeConsumed = true
-    attributes {
-        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
-        attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, DocsType.SOURCES))
-        attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
-    }
-}
-
-configurations.create('javadocElements') {
-    canBeResolved = false
-    canBeConsumed = true
-    attributes {
-        attribute(Category.CATEGORY_ATTRIBUTE, objects.named(Category, Category.DOCUMENTATION))
-        attribute(DocsType.DOCS_TYPE_ATTRIBUTE, objects.named(DocsType, DocsType.JAVADOC))
-        attribute(Usage.USAGE_ATTRIBUTE, objects.named(Usage, Usage.JAVA_RUNTIME))
-    }
-}
-
-// 2. Define the discrete archive compilation steps
-tasks.register('customSourcesJar', Jar) {
+tasks.named('sourcesJar', Jar) {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'sources'
     archiveExtension = 'jar'
     from project.sourceSets.main.allSource
 }
 
-tasks.register('customJavadocJar', Jar) {
+tasks.named('javadocJar', Jar) {
     dependsOn tasks.named('dokkaGenerateHtml')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     archiveClassifier = 'javadoc'
@@ -84,16 +62,18 @@ tasks.register('customJavadocJar', Jar) {
     from layout.buildDirectory.dir("dokka/html")
 }
 
-// 3. Map the custom archives to the clean, non-polluted configurations
-project.artifacts {
-    add('sourcesElements', tasks.named('customSourcesJar'))
-    add('javadocElements', tasks.named('customJavadocJar'))
+// Modify the software component runtime elements to forcefully swap the artifact references
+// before Gradle builds and serializes the frozen .module metadata files
+components.java.withVariantsFromConfiguration(configurations.sourcesElements) { variant ->
+    variant.skip()
+}
+components.java.withVariantsFromConfiguration(configurations.javadocElements) { variant ->
+    variant.skip()
 }
 
-// 4. Inject our customized variant configurations straight into components.java
-// before the publishing engine builds the final frozen metadata graphs.
-components.java.addVariantsFromConfiguration(configurations.sourcesElements) {}
-components.java.addVariantsFromConfiguration(configurations.javadocElements) {}
+// Re-register the true archive task mappings back into the open publishing streams
+configurations.sourcesElements.outgoing.artifact(tasks.named('sourcesJar'))
+configurations.javadocElements.outgoing.artifact(tasks.named('javadocJar'))
 
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
