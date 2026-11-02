@@ -62,6 +62,11 @@ publishing {
         mavenJava(MavenPublication) {
             // noinspection GroovyAssignabilityCheck
             from components.java
+
+            // Forces JitPack to register the separate sources jar artifact
+            // in its generated POM metadata.
+            // noinspection GroovyAssignabilityCheck
+            artifact tasks.named('sourcesJar').get()
         }
     }
 }
