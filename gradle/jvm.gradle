@@ -43,7 +43,16 @@ java {
     targetCompatibility = versions.jdk
 
     withJavadocJar()
-    withSourcesJar()
+//    withSourcesJar()
+}
+
+// Define the archive packaging parameters cleanly.
+tasks.register('sourcesJar', Jar) {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    archiveClassifier = 'sources'
+    archiveExtension = 'jar'
+
+    from project.sourceSets.main.allSource
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
@@ -54,21 +63,11 @@ publishing {
             // noinspection GroovyAssignabilityCheck
             from components.java
 
-            artifact(tasks.named('sourcesJar').get()) {
-                classifier = 'sources'
-                extension = 'jar'
-            }
+            // Explicitly links the distinct sources jar to the Maven POM infrastructure.
+            // noinspection GroovyAssignabilityCheck
+            artifact tasks.named('sourcesJar').get()
         }
     }
-}
-
-// Define the archive packaging parameters cleanly.
-tasks.named('sourcesJar', Jar) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveClassifier = 'sources'
-    archiveExtension = 'jar'
-
-    from project.sourceSets.main.allSource
 }
 
 // The JAXB APIs are considered to be Java EE APIs and therefore are no longer contained
