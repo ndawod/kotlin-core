@@ -58,8 +58,8 @@ tasks.named('sourcesJar', Jar) {
 
 tasks.named('javadocJar', Jar) {
     // Re-routes the default javadoc task target to leverage the Dokka engine output.
-    dependsOn tasks.named('dokkaHtml')
-    from tasks.named('dokkaHtml')
+    dependsOn tasks.named('dokkaGenerateHtml')
+    from tasks.named('dokkaGenerateHtml')
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
