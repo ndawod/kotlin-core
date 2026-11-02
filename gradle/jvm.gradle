@@ -43,8 +43,8 @@ java {
     sourceCompatibility = versions.jdk
     targetCompatibility = versions.jdk
 
-    withJavadocJar()
     withSourcesJar()
+    withJavadocJar()
 }
 
 tasks.named('sourcesJar', Jar) {
@@ -54,6 +54,12 @@ tasks.named('sourcesJar', Jar) {
 
     // Aggregates both Java and Kotlin directories into the source archive.
     from project.sourceSets.main.allSource
+}
+
+tasks.named('javadocJar', Jar) {
+    // Re-routes the default javadoc task target to leverage the Dokka engine output.
+    dependsOn tasks.named('dokkaHtml')
+    from tasks.named('dokkaHtml')
 }
 
 // DO NOT wrap the following in project.afterEvaluate!
