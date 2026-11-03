@@ -25,15 +25,14 @@ apply from: "$rootDir/gradle/config.gradle"
 
 apply plugin: 'java'
 apply plugin: 'java-library'
-apply plugin: 'org.jetbrains.dokka'
 apply plugin: 'maven-publish'
 
-javadoc {
-    // noinspection GroovyAssignabilityCheck
-    options {
-        charSet = encoding
-        docEncoding = encoding
-    }
+// The JAXB APIs are considered to be Java EE APIs and therefore are no longer contained
+// on the default classpath in Java SE 9. In Java 11, they are completely removed from the JDK.
+dependencies {
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'com.sun.xml.bind:jaxb-core:2.3.0'
+    implementation 'com.sun.xml.bind:jaxb-impl:2.3.0'
 }
 
 java {
@@ -47,33 +46,13 @@ java {
     withJavadocJar()
 }
 
-tasks.register('customSourcesJar', Jar) {
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveClassifier = 'sources'
-    archiveExtension = 'jar'
-    from project.sourceSets.main.allSource
+javadoc {
+    // noinspection GroovyAssignabilityCheck
+    options {
+        charSet = encoding
+        docEncoding = encoding
+    }
 }
-
-tasks.register('customJavadocJar', Jar) {
-    dependsOn tasks.named('dokkaGenerateHtml')
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    archiveClassifier = 'javadoc'
-    archiveExtension = 'jar'
-    from layout.buildDirectory.dir("dokka/html")
-}
-
-// Modify the software component runtime elements to forcefully swap the artifact references
-// before Gradle builds and serializes the frozen .module metadata files
-components.java.withVariantsFromConfiguration(configurations.sourcesElements) { variant ->
-    variant.skip()
-}
-components.java.withVariantsFromConfiguration(configurations.javadocElements) { variant ->
-    variant.skip()
-}
-
-// Re-register the true archive task mappings back into the open publishing streams
-configurations.sourcesElements.outgoing.artifact(tasks.named('customSourcesJar'))
-configurations.javadocElements.outgoing.artifact(tasks.named('customJavadocJar'))
 
 // DO NOT wrap the following in project.afterEvaluate!
 publishing {
@@ -84,12 +63,4 @@ publishing {
             from components.java
         }
     }
-}
-
-// The JAXB APIs are considered to be Java EE APIs and therefore are no longer contained
-// on the default classpath in Java SE 9. In Java 11, they are completely removed from the JDK.
-dependencies {
-    implementation 'javax.xml.bind:jaxb-api:2.3.0'
-    implementation 'com.sun.xml.bind:jaxb-core:2.3.0'
-    implementation 'com.sun.xml.bind:jaxb-impl:2.3.0'
 }
