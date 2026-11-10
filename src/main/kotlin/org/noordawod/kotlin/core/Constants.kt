@@ -48,6 +48,11 @@ val DEFAULT_LANGUAGE_CODE: String = DEFAULT_LOCALE.language.lowercase(ASCII_LOCA
 val DEFAULT_COUNTRY_CODE: String = DEFAULT_LOCALE.country.uppercase(ASCII_LOCALE)
 
 /**
+ * The default timeout for connecting to external services.
+ */
+val DEFAULT_CONNECT_TIMEOUT: java.time.Duration = java.time.Duration.ofSeconds(10)
+
+/**
  * Default timeout when connecting to network services.
  */
 const val DEFAULT_CONNECTION_TIMEOUT: Long = 10 * MILLIS_IN_1_SECOND
