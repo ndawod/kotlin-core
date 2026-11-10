@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.11.1 (November 10, 2026)
+    Simplify the network-related functions.
+
 4.11.0 (November 10, 2026)
     Create new network utility functions and transferred image utility functions
     from `kotlin-restful`.
