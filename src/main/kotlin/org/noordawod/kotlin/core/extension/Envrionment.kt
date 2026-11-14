@@ -55,8 +55,7 @@ val Environment.isLocalOrRemoteOrDevel: Boolean
 fun Environment.logLevel(): String = when (this) {
   Environment.LOCAL -> "DEBUG"
   Environment.REMOTE -> "DEBUG"
-  Environment.DEVEL -> "DEBUG"
-  Environment.BETA -> "WARNING"
+  Environment.DEVEL, Environment.BETA -> "WARNING"
   Environment.PRODUCTION -> "ERROR"
 }
 
