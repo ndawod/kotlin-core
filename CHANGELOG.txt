@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.11.2 (November 15, 2026)
+    Change the log levels.
+
 4.11.1 (November 10, 2026)
     Simplify the network-related functions.
 

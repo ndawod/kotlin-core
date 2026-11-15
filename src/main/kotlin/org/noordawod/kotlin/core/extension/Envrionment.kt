@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-@file:Suppress("unused")
+@file:Suppress("unused", "MagicNumber", "StringLiteralDuplication")
 
 package org.noordawod.kotlin.core.extension
 
@@ -51,10 +51,8 @@ val Environment.isLocalOrRemoteOrDevel: Boolean
 /**
  * Returns the appropriate log level for this [Environment] instance.
  */
-@Suppress("StringLiteralDuplication")
 fun Environment.logLevel(): String = when (this) {
-  Environment.LOCAL -> "DEBUG"
-  Environment.REMOTE -> "DEBUG"
+  Environment.LOCAL, Environment.REMOTE -> "DEBUG"
   Environment.DEVEL, Environment.BETA -> "WARNING"
   Environment.PRODUCTION -> "ERROR"
 }
@@ -62,7 +60,6 @@ fun Environment.logLevel(): String = when (this) {
 /**
  * Returns the default timeout, in seconds, based on this [Environment].
  */
-@Suppress("MagicNumber")
 fun Environment?.timeoutInSeconds(): Int = when (this) {
   Environment.LOCAL, Environment.REMOTE -> 5
   Environment.DEVEL, null -> 10
