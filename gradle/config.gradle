@@ -31,7 +31,7 @@ ext.versions = [
     dagger: '2.60.1',
     kotlin: '2.4.21', // https://kotlinlang.org/docs/releases.html#release-details
     kotlin_coroutines: '1.11.0', // https://github.com/Kotlin/kotlinx.coroutines/releases
-    kotlin_serialization: '1.12.0', // https://github.com/Kotlin/kotlinx.serialization/releases
+    kotlin_serialization: '1.13.0', // https://github.com/Kotlin/kotlinx.serialization/releases
     uribuilder_tiny: '2.7.1',
     seruco_base62: '0.1.3',
     auth0_jwt: '4.6.2',
