@@ -3,6 +3,9 @@ Description: Auxiliary methods and functions for the Kotlin programming language
 
 This documents the changes between versions:
 
+4.11.4 (November 19, 2026)
+    Add few extension functions for numbers.
+
 4.11.3 (November 16, 2026)
     Bump the version of Kotlin Serialization.
 
